@@ -4,7 +4,7 @@
     "slug": "Mobile-App-HR-V2",
     "version": "1.0.13",
     "orientation": "portrait",
-    "icon": "./assets/appstore.png",
+    "icon": "./assets/playstore.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/Images/Splash-Screen1.png",
