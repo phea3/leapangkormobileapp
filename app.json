@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Go Global HR",
-    "slug": "Mobile-App-HR-V2",
-    "version": "1.0.14",
+    "name": "LEAP ANGKOR HR",
+    "slug": "Leap-Ankor-HR",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/playstore.png",
     "userInterfaceStyle": "light",
@@ -14,12 +14,10 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "14",
+      "buildNumber": "0",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access the camera to scan the QR code at check-in and check-out.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
@@ -44,8 +42,7 @@
         "android.permission.FOREGROUND_SERVICE"
       ],
       "package": "com.goglobalschool.humanresource",
-      "versionCode": 14
-
+      "versionCode": 0
     },
     "plugins": [
       [
