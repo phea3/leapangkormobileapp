@@ -1,0 +1,116 @@
+@import "../themes.scss";
+
+.AttendanceContainer {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  align-items: center;
+}
+
+.AttendanceBackButtonContainer {
+  width: 100%;
+}
+
+.AttendanceBackButton {
+  width: 50%;
+  padding: 10px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.AttendanceBackButtonIconSM {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.AttendanceBackButtonIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.AttendanceBackButtonTitleSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.AttendanceBackButtonTitle {
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.AttendanceTitlesContainer {
+  width: 95%;
+  height: 40px;
+  flex-direction: row;
+  align-items: center;
+  background-color: $color-light-blue;
+}
+
+.AttendanceTitleContainer {
+  width: 35%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.AttendanceFineTitleContainer {
+  width: 10%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.AttendanceDateTitleContainer {
+  width: 20%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.AttendanceTitleTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.AttendanceTitleText {
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.AttendanceBodyContainer {
+  width: 95%;
+  height: 55px;
+  flex-direction: row;
+  align-items: center;
+  border-bottom-width: 0.5px;
+  border-bottom-color: $color-black;
+}
+
+.AttendanceBodyTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+}
+
+.AttendanceBodyText {
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+}
+
+.AttendanceBodyFineTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-regular;
+  color: $color-red;
+}
+
+.AttendanceBodyFineText {
+  font-family: $kantumruy-regular;
+  color: $color-red;
+}

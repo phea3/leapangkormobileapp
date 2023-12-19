@@ -1,0 +1,511 @@
+@import "../themes.scss";
+
+.HomeContainer {
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.HomeBoxContainerSM {
+  width: 25%;
+  height: 80px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.HomeBoxContainer {
+  width: 25%;
+  height: 120px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.HomeBoxCircleSM {
+  width: 50px;
+  height: 50px;
+  border-radius: 100px;
+  border-width: 2px;
+  border-color: $color-white;
+  justify-content: center;
+  align-items: center;
+}
+
+.HomeBoxCircle {
+  width: 70px;
+  height: 70px;
+  border-radius: 100px;
+  border-width: 2px;
+  border-color: $color-white;
+  justify-content: center;
+  align-items: center;
+}
+
+.HomeSelectDateContainer {
+  width: 90%;
+  justify-content: flex-start;
+}
+
+.HomeSelectDateTextSM {
+  font-size: 10px;
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeSelectDateText {
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeBoxInSideCircleTextSM {
+  font-size: 16px;
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeBoxInSideCircleText {
+  font-size: 20px;
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+.HomeBoxCircleTextSM {
+  font-size: 8px;
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeBoxCircleText {
+  font-size: 12px;
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeBoxesContainer {
+  flex-direction: row;
+}
+
+.HomeContentContainer {
+  flex: 1;
+  width: 100%;
+}
+
+.HomeMainContentContainer {
+  flex: 1;
+  width: 100%;
+  background-color: $color-white;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15;
+  align-items: center;
+}
+
+.HomeFeaturesTitleSM {
+  width: 100%;
+  padding: 10px;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.HomeFeaturesTitle {
+  width: 100%;
+  padding: 15px;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.HomeFeaturesTitleButton {
+  width: 50%;
+  flex-direction: row;
+  align-items: center;
+}
+
+.HomeFeaturesBoxesContaienrSM {
+  width: 100%;
+  height: 80px;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.HomeFeaturesBoxesContaienr {
+  width: 100%;
+  height: 100px;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.HomeFeaturesBoxContaienrSM {
+  width: 24%;
+  height: 80px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.HomeFeaturesBoxContaienr {
+  width: 24%;
+  height: 100px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.HomeBoxStyleSM {
+  width: 92%;
+  height: 70px;
+  border-width: 1px;
+  border-color: $color-dark-blue;
+  border-radius: 10px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.HomeBoxStyle {
+  width: 92%;
+  height: 90px;
+  border-width: 1px;
+  border-color: $color-dark-blue;
+  border-radius: 10px;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.HomeFeaturesIconSM {
+  width: 25px;
+  height: 25px;
+}
+
+.HomeFeaturesIcon {
+  width: 30px;
+  height: 30px;
+}
+
+.HomeFeaturesBoxTitleSM {
+  font-size: 8px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeFeaturesBoxTitle {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeFeaturesTitleTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeFeaturesTitleText {
+  font-size: 14px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeHolidayTopContainerSM {
+  padding-top: 10px;
+  width: 90%;
+}
+
+.HomeHolidayTopContainer {
+  padding-top: 10px;
+  width: 90%;
+}
+
+.HomeHolidayCardContainerSM {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 5px;
+}
+
+.HomeHolidayCardContainer {
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px;
+}
+
+.HomeHolidayProfileImageSM {
+  width: 30px;
+  height: 30px;
+  border-radius: 100px;
+  margin-right: 5px;
+}
+
+.HomeHolidayProfileImage {
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  margin-right: 10px;
+}
+
+.HomeHolidayTitleContainer {
+  flex: 1;
+}
+
+.HomeHolidayTitle1SM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeHolidayTitle1 {
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeHolidayTitle2SM {
+  font-size: 8px;
+  font-family: $kantumruy-bold;
+  color: $color-red;
+}
+
+.HomeHolidayTitle2 {
+  font-size: 12px;
+  font-family: $kantumruy-bold;
+  color: $color-red;
+}
+
+.HomeHolidayTitle3SM {
+  font-size: 8px;
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+}
+
+.HomeHolidayTitle3 {
+  font-size: 12px;
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+}
+
+.HomeLeaveRequestContainerSM {
+  width: 94%;
+  padding: 5px;
+  background-color: $color-dark-blue;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.HomeLeaveRequestContainer {
+  width: 94%;
+  padding: 10px;
+  background-color: $color-dark-blue;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.HomeLeaveRequestTextSM {
+  font-size: 10px;
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeLeaveRequestText {
+  color: $color-white;
+  font-family: $kantumruy-bold;
+}
+
+.HomeMainBackIconSM {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.HomeMainBackIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.HomeMainSelectIconSM {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.HomeMainSelectIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.HomeMainSelectTimeContainerSM {
+  width: 100%;
+  height: 30px;
+  padding-top: 5px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.HomeMainSelectTimeContainer {
+  width: 100%;
+  height: 40px;
+  padding-top: 10px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.HomeMainSelectTimeHalfContainer {
+  flex-direction: row;
+  align-items: center;
+}
+
+.HomeMainScrollviewStyle {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+}
+
+.HomeMainSelectDateButtonSM {
+  height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  flex-direction: row;
+  align-items: center;
+  background-color: $color-light-blue;
+}
+
+.HomeMainSelectDateButton {
+  height: 40px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  flex-direction: row;
+  align-items: center;
+  background-color: $color-light-blue;
+}
+
+.HomeMainSelectDateContainer {
+  width: 100%;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.HomeMainSelectDateButtonLabelSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+}
+
+.HomeMainSelectDateButtonLabel {
+  font-family: $kantumruy-bold;
+}
+
+.HomeMainSelectTitleSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeMainSelectTitle {
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.HomeMainSelectDateButtonPlaceholderSM {
+  font-size: 10px;
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+}
+
+.HomeMainSelectDateButtonPlaceholder {
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+}
+
+.HomeMainSelectDateMiniContainer {
+  justify-content: flex-start;
+}
+
+.HomeLeaveReasonContainerSM {
+  width: 100%;
+  height: 30px;
+  border-width: 1px;
+  border-radius: 10px;
+  padding-left: 10px;
+  border-color: $color-dark-blue;
+  justify-content: center;
+}
+
+.HomeLeaveReasonContainer {
+  width: 100%;
+  height: 40px;
+  border-width: 1px;
+  border-radius: 10px;
+  padding-left: 10px;
+  border-color: $color-dark-blue;
+  justify-content: center;
+}
+
+.HomeLeaveReasonStyleSM {
+  font-size: 10px;
+  width: 100%;
+  font-family: $kantumruy-regular;
+}
+
+.HomeLeaveReasonStyle {
+  width: 100%;
+  font-family: $kantumruy-regular;
+}
+
+.HomeMainSelectDateSectionSM {
+  flex-direction: column;
+  align-items: center;
+}
+
+.HomeMainSelectDateSection {
+  flex-direction: row;
+  align-items: center;
+}
+
+.HomeMainSelectDateButtonLabelContainerSM {
+  width: 100%;
+  height: 20px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.HomeMainSelectDateButtonLabelContainer {
+  width: 100%;
+  height: 40px;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.HomeLeaveRequestButtonSM {
+  width: 100%;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: $color-dark-blue;
+}
+
+.HomeLeaveRequestButton {
+  width: 100%;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: $color-dark-blue;
+}
+
+.HomeLeaveRequestButtonTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-white;
+}
+
+.HomeLeaveRequestButtonText {
+  font-family: $kantumruy-bold;
+  color: $color-white;
+}

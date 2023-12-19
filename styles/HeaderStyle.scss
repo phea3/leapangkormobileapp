@@ -1,0 +1,162 @@
+@import "../themes.scss";
+
+.HeaderContainer {
+  width: 100%;
+  height: 12%;
+  align-items: center;
+}
+
+.HeaderInSideContainer {
+  width: 95%;
+  height: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.HeaderLeftSideContainerSM {
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+}
+
+.HeaderLeftSideContainer {
+  flex-direction: row;
+  align-items: center;
+  height: 80%;
+}
+
+.HeaderRightSideContainerSM {
+  padding: 5px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.HeaderRightSideContainer {
+  flex-direction: row;
+  align-items: center;
+}
+
+.HeaderUserProfileImageSM {
+  width: 35px;
+  height: 35px;
+  margin: 4px;
+  border-radius: 100px;
+  background-color: $color-white;
+}
+
+.HeaderUserProfileImage {
+  width: 50px;
+  height: 50px;
+  margin: 8px;
+  border-radius: 100px;
+  background-color: $color-white;
+}
+
+.HeaderUserBellSM {
+  width: 25px;
+  height: 25px;
+  margin-right: 4px;
+  border-radius: 4px;
+  background-color: $color-white;
+}
+
+.HeaderUserBell {
+  width: 35px;
+  height: 35px;
+  margin-right: 8px;
+  border-radius: 8px;
+  background-color: $color-white;
+}
+
+.HeaderBlackTitle1SM {
+  font-size: 12px;
+  font-family: $kantumruy-bold;
+}
+.HeaderTitle1BlueSM {
+  font-size: 13px;
+  font-family: $kantumruy-bold;
+  color: $color-main;
+}
+
+.HeaderTitle1SM {
+  font-size: 12px;
+  font-family: $kantumruy-bold;
+  color: $color-white;
+}
+.HeaderTitle1Blue {
+  font-size: 16px;
+  font-family: $kantumruy-bold;
+  color: $color-main;
+}
+
+.HeaderBlackTitle1 {
+  font-size: 16px;
+  font-family: $kantumruy-bold;
+}
+
+.HeaderTitle1 {
+  font-size: 16px;
+  font-family: $kantumruy-bold;
+  color: $color-white;
+}
+
+.HeaderTitle2SM {
+  font-size: 10px;
+  font-family: $kantumruy-regular;
+  color: $color-white;
+}
+
+.HeaderTitle2 {
+  font-size: 13px;
+  font-family: $kantumruy-regular;
+  color: $color-white;
+}
+
+.HeaderTitleContainerSM {
+  padding: 5px;
+}
+
+.HeaderTitleContainer {
+  padding: 0px;
+}
+
+.HeaderBackIconSM {
+  width: 16px;
+  height: 16px;
+  margin: 4px;
+}
+
+.HeaderBackIcon {
+  width: 22px;
+  height: 22px;
+  margin: 8px;
+}
+
+.ProfileBackButton {
+  // width: 40%;
+  padding: 10px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.ProfileBackButtonIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.ProfileBackButtonTitle {
+  font-family: $kantumruy-bold;
+  color: $color-white;
+}
+
+.HeaderLeftFullSideContainer {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  background-color: #f8f8f8;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}

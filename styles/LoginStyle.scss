@@ -1,0 +1,212 @@
+@import "../themes.scss";
+
+.LoginScreenContainer {
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.LoginScreenTopContainerKB {
+  width: 100%;
+  height: 40%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.LoginScreenTopContainer {
+  width: 100%;
+  height: 40%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.LoginScreenMidContainerKB {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.LoginScreenMidContainer {
+  width: 100%;
+  height: 45%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.LoginScreenLogonImageContainer {
+  width: 100%;
+  height: 70%;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.LoginScreenLogonImageContainerSM {
+  width: 100%;
+  height: 70%;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.LoginScreenLoginStyleSM {
+  width: 90px;
+  height: 90px;
+  border-radius: 100px;
+}
+
+.LoginScreenLoginStyle {
+  width: 130px;
+  height: 130px;
+  border-radius: 100px;
+}
+
+.LoginScreenTextInputContainerSM {
+  width: 80%;
+  margin-top: 5px;
+}
+
+.LoginScreenTextInputContainer {
+  width: 80%;
+  margin-top: 10px;
+}
+
+.LoginScreenTextInputBoxSM {
+  width: 100%;
+  border-width: 1px;
+  border-color: $color-grey;
+  border-radius: 8px;
+  padding: 5px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background-color: $color-light-grey;
+}
+
+.LoginScreenTextInputBox {
+  width: 100%;
+  border-width: 1px;
+  border-color: $color-grey;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background-color: $color-light-grey;
+}
+
+.LoginScreenTextInputTextSM {
+  width: 80%;
+  font-family: $font-body;
+  font-size: 10px;
+}
+
+.LoginScreenTextInputText {
+  width: 80%;
+  font-family: $font-body;
+}
+
+.LoginScreenTextInputIconSM {
+  width: 16px;
+  height: 16px;
+}
+
+.LoginScreenTextInputIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.LoginScreenTitle1SM {
+  font-size: 16px;
+  font-family: $font-body;
+}
+
+.LoginScreenTitle1 {
+  font-size: 20px;
+  font-family: $font-body;
+}
+
+.LoginScreenTitle2SM {
+  font-size: 12px;
+  font-family: $font-body;
+  margin-top: 10px;
+}
+
+.LoginScreenTitle2 {
+  font-size: 14px;
+  font-family: $font-body;
+  margin-top: 10px;
+}
+
+.LoginScreenText1SM {
+  font-family: $font-body;
+  font-size: 10px;
+}
+
+.LoginScreenText1 {
+  font-family: $font-body;
+}
+
+.LoginScreenOptionContainer {
+  width: 80%;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.LoginScreenOptionRememberPasswordContainer {
+  flex-direction: row;
+}
+
+.LoginScreenLoginButtonSM {
+  width: 80%;
+  border-radius: 8px;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-main;
+  margin-top: 8px;
+}
+
+.LoginScreenLoginButton {
+  width: 80%;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-main;
+  margin-top: 10px;
+}
+
+.LoginScreenLoginButtonTextSM {
+  font-size: 12px;
+  font-family: $bayon-regular;
+  color: $color-white;
+}
+
+.LoginScreenLoginButtonText {
+  font-family: $bayon-regular;
+  color: $color-white;
+}
+
+.LoginScreenFooterContainer {
+  width: 100%;
+  height: 15%;
+  justify-content: center;
+  align-items: center;
+}
+
+.LoginScreenCheckboxSM {
+  width: 15px;
+  height: 15px;
+  margin-right: 4px;
+}
+
+.LoginScreenCheckbox {
+  margin-right: 8px;
+}
+
+.LoginScreenFooterImage {
+  width: 100%;
+  height: 60%;
+}

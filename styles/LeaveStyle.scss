@@ -1,0 +1,107 @@
+@import "../themes.scss";
+
+.LeaveContainer {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  align-items: center;
+}
+
+.LeaveBackButtonContainer {
+  width: 100%;
+}
+
+.LeaveBackButtonSM {
+  width: 40%;
+  padding: 10px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.LeaveBackButton {
+  width: 40%;
+  padding: 10px;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.LeaveBackButtonIconSM {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+}
+
+.LeaveBackButtonIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.LeaveBackButtonTitleSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.LeaveBackButtonTitle {
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.LeaveTitlesContainer {
+  width: 95%;
+  height: 40px;
+  flex-direction: row;
+  align-items: center;
+  background-color: $color-light-blue;
+}
+
+.LeaveTitleContainer {
+  width: 22%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.LeaveTitleLeftContainer {
+  width: 28%;
+  height: 100%;
+  align-items: left;
+  justify-content: center;
+  margin-left: 6px;
+}
+
+.LeaveTitleTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.LeaveTitleText {
+  font-family: $kantumruy-bold;
+  color: $color-dark-blue;
+}
+
+.LeaveBodyContainer {
+  width: 95%;
+  height: 55px;
+  flex-direction: row;
+  align-items: center;
+  border-bottom-width: 0.5px;
+  border-bottom-color: $color-black;
+}
+
+.LeaveBodyTextSM {
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+  font-size: 9px;
+}
+.LeaveBodyText {
+  font-family: $kantumruy-regular;
+  color: $color-dark-blue;
+  font-size: 14px;
+}

@@ -1,0 +1,125 @@
+@import "../themes.scss";
+
+.ProfileContainer {
+  width: 100%;
+  height: 100%;
+  background-color: $color-white;
+  align-items: center;
+}
+
+.ProfileTopContainer {
+  width: 100%;
+  height: 25%;
+  justify-content: center;
+  align-items: center;
+  background-color: $color-background;
+}
+
+.ProfileBodyContainer {
+  width: 100%;
+  height: 70%;
+  justify-content: space-between;
+}
+
+.ImageUser {
+  width: 120px;
+  height: 120px;
+  border-radius: 100px;
+  position: absolute;
+  border-width: 2px;
+  border-color: $color-white;
+}
+.ImageUserSM {
+  width: 90px;
+  height: 90px;
+  border-radius: 100px;
+  position: absolute;
+  border-width: 1px;
+  border-color: $color-white;
+}
+
+.UserName {
+  font-family: $font-body;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: $color-main;
+  text-transform: uppercase;
+}
+
+.UserNameSM {
+  font-family: $font-body;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  color: $color-main;
+  text-transform: uppercase;
+}
+
+.UserPosition {
+  font-family: $font-body;
+  font-size: $base-font-size;
+  text-align: center;
+  color: $color-main;
+  text-transform: uppercase;
+  line-height: 35px;
+  font-size: 18px;
+}
+.UserPositionSM {
+  font-family: $font-body;
+  font-size: $base-font-size;
+  text-align: center;
+  color: $color-main;
+  text-transform: uppercase;
+  line-height: 30px;
+  font-size: 13px;
+}
+
+.ProfileFirstTopContainer {
+  width: 100%;
+  height: 50%;
+  background-color: $color-background;
+}
+
+.ProfileSecondTopContainer {
+  width: 100%;
+  height: 50%;
+  background-color: $color-white;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+}
+.LogoutContainer {
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.LogoutScreenLogoutButtonSM {
+  width: 90%;
+  border-radius: 8px;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  background-color: #dc0606;
+  margin-top: 8px;
+}
+
+.LogoutScreenLogoutButton {
+  width: 90%;
+  border-radius: 10px;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  background-color: #dc0606;
+  margin-top: 10px;
+}
+
+.LogoutScreenLogoutButtonTextSM {
+  font-size: 12px;
+  font-family: $bayon-regular;
+  color: $color-white;
+}
+
+.LogoutScreenLogoutButtonText {
+  font-family: $bayon-regular;
+  color: $color-white;
+}

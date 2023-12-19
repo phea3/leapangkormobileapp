@@ -1,0 +1,127 @@
+@import "../themes.scss";
+
+.NotificationActionContainer {
+  width: 100%;
+  height: 100%;
+}
+
+.ActionCardContainer {
+  width: 100%;
+  padding: 10px;
+  flex-direction: row;
+  align-items: center;
+  border-bottom-width: 0.5px;
+  border-bottom-color: $color-black;
+}
+
+.ActionCardBodyLeft {
+  width: 15%;
+}
+
+.ActionCardIcon {
+  height: 40px;
+  width: 40px;
+  background-color: #2058e8;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
+}
+.ActionCardIconSM {
+  height: 35px;
+  width: 35px;
+  background-color: #2058e8;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.ActionCardIconRed {
+  height: 40px;
+  width: 40px;
+  background-color: $color-red;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
+}
+.ActionCardIconRedSM {
+  height: 35px;
+  width: 35px;
+  background-color: $color-red;
+  border-radius: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.ActionIcon {
+  height: 22px;
+  width: 22px;
+}
+.ActionIconSM {
+  height: 20px;
+  width: 20px;
+}
+
+.ActionCardBodyRight {
+  width: 85%;
+}
+.ActionLeaveTitle {
+  font-family: $font-body;
+  font-size: 15px;
+  color: $color-background;
+}
+.ActionLeaveTitleSM {
+  font-family: $font-body;
+  font-size: 12px;
+  color: $color-background;
+}
+.ActionLeaveTitleRed {
+  font-family: $font-body;
+  font-size: 15px;
+  color: $color-red;
+}
+.ActionLeaveTitleRedSM {
+  font-family: $font-body;
+  font-size: 12px;
+  color: $color-red;
+}
+
+.ActionDatTime {
+  font-family: $font-body;
+  font-size: 12px;
+  color: $color-background;
+}
+.ActionDatTimeSM {
+  font-family: $font-body;
+  font-size: 8px;
+  color: $color-background;
+}
+
+.ActionDatTimeRed {
+  font-family: $font-body;
+  font-size: 11px;
+  color: $color-red;
+}
+.ActionDatTimeRedSM {
+  font-family: $font-body;
+  font-size: 8px;
+  color: $color-red;
+}
+
+.ActionComment {
+  font-family: $font-body;
+  font-size: 13px;
+}
+.ActionCommentSM {
+  font-family: $font-body;
+  font-size: 10px;
+}
+.ActionCommentRed {
+  font-family: $font-body;
+  font-size: 13px;
+  color: $color-red;
+}
+.ActionCommentRedSM {
+  font-family: $font-body;
+  font-size: 10px;
+  color: $color-red;
+}

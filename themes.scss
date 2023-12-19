@@ -1,0 +1,31 @@
+$title-font-size: 16px;
+$base-font-size: 14px;
+$base-font-weight: 400;
+$bayon-regular: "Bayon-Regular";
+$font-body: "Kantumruy-Regular";
+
+$color-main: #3c6efb;
+$color-dark-blue: #082b9e;
+$color-background: #0d3aa9;
+$color-medium-blue: "#2999DA";
+$color-white: #fff;
+$color-light-blue: #e1eefd;
+$color-orange: #fca845;
+$color-gray: #dcdcdc;
+$color-grey: #9aa3a6;
+$color-light-grey: #fcfcfc;
+$color-light-gray: #f1f1f1;
+$color-green: #4cbb17;
+$color-pink: #ec2777;
+$color-red: #ff0000;
+$color-black: #000000;
+$border-radius-main: 10px;
+
+$kantumruy-regular: "Kantumruy-Regular";
+$kantumruy-bold: "Kantumruy-Bold";
+$screen-width: 100vw; // Set the initial value to 100vw
+
+// Media query to update the $screen-width variable based on the device screen width
+@media (max-width: 768px) {
+  $screen-width: 768px;
+}
