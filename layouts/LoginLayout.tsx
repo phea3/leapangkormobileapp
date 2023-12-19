@@ -10,7 +10,7 @@ export default function LoginLayout() {
       style={LayoutStyle.LoginLayoutContainer}
     >
       <StatusBar
-        barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"}
+        barStyle={Platform.OS === "ios" ? "dark-content" : "dark-content"}
       />
       <Outlet />
     </ImageBackground>

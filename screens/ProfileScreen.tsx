@@ -76,7 +76,7 @@ export default function ProfileScreen() {
         </View>
         <View style={ProfileStyle.ProfileBodyContainer}>
           <View>
-            <Text
+            {/* <Text
               style={
                 dimension === "sm"
                   ? ProfileStyle.UserNameSM
@@ -98,7 +98,7 @@ export default function ProfileScreen() {
               {data?.getUserInfoMobile?.position
                 ? data?.getUserInfoMobile?.position
                 : "--:--"}
-            </Text>
+            </Text> */}
           </View>
           <View style={ProfileStyle.LogoutContainer}>
             <TouchableOpacity

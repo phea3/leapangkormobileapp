@@ -9,7 +9,6 @@ import {
   Keyboard,
   Alert,
   Modal,
-  StatusBar,
   Platform,
 } from "react-native";
 import { useNavigate } from "react-router";
@@ -98,7 +97,7 @@ export default function ForgotPasswordScreen() {
                   ? ForgotPasswordStyle.LogoImageSm
                   : ForgotPasswordStyle.LogoImage
               }
-              source={require("../assets/Images/Logo-1.png")}
+              source={require("../assets/logo.png")}
               resizeMode="contain"
             />
           </View>
@@ -124,7 +123,7 @@ export default function ForgotPasswordScreen() {
               : ForgotPasswordStyle.ForgotScreenTitle2
           }
         >
-          Go Global Human Resource
+          Leap Angkor Human Resource
         </Text>
 
         <View

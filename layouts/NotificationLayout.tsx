@@ -10,7 +10,7 @@ export default function NotificationLayout() {
       <Tabview />
       <View style={LayoutStyle.NotificationLayoutBodyContainer}>
         <StatusBar
-          barStyle={Platform.OS === "ios" ? "dark-content" : "light-content"}
+          barStyle={Platform.OS === "ios" ? "dark-content" : "dark-content"}
         />
         <Outlet />
       </View>

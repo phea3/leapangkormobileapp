@@ -1,4 +1,4 @@
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import Router from "./Router";
 import { NativeRouter as Routers } from "react-router-native";
 import { useNavigate, useLocation } from "react-router-native";
@@ -15,7 +15,11 @@ export default function App() {
           <AuthProvider>
             <ApolloConfig>
               <Routers>
-                <StatusBar barStyle={"light-content"} />
+                <StatusBar
+                  barStyle={
+                    Platform.OS === "ios" ? "light-content" : "dark-content"
+                  }
+                />
                 <Router />
               </Routers>
             </ApolloConfig>

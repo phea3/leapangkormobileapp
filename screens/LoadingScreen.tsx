@@ -40,7 +40,7 @@ export default function LoadingScreen() {
           <Image
             source={
               isConnected
-                ? require("../assets/Images/Logo-1.png")
+                ? require("../assets/logo.png")
                 : require("../assets/Images/wifi.gif")
             }
             resizeMode="contain"

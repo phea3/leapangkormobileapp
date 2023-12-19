@@ -31,12 +31,11 @@ export default function LoginScreen() {
   const [eye, setEye] = useState(true);
   const [load, setLoad] = useState(true);
 
-
   useEffect(() => {
     setTimeout(() => {
-      setLoad(false)
+      setLoad(false);
     }, 500);
-  }, [])
+  }, []);
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -152,8 +151,8 @@ export default function LoginScreen() {
     getAccount();
   }, []);
 
-  if(load){
-    return <ActivityIndicator />
+  if (load) {
+    return <ActivityIndicator />;
   }
 
   return (
@@ -174,7 +173,7 @@ export default function LoginScreen() {
             }
           >
             <Image
-              source={require("../assets/Images/Logo-1.png")}
+              source={require("../assets/logo.png")}
               resizeMode="contain"
               style={
                 dimension === "sm"
@@ -202,7 +201,7 @@ export default function LoginScreen() {
             }
           >
             {/* ប្រព័ន្ធការគ្រប់គ្រងកម្មវិធីសាលាហ្គោឡូប៊ល់ */}
-            Go Global Human Resource
+            Leap Angkor Human Resource
           </Text>
         </View>
       )}
