@@ -2,27 +2,83 @@
   "expo": {
     "name": "Go Global HR",
     "slug": "Mobile-App-HR-V2",
-    "version": "1.0.0",
+    "version": "1.0.13",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/appstore.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/Images/Artboard-3.png",
+      "image": "./assets/Images/Splash-Screen1.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "buildNumber": "13",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access the camera to scan the QR code at check-in and check-out.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
+        "NSLocationAlwaysUsageDescription": "Access your location to ensure you are close to the company for scanning.",
+        "NSLocationWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
+        "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
+        "UIBackgroundModes": ["remote-notification"]
+      },
+      "bundleIdentifier": "com.goglobalschool.goglobalhumanresource"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.FOREGROUND_SERVICE"
+      ],
+      "package": "com.goglobalschool.humanresource",
+      "versionCode": 14
+
     },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location to scan the QR code at check-in and check-out.",
+          "locationAlwaysPermission": "Allow $(PRODUCT_NAME) to use your location to scan the QR code at check-in and check-out."
+        }
+      ],
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access the camera to scan the QR code at check-in and check-out."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/Images/noti_icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/Images/notification.wav",
+            "./assets/Images/notification_sound_other.wav"
+          ],
+          "mode": "production"
+        }
+      ]
+    ],
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "icon": "./assets/Images/noti_icon.png"
     },
     "extra": {
       "eas": {
