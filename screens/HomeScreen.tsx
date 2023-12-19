@@ -1,4 +1,4 @@
-import { Keyboard, Text, View } from "react-native";
+import { ActivityIndicator, Keyboard, Text, View } from "react-native";
 import HomeStyle from "../styles/HomeStyle.scss";
 import moment from "moment";
 import { Outlet } from "react-router-native";
@@ -28,6 +28,13 @@ export default function HomeScreen() {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const { uid } = useContext(AuthContext);
   const { dimension } = useContext(AuthContext);
+  const [load, setLoad ] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoad(false)
+    }, 100);
+  }, [])
 
   const { data: leaveData, refetch: leavRefetch } = useQuery(
     GETEMPLOYEELEAVEINFO,
@@ -138,10 +145,14 @@ export default function HomeScreen() {
           </View>
         </>
       ) : null}
-
-      <View style={HomeStyle.HomeContentContainer}>
-        <Outlet />
-      </View>
+      { load ? 
+        <View style={HomeStyle.HomeContentContainer}>
+          <ActivityIndicator size={"small"}/>
+        </View> :  
+        <View style={HomeStyle.HomeContentContainer}>
+          <Outlet />
+        </View>
+      }
     </View>
   );
 }

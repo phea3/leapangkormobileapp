@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Alert,
   Keyboard,
+  ActivityIndicator,
 } from "react-native";
 
 import LoginStyle from "../styles/LoginStyle.scss";
@@ -27,7 +28,15 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
   const [isChecked, setChecked] = useState(true);
   const { dispatch, REDUCER_ACTIONS } = useUser();
-  const [eye, setEye] = useState(false);
+  const [eye, setEye] = useState(true);
+  const [load, setLoad] = useState(true);
+
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoad(false)
+    }, 500);
+  }, [])
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -142,6 +151,10 @@ export default function LoginScreen() {
     }
     getAccount();
   }, []);
+
+  if(load){
+    return <ActivityIndicator />
+  }
 
   return (
     <View style={LoginStyle.LoginScreenContainer}>

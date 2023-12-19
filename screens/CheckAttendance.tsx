@@ -1,5 +1,7 @@
 import {
+  Alert,
   Image,
+  Linking,
   Modal,
   ScrollView,
   Text,
@@ -7,7 +9,7 @@ import {
   View,
 } from "react-native";
 import LeaveStyle from "../styles/LeaveStyle.scss";
-import { useNavigate } from "react-router-native";
+import { useLocation, useNavigate } from "react-router-native";
 import { useMutation } from "@apollo/client";
 import { EMPLOYEECHECKATTENDANCE } from "../graphql/EmployeeCheckAttendance";
 import CheckStyle from "../styles/CheckStyle.scss";
@@ -20,6 +22,7 @@ import { AuthContext } from "../Context/AuthContext";
 
 export default function ChecKAttendance({ locate }: any) {
   const navigate = useNavigate();
+  const located = useLocation()
   const [isVisible, setVisible] = useState(false);
   const [CheckIsVisible, setCheckVisible] = useState(false);
   const [scanType, setScanType] = useState("");
@@ -55,6 +58,35 @@ export default function ChecKAttendance({ locate }: any) {
     setVisible(true);
   };
 
+    const handleLocationPermission = async () => {
+      try {
+        // Request foreground location permissions
+        const { status } = await Location.requestForegroundPermissionsAsync();
+  
+        // Handle the permission status
+        if (status === 'granted') {
+          console.log('Foreground location permission granted');
+          // Perform actions that require foreground location permission here
+        } else {
+          console.log('Foreground location permission denied');
+          // Handle denied permission (e.g., show a message to the user)
+          Alert.alert('Permission Denied', 'Foreground location permission is required for this feature.',[
+            {
+              text: 'Settings',
+              onPress: () => Linking.openSettings(),
+            },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+          ]);
+        }
+      } catch (error) {
+        console.error('Error requesting foreground location permission:', error);
+        // Handle errors if any
+      }
+    };
+
   async function getLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
@@ -73,7 +105,7 @@ export default function ChecKAttendance({ locate }: any) {
 
   useEffect(() => {
     getLocation();
-  }, []);
+  }, [located.pathname]);
 
   // console.log(locate);
   const [employeeCheckAttendance] = useMutation(EMPLOYEECHECKATTENDANCE);
@@ -157,8 +189,11 @@ export default function ChecKAttendance({ locate }: any) {
         </View>
         <View style={CheckStyle.LeaveErrorConainer}>
           <Text style={CheckStyle.LeaveErrorTitle}>
-            Permission to access location was denied
+            Permission to access location was denied.
           </Text>
+          <TouchableOpacity onPress={handleLocationPermission} style={{ backgroundColor: "#082b9e", padding: 10, marginTop: 5}}>
+              <Text style={{ fontSize: dimension === "sm" ? 10 : 14 , color: "#fff", fontFamily: "Kantumruy-Bold" }}>Allow your location</Text>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -403,20 +438,22 @@ export default function ChecKAttendance({ locate }: any) {
             <View style={CheckStyle.CheckOutLocationFullContainer}>
               <View style={CheckStyle.CheckOutLocationContainer}>
                 <Text
-                  style={
+                  style={[
                     dimension === "sm"
                       ? CheckStyle.CheckOutLocationTitleSM
-                      : CheckStyle.CheckOutLocationTitle
+                      : CheckStyle.CheckOutLocationTitle,
+                      { color: location?.coords.latitude || locate?.coords.latitude ? "green" : "red"}  ]
                   }
                 >
                   Your location:
                 </Text>
 
                 <Text
-                  style={
+                  style={[
                     dimension === "sm"
                       ? CheckStyle.CheckOutLocationTitleSM
-                      : CheckStyle.CheckOutLocationTitle
+                      : CheckStyle.CheckOutLocationTitle, 
+                      { color: location?.coords.latitude || locate?.coords.latitude ? "green" : "red"}]
                   }
                 >
                   Latitude:{" "}

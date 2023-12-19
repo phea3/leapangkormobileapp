@@ -2,6 +2,7 @@ import {
   Alert,
   Image,
   Keyboard,
+  Platform,
   ScrollView,
   Text,
   TextInput,
@@ -353,7 +354,7 @@ export default function HomeLeaveScreen() {
                 {halfDay ? (
                   <View
                     style={
-                      dimension === "sm"
+                      dimension === "sm" || Platform.OS === "android" 
                         ? HomeStyle.HomeMainSelectDateSectionSM
                         : HomeStyle.HomeMainSelectDateSection
                     }
@@ -365,7 +366,7 @@ export default function HomeLeaveScreen() {
                           : HomeStyle.HomeMainSelectDateButton,
                         {
                           marginRight: 10,
-                          marginBottom: dimension === "sm" ? 10 : 0,
+                          marginBottom: dimension === "sm" || Platform.OS === "android" ? 10 : 0,
                         },
                       ]}
                       onPress={() => {

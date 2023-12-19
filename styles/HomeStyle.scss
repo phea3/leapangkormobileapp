@@ -87,6 +87,11 @@
 .HomeContentContainer {
   flex: 1;
   width: 100%;
+  background-color: $color-white;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15;
+  align-items: center;
+  justify-content: center;
 }
 
 .HomeMainContentContainer {
