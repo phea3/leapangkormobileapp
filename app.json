@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "0",
@@ -24,9 +26,11 @@
         "NSLocationAlwaysUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSLocationWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
-        "UIBackgroundModes": ["remote-notification"]
+        "UIBackgroundModes": [
+          "remote-notification"
+        ]
       },
-      "bundleIdentifier": "com.goglobalschool.goglobalhumanresource"
+      "bundleIdentifier": "com.leapangkor.leapangkorresource"
     },
     "android": {
       "adaptiveIcon": {
@@ -41,7 +45,7 @@
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.FOREGROUND_SERVICE"
       ],
-      "package": "com.goglobalschool.humanresource",
+      "package": "com.leapangkor.humanresource",
       "versionCode": 0
     },
     "plugins": [
@@ -61,7 +65,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/Images/noti_icon.png",
+          "icon": "./assets/logo.png",
           "color": "#ffffff",
           "sounds": [
             "./assets/Images/notification.wav",
@@ -75,11 +79,11 @@
       "favicon": "./assets/favicon.png"
     },
     "notification": {
-      "icon": "./assets/Images/noti_icon.png"
+      "icon": "./assets/logo.png"
     },
     "extra": {
       "eas": {
-        "projectId": "caa5fab5-bb73-4073-ab91-3080a26bbf8e"
+        "projectId": "8d8aa08c-fab6-46f3-816e-56d9bea9d954"
       }
     }
   }
