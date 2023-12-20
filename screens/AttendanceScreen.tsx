@@ -19,8 +19,8 @@ export default function AttendanceScreen() {
       variables: {
         limit: limit,
       },
-      onCompleted(data) {
-        // console.log(data);
+      onCompleted(getAttendanceMobile) {
+        console.log(getAttendanceMobile);
       },
       onError(error) {
         console.log(error?.message);

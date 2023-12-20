@@ -7,7 +7,7 @@
     "icon": "./assets/playstore.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/Splash-Screen1.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "0",
+      "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access the camera to scan the QR code at check-in and check-out.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
@@ -42,7 +42,7 @@
         "android.permission.FOREGROUND_SERVICE"
       ],
       "package": "com.leapangkor.humanresource",
-      "versionCode": 0
+      "versionCode": 1
     },
     "plugins": [
       [
