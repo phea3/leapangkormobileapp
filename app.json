@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "0",
@@ -26,9 +24,7 @@
         "NSLocationAlwaysUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSLocationWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
-        "UIBackgroundModes": [
-          "remote-notification"
-        ]
+        "UIBackgroundModes": ["remote-notification"]
       },
       "bundleIdentifier": "com.leapangkor.leapangkorresource"
     },
