@@ -189,7 +189,7 @@ export default function HomeLeaveScreen() {
         style={HomeStyle.HomeMainScrollviewStyle}
         showsVerticalScrollIndicator={false}
       >
-        <KeyboardDismissableArea />
+        {/* <KeyboardDismissableArea /> */}
         {!isKeyboardVisible ? (
           <>
             <View style={HomeStyle.HomeMainSelectDateButtonLabelContainer}>
@@ -354,7 +354,7 @@ export default function HomeLeaveScreen() {
                 {halfDay ? (
                   <View
                     style={
-                      dimension === "sm" || Platform.OS === "android" 
+                      dimension === "sm" || Platform.OS === "android"
                         ? HomeStyle.HomeMainSelectDateSectionSM
                         : HomeStyle.HomeMainSelectDateSection
                     }
@@ -366,7 +366,10 @@ export default function HomeLeaveScreen() {
                           : HomeStyle.HomeMainSelectDateButton,
                         {
                           marginRight: 10,
-                          marginBottom: dimension === "sm" || Platform.OS === "android" ? 10 : 0,
+                          marginBottom:
+                            dimension === "sm" || Platform.OS === "android"
+                              ? 10
+                              : 0,
                         },
                       ]}
                       onPress={() => {

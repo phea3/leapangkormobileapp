@@ -275,7 +275,7 @@ export default function LoginScreen() {
           >
             <TextInput
               value={password}
-              placeholder="ពាក្យសម្ងាត់ ៨ តួ"
+              placeholder="password"
               style={
                 dimension === "sm"
                   ? LoginStyle.LoginScreenTextInputTextSM

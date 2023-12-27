@@ -131,7 +131,7 @@ export default function HomeMainScreen() {
               : HomeStyle.HomeLeaveRequestText
           }
         >
-          Leave Request
+          Leave
         </Text>
       </TouchableOpacity>
       <ScrollView

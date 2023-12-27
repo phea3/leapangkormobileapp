@@ -3,10 +3,12 @@ import ModalStyle from "../styles/ModalStyle.scss";
 import { View } from "react-native-animatable";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import { useNavigate } from "react-router-native";
 
 export default function CheckModal({ isVisible, handleClose, data }: any) {
   const { dimension } = useContext(AuthContext);
   // console.log(data);
+  const navigate = useNavigate();
   return (
     <Modal
       visible={isVisible}
@@ -17,7 +19,14 @@ export default function CheckModal({ isVisible, handleClose, data }: any) {
       <View style={ModalStyle.ModalContainer}>
         <TouchableOpacity
           style={ModalStyle.ModalBackgroundOpacity}
-          onPress={() => handleClose()}
+          onPress={() => {
+            handleClose();
+            setTimeout(() => {
+              if (data?.status === true) {
+                navigate("/attendance");
+              }
+            }, 500);
+          }}
           activeOpacity={0.2}
         />
         <View

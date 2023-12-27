@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "LEAP ANGKOR HR",
+    "name": "LA HR",
     "slug": "Leap-Ankor-HR",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,20 +17,29 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1",
+      "buildNumber": "0",
       "infoPlist": {
+        "NSCalendarsFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
+        "NSCalendarsUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
         "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access the camera to scan the QR code at check-in and check-out.",
         "NSLocationAlwaysAndWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSLocationAlwaysUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSLocationWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
-        "UIBackgroundModes": ["remote-notification"]
+        "NSUserTrackingUsageDescription": "Allow $(PRODUCT_NAME) to collect and use data for personalized services.",
+        "NSRemoteNotificationUsageDescription": "Receive push notifications to stay updated on important information.",
+        "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library.",
+        "NSUserNotificationsUsageDescription": "Allow $(PRODUCT_NAME) to push you notification.",
+        "NSRemindersFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders.",
+        "NSRemindersUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders.",
+        "NSDataCollectionAndStorage": "Allow $(PRODUCT_NAME) to collect your data and storage.",
+        "UIBackgroundModes": ["remote-notification", "fetch"]
       },
-      "bundleIdentifier": "com.leapangkor.leapangkorresource"
+      "bundleIdentifier": "com.leapangkor.humanresource"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/playstore.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -39,10 +48,11 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.FOREGROUND_SERVICE"
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.RECORD_AUDIO"
       ],
       "package": "com.leapangkor.humanresource",
-      "versionCode": 1
+      "versionCode": 0
     },
     "plugins": [
       [
