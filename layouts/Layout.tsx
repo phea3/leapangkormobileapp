@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Alert } from "react-native";
+import { View, Text, SafeAreaView, Alert, ImageBackground } from "react-native";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import Header from "../includes/Header";
@@ -168,26 +168,32 @@ const Layout = ({ expoPushToken }: any) => {
           location.pathname === "/notification/action" ||
           location.pathname === "/notification/meeting"
             ? "#ffffff"
-            : "#0D3AA9",
+            : "#177A02",
         justifyContent: "flex-end",
       }}
     >
       <View style={LayoutStyle.LayoutCoverFooter} />
-      <View style={LayoutStyle.LayoutContainer}>
-        <Header />
-        <Animated.View
-          style={[
-            {
-              width: "100%",
-              height: 0,
-            },
-            animatedStyles,
-          ]}
-        />
-        <View style={LayoutStyle.LayoutOutletContainer}>
-          <Outlet />
+      <ImageBackground
+        source={require("../assets/Images/insidebackground.png")}
+        resizeMode="cover"
+        style={LayoutStyle.LoginLayoutContainer}
+      >
+        <View style={LayoutStyle.LayoutContainer}>
+          <Header />
+          <Animated.View
+            style={[
+              {
+                width: "100%",
+                height: 0,
+              },
+              animatedStyles,
+            ]}
+          />
+          <View style={LayoutStyle.LayoutOutletContainer}>
+            <Outlet />
+          </View>
         </View>
-      </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 };

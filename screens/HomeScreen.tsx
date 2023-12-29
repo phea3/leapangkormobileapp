@@ -1,4 +1,4 @@
-import { ActivityIndicator, Keyboard, Text, View } from "react-native";
+import { ActivityIndicator, Image, Keyboard, Text, View } from "react-native";
 import HomeStyle from "../styles/HomeStyle.scss";
 import moment from "moment";
 import { Outlet } from "react-router-native";
@@ -11,7 +11,7 @@ import { AuthContext } from "../Context/AuthContext";
 
 const Actions = [
   {
-    title: "Annual leave",
+    title: "Day Off",
   },
   {
     title: "Permission",
@@ -28,13 +28,13 @@ export default function HomeScreen() {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const { uid } = useContext(AuthContext);
   const { dimension } = useContext(AuthContext);
-  const [load, setLoad ] = useState(true)
+  const [load, setLoad] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
-      setLoad(false)
+      setLoad(false);
     }, 100);
-  }, [])
+  }, []);
 
   const { data: leaveData, refetch: leavRefetch } = useQuery(
     GETEMPLOYEELEAVEINFO,
@@ -44,7 +44,7 @@ export default function HomeScreen() {
         employeeId: uid ? uid : "",
       },
       onCompleted: ({ getEmployeeLeaveInfo }) => {
-        // console.log(getEmployeeLeaveInfo);
+        // console.log("getEmployeeLeaveInfo", getEmployeeLeaveInfo);
       },
       onError(error) {
         console.log(error?.message);
@@ -112,9 +112,9 @@ export default function HomeScreen() {
                         : HomeStyle.HomeBoxInSideCircleText
                     }
                   >
-                    {action.title === "Annual leave"
-                      ? leaveData?.getEmployeeLeaveInfo?.al
-                        ? leaveData?.getEmployeeLeaveInfo?.al
+                    {action.title === "Day Off"
+                      ? leaveData?.getEmployeeLeaveInfo?.dayOfTimeOff
+                        ? leaveData?.getEmployeeLeaveInfo?.dayOfTimeOff
                         : "0"
                       : action.title === "Permission"
                       ? leaveData?.getEmployeeLeaveInfo?.permission
@@ -145,14 +145,18 @@ export default function HomeScreen() {
           </View>
         </>
       ) : null}
-      { load ? 
+      {load ? (
         <View style={HomeStyle.HomeContentContainer}>
-          <ActivityIndicator size={"small"}/>
-        </View> :  
+          <Image
+            source={require("../assets/Images/loader-1.gif")}
+            style={{ width: 100, height: 100 }}
+          />
+        </View>
+      ) : (
         <View style={HomeStyle.HomeContentContainer}>
           <Outlet />
         </View>
-      }
+      )}
     </View>
   );
 }

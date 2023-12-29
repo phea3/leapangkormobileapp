@@ -5,7 +5,7 @@ import LayoutStyle from "../styles/LayoutStyle.scss";
 export default function LoginLayout() {
   return (
     <ImageBackground
-      source={require("../assets/Images/Artboard-3.png")}
+      source={require("../assets/Images/watermark.png")}
       resizeMode="cover"
       style={LayoutStyle.LoginLayoutContainer}
     >

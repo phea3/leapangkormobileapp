@@ -2,7 +2,7 @@
   "expo": {
     "name": "LA HR",
     "slug": "Leap-Ankor-HR",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/playstore.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "0",
+      "buildNumber": "1",
       "infoPlist": {
         "NSCalendarsFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
         "NSCalendarsUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
@@ -52,7 +52,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.leapangkor.humanresource",
-      "versionCode": 0
+      "versionCode": 1
     },
     "plugins": [
       [

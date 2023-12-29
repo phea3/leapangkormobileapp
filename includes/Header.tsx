@@ -39,7 +39,15 @@ export default function Header() {
   // console.log(location.pathname);
 
   return (
-    <View style={HeaderStyle.HeaderContainer}>
+    <View
+      style={
+        location.pathname === "/notification/action" ||
+        location.pathname === "/notification/meeting" ||
+        location.pathname === "/notification"
+          ? HeaderStyle.HeaderContainer1
+          : HeaderStyle.HeaderContainer
+      }
+    >
       <View style={HeaderStyle.HeaderInSideContainer}>
         {location.pathname === "/notification/action" ||
         location.pathname === "/notification/meeting" ||
@@ -56,7 +64,7 @@ export default function Header() {
               }}
             >
               <Image
-                source={require("../assets/Images/back-blue.png")}
+                source={require("../assets/Images/back-dark-blue.png")}
                 style={
                   dimension === "sm"
                     ? HeaderStyle.HeaderBackIconSM
@@ -77,7 +85,7 @@ export default function Header() {
                       : HeaderStyle.HeaderTitle1Blue
                   }
                 >
-                  Notifications
+                  NOTIFICATIONS
                 </Text>
               </View>
             </TouchableOpacity>

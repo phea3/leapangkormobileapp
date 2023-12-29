@@ -155,7 +155,7 @@
   width: 92%;
   height: 70px;
   border-width: 1px;
-  border-color: $color-dark-blue;
+  border-color: $color-dark-green;
   border-radius: 10px;
   justify-content: space-evenly;
   align-items: center;
@@ -165,7 +165,7 @@
   width: 92%;
   height: 90px;
   border-width: 1px;
-  border-color: $color-dark-blue;
+  border-color: $color-dark-green;
   border-radius: 10px;
   justify-content: space-evenly;
   align-items: center;
@@ -182,27 +182,29 @@
 }
 
 .HomeFeaturesBoxTitleSM {
+  text-transform: uppercase;
   font-size: 8px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeFeaturesBoxTitle {
+  text-transform: uppercase;
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeFeaturesTitleTextSM {
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeFeaturesTitleText {
   font-size: 14px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeHolidayTopContainerSM {
@@ -250,12 +252,12 @@
 .HomeHolidayTitle1SM {
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeHolidayTitle1 {
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeHolidayTitle2SM {
@@ -273,19 +275,19 @@
 .HomeHolidayTitle3SM {
   font-size: 8px;
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeHolidayTitle3 {
   font-size: 12px;
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeLeaveRequestContainerSM {
   width: 94%;
   padding: 5px;
-  background-color: $color-dark-blue;
+  background-color: $color-dark-green;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
@@ -295,7 +297,7 @@
 .HomeLeaveRequestContainer {
   width: 94%;
   padding: 10px;
-  background-color: $color-dark-blue;
+  background-color: $color-dark-green;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
@@ -373,7 +375,7 @@
   border-radius: 10px;
   flex-direction: row;
   align-items: center;
-  background-color: $color-light-blue;
+  background-color: $color-light-green;
 }
 
 .HomeMainSelectDateButton {
@@ -383,7 +385,7 @@
   border-radius: 10px;
   flex-direction: row;
   align-items: center;
-  background-color: $color-light-blue;
+  background-color: $color-light-green;
 }
 
 .HomeMainSelectDateContainer {
@@ -404,23 +406,23 @@
 .HomeMainSelectTitleSM {
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeMainSelectTitle {
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeMainSelectDateButtonPlaceholderSM {
   font-size: 10px;
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeMainSelectDateButtonPlaceholder {
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .HomeMainSelectDateMiniContainer {
@@ -433,7 +435,7 @@
   border-width: 1px;
   border-radius: 10px;
   padding-left: 10px;
-  border-color: $color-dark-blue;
+  border-color: $color-dark-green;
   justify-content: center;
 }
 
@@ -443,7 +445,7 @@
   border-width: 1px;
   border-radius: 10px;
   padding-left: 10px;
-  border-color: $color-dark-blue;
+  border-color: $color-dark-green;
   justify-content: center;
 }
 
@@ -490,7 +492,7 @@
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
-  background-color: $color-dark-blue;
+  background-color: $color-dark-green;
 }
 
 .HomeLeaveRequestButton {
@@ -501,7 +503,7 @@
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 10px;
-  background-color: $color-dark-blue;
+  background-color: $color-dark-green;
 }
 
 .HomeLeaveRequestButtonTextSM {

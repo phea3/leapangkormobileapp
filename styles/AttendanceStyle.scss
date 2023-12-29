@@ -7,6 +7,10 @@
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   align-items: center;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-left-width: 1px;
+  border-color: $color-green;
 }
 
 .AttendanceBackButtonContainer {
@@ -34,14 +38,16 @@
 }
 
 .AttendanceBackButtonTitleSM {
+  text-transform: uppercase;
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .AttendanceBackButtonTitle {
+  text-transform: uppercase;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .AttendanceTitlesContainer {
@@ -49,7 +55,7 @@
   height: 40px;
   flex-direction: row;
   align-items: center;
-  background-color: $color-light-blue;
+  background-color: $color-light-green;
 }
 
 .AttendanceTitleContainer {
@@ -76,12 +82,12 @@
 .AttendanceTitleTextSM {
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .AttendanceTitleText {
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .AttendanceBodyContainer {
@@ -90,27 +96,36 @@
   flex-direction: row;
   align-items: center;
   border-bottom-width: 0.5px;
-  border-bottom-color: $color-black;
+  border-bottom-color: $color-gray;
 }
 
 .AttendanceBodyTextSM {
   font-size: 10px;
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
 }
 
 .AttendanceBodyText {
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
+}
+
+.AttendanceBodyNoFineTextSM {
+  font-size: 10px;
+  font-family: $kantumruy-bold;
+  color: $color-dark-green;
+}
+
+.AttendanceBodyNoFineText {
+  font-family: $kantumruy-bold;
+  color: $color-dark-green;
 }
 
 .AttendanceBodyFineTextSM {
   font-size: 10px;
-  font-family: $kantumruy-regular;
+  font-family: $kantumruy-bold;
   color: $color-red;
 }
 
 .AttendanceBodyFineText {
-  font-family: $kantumruy-regular;
+  font-family: $kantumruy-bold;
   color: $color-red;
 }

@@ -22,23 +22,19 @@ import { AuthContext } from "../Context/AuthContext";
 
 export default function ChecKAttendance({ locate }: any) {
   const navigate = useNavigate();
-  const located = useLocation()
+  const located = useLocation();
   const [isVisible, setVisible] = useState(false);
   const [CheckIsVisible, setCheckVisible] = useState(false);
   const [scanType, setScanType] = useState("");
   const { dimension } = useContext(AuthContext);
-
   const [checkData, setCheckData] = useState({
     message: "",
     status: false,
   });
-
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
-
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
   const [morning, setMorning] = useState(true);
   const [afternoon, setAfternoon] = useState(false);
 
@@ -47,6 +43,7 @@ export default function ChecKAttendance({ locate }: any) {
   };
 
   const handleClose = () => {
+    navigate("/attendance");
     setVisible(false);
   };
 
@@ -58,34 +55,38 @@ export default function ChecKAttendance({ locate }: any) {
     setVisible(true);
   };
 
-    const handleLocationPermission = async () => {
-      try {
-        // Request foreground location permissions
-        const { status } = await Location.requestForegroundPermissionsAsync();
-  
-        // Handle the permission status
-        if (status === 'granted') {
-          console.log('Foreground location permission granted');
-          // Perform actions that require foreground location permission here
-        } else {
-          console.log('Foreground location permission denied');
-          // Handle denied permission (e.g., show a message to the user)
-          Alert.alert('Permission Denied', 'Foreground location permission is required for this feature.',[
+  const handleLocationPermission = async () => {
+    try {
+      // Request foreground location permissions
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      // Handle the permission status
+      if (status === "granted") {
+        console.log("Foreground location permission granted");
+        // Perform actions that require foreground location permission here
+      } else {
+        console.log("Foreground location permission denied");
+        // Handle denied permission (e.g., show a message to the user)
+        Alert.alert(
+          "Permission Denied",
+          "Foreground location permission is required for this feature.",
+          [
             {
-              text: 'Settings',
+              text: "Settings",
               onPress: () => Linking.openSettings(),
             },
             {
-              text: 'Cancel',
-              style: 'cancel',
+              text: "Cancel",
+              style: "cancel",
             },
-          ]);
-        }
-      } catch (error) {
-        console.error('Error requesting foreground location permission:', error);
-        // Handle errors if any
+          ]
+        );
       }
-    };
+    } catch (error) {
+      console.error("Error requesting foreground location permission:", error);
+      // Handle errors if any
+    }
+  };
 
   async function getLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
@@ -117,14 +118,10 @@ export default function ChecKAttendance({ locate }: any) {
 
   const CheckInOut = async () => {
     let createValue = {
-      longitude: location?.coords.longitude
-        ? location?.coords.longitude.toString()
-        : locate?.coords.longitude
+      longitude: locate?.coords.longitude
         ? locate?.coords.longitude.toString()
         : "",
-      latitude: location?.coords.latitude
-        ? location?.coords.latitude.toString()
-        : locate?.coords.latitude
+      latitude: locate?.coords.latitude
         ? locate?.coords.latitude.toString()
         : "",
       shift: morning ? "morning" : afternoon ? "afternoon" : "",
@@ -188,11 +185,20 @@ export default function ChecKAttendance({ locate }: any) {
           </TouchableOpacity>
         </View>
         <View style={CheckStyle.LeaveErrorConainer}>
-          <Text style={CheckStyle.LeaveErrorTitle}>
-            Permission to access location was denied.
-          </Text>
-          <TouchableOpacity onPress={handleLocationPermission} style={{ backgroundColor: "#082b9e", padding: 10, marginTop: 5}}>
-              <Text style={{ fontSize: dimension === "sm" ? 10 : 14 , color: "#fff", fontFamily: "Kantumruy-Bold" }}>Allow your location</Text>
+          <TouchableOpacity
+            onPress={() => {
+              handleLocationPermission();
+            }}
+            style={{ backgroundColor: "#082b9e", padding: 10, marginTop: 5 }}
+          >
+            <Text
+              style={[
+                CheckStyle.LeaveErrorTitle,
+                { fontSize: dimension === "sm" ? 12 : 16 },
+              ]}
+            >
+              Permission to access location was denied.
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -297,7 +303,7 @@ export default function ChecKAttendance({ locate }: any) {
                     : LeaveStyle.LeaveBackButtonTitle
                 }
               >
-                Leave Check
+                Check In/Out
               </Text>
             </TouchableOpacity>
           </View>
@@ -308,8 +314,14 @@ export default function ChecKAttendance({ locate }: any) {
               backgroundColor: "#f8f8f8",
               padding: 10,
               borderRadius: 10,
+              borderWidth: 1,
+              borderColor: "#dcdcdc",
             }}
-            style={{ flex: 1, width: "100%", padding: 10 }}
+            style={{
+              flex: 1,
+              width: "100%",
+              padding: 10,
+            }}
           >
             <View
               style={
@@ -436,38 +448,69 @@ export default function ChecKAttendance({ locate }: any) {
               </Text>
             </TouchableOpacity>
             <View style={CheckStyle.CheckOutLocationFullContainer}>
-              <View style={CheckStyle.CheckOutLocationContainer}>
+              <View
+                style={[
+                  CheckStyle.CheckOutLocationContainer,
+                  {
+                    padding: 10,
+                    marginTop: 10,
+                    borderColor:
+                      locate?.coords.latitude >= 13.34572060724703 &&
+                      locate?.coords.latitude <= 13.349565026819539 &&
+                      locate?.coords.longitude >= 103.84319363518682 &&
+                      locate?.coords.longitude <= 103.84595763628897
+                        ? "green"
+                        : "red",
+                  },
+                ]}
+              >
                 <Text
                   style={[
                     dimension === "sm"
                       ? CheckStyle.CheckOutLocationTitleSM
                       : CheckStyle.CheckOutLocationTitle,
-                      { color: location?.coords.latitude || locate?.coords.latitude ? "green" : "red"}  ]
-                  }
+                    {
+                      color:
+                        // location?.coords.latitude || locate?.coords.latitude
+                        locate?.coords.latitude >= 13.34572060724703 &&
+                        locate?.coords.latitude <= 13.349565026819539 &&
+                        locate?.coords.longitude >= 103.84319363518682 &&
+                        locate?.coords.longitude <= 103.84595763628897
+                          ? "green"
+                          : "red",
+                    },
+                  ]}
                 >
-                  Your location:
+                  {locate?.coords.latitude >= 13.34572060724703 &&
+                  locate?.coords.latitude <= 13.349565026819539 &&
+                  locate?.coords.longitude >= 103.84319363518682 &&
+                  locate?.coords.longitude <= 103.84595763628897
+                    ? "Coordinates are within the specified range."
+                    : "Coordinates are outside the specified range."}
                 </Text>
 
                 <Text
                   style={[
                     dimension === "sm"
-                      ? CheckStyle.CheckOutLocationTitleSM
-                      : CheckStyle.CheckOutLocationTitle, 
-                      { color: location?.coords.latitude || locate?.coords.latitude ? "green" : "red"}]
-                  }
+                      ? CheckStyle.CheckOutLocationBodySM
+                      : CheckStyle.CheckOutLocationBody,
+                    {
+                      color:
+                        // location?.coords.latitude || locate?.coords.latitude
+                        locate?.coords.latitude >= 13.34572060724703 &&
+                        locate?.coords.latitude <= 13.349565026819539 &&
+                        locate?.coords.longitude >= 103.84319363518682 &&
+                        locate?.coords.longitude <= 103.84595763628897
+                          ? "green"
+                          : "red",
+                      paddingTop: 10,
+                    },
+                  ]}
                 >
                   Latitude:{" "}
-                  {location?.coords.latitude
-                    ? location?.coords.latitude
-                    : locate?.coords.latitude
-                    ? locate?.coords.latitude
-                    : ""}
-                  ,{"\n"}Longitude:{" "}
-                  {location?.coords.longitude
-                    ? location?.coords.longitude
-                    : locate?.coords.longitude
-                    ? locate?.coords.longitude
-                    : ""}
+                  {locate?.coords.latitude ? locate?.coords.latitude : ""},
+                  {"\n"}Longitude:{" "}
+                  {locate?.coords.longitude ? locate?.coords.longitude : ""}
                 </Text>
               </View>
               <TouchableOpacity
@@ -481,12 +524,20 @@ export default function ChecKAttendance({ locate }: any) {
                 }}
               >
                 <Image
-                  source={require("../assets/Images/refresh.png")}
+                  source={
+                    locate?.coords.latitude >= 13.34572060724703 &&
+                    locate?.coords.latitude <= 13.349565026819539 &&
+                    locate?.coords.longitude >= 103.84319363518682 &&
+                    locate?.coords.longitude <= 103.84595763628897
+                      ? require("../assets/Images/allowlocation.gif")
+                      : require("../assets/Images/redlocation.gif")
+                  }
                   style={
                     dimension === "sm"
                       ? CheckStyle.CheckOutLocationRefetchIconSM
                       : CheckStyle.CheckOutLocationRefetchIcon
                   }
+                  resizeMode="contain"
                 />
               </TouchableOpacity>
             </View>

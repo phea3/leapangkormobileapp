@@ -23,9 +23,17 @@
   justify-content: center;
 }
 
+.LogoImageStyle1 {
+  width: 125px;
+  height: 125px;
+}
+
 .LogoImageStyle {
   width: 125px;
   height: 125px;
+  border-radius: 100px;
+  border-width: 2px;
+  border-color: $color-dark-green;
 }
 
 .LoadingImageContainer {

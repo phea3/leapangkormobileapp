@@ -25,7 +25,7 @@ export default function LoadingScreen() {
 
   return (
     <ImageBackground
-      source={require("../assets/Images/Artboard-3.png")}
+      source={require("../assets/Images/watermark.png")}
       resizeMode="cover"
       style={LoadingStyle.LoadingScreenContainer}
     >
@@ -44,13 +44,17 @@ export default function LoadingScreen() {
                 : require("../assets/Images/wifi.gif")
             }
             resizeMode="contain"
-            style={LoadingStyle.LogoImageStyle}
+            style={
+              isConnected
+                ? LoadingStyle.LogoImageStyle
+                : LoadingStyle.LogoImageStyle1
+            }
           />
         </View>
         <View style={LoadingStyle.LoadingImageContainer}>
           {isConnected ? (
             <Image
-              source={require("../assets/Images/loader-1.gif")}
+              source={require("../assets/Images/18-location-pin-gradient.gif")}
               style={LoadingStyle.LoadingImageStyle}
             />
           ) : (

@@ -42,7 +42,7 @@ export default function Router() {
   useEffect(() => {
     setTimeout(() => {
       setLoad(false);
-    }, 1000);
+    }, 9000);
   }, []);
 
   useEffect(() => {
@@ -202,13 +202,13 @@ export default function Router() {
     },
   ]);
 
-  // if (locate === null && !errorMsg) {
-  //   return loadScreen;
-  // } else {
-  if (token !== "" && token !== undefined) {
-    return Content;
+  if ((locate === null && !errorMsg) || load) {
+    return loadScreen;
   } else {
-    return Login;
+    if (token !== "" && token !== undefined) {
+      return Content;
+    } else {
+      return Login;
+    }
   }
-  // }
 }

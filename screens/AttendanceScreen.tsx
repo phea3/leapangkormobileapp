@@ -6,11 +6,20 @@ import { GETATTENDANCEMOBILE } from "../graphql/getAttendanceMobile";
 import { useContext, useEffect, useState } from "react";
 import moment from "moment";
 import { AuthContext } from "../Context/AuthContext";
+import HomeStyle from "../styles/HomeStyle.scss";
+import * as Animatable from "react-native-animatable";
 
 export default function AttendanceScreen() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState(10);
   const { dimension } = useContext(AuthContext);
+  const [load, setLoad] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoad(false);
+    }, 1000);
+  }, []);
 
   const { data: AttendanceData, refetch: AttendanceRefetch } = useQuery(
     GETATTENDANCEMOBILE,
@@ -19,8 +28,8 @@ export default function AttendanceScreen() {
       variables: {
         limit: limit,
       },
-      onCompleted(getAttendanceMobile) {
-        console.log(getAttendanceMobile);
+      onCompleted(data) {
+        // console.log(data);
       },
       onError(error) {
         console.log(error?.message);
@@ -54,7 +63,7 @@ export default function AttendanceScreen() {
                 : AttendanceStyle.AttendanceBackButtonTitle
             }
           >
-            Attendance Screen
+            Attendances
           </Text>
         </TouchableOpacity>
       </View>
@@ -105,59 +114,27 @@ export default function AttendanceScreen() {
           </Text>
         </View>
       </View>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        style={{ flex: 1, width: "100%" }}
-        showsVerticalScrollIndicator={false}
-      >
-        {AttendanceData?.getAttendanceMobile.map(
-          (attendance: any, index: number) => (
-            <View style={AttendanceStyle.AttendanceBodyContainer} key={index}>
-              <View style={AttendanceStyle.AttendanceDateTitleContainer}>
-                <Text
-                  style={
-                    dimension === "sm"
-                      ? AttendanceStyle.AttendanceBodyTextSM
-                      : AttendanceStyle.AttendanceBodyText
-                  }
-                >
-                  {moment(attendance?.date).format("DD MMM YY")}
-                </Text>
-              </View>
-              <View style={AttendanceStyle.AttendanceTitleContainer}>
-                <Text
-                  style={
-                    dimension === "sm"
-                      ? AttendanceStyle.AttendanceBodyTextSM
-                      : AttendanceStyle.AttendanceBodyText
-                  }
-                >
-                  {attendance?.morning}
-                </Text>
-              </View>
-              <View style={AttendanceStyle.AttendanceTitleContainer}>
-                <Text
-                  style={
-                    dimension === "sm"
-                      ? AttendanceStyle.AttendanceBodyTextSM
-                      : AttendanceStyle.AttendanceBodyText
-                  }
-                >
-                  {attendance?.afternoon}
-                </Text>
-              </View>
-              <View style={AttendanceStyle.AttendanceFineTitleContainer}>
-                {attendance?.fine > 0 ? (
-                  <Text
-                    style={
-                      dimension === "sm"
-                        ? AttendanceStyle.AttendanceBodyFineTextSM
-                        : AttendanceStyle.AttendanceBodyFineText
-                    }
-                  >
-                    ${attendance?.fine}
-                  </Text>
-                ) : (
+      {load ? (
+        <View style={HomeStyle.HomeContentContainer}>
+          <Image
+            source={require("../assets/Images/loader-1.gif")}
+            style={{ width: 100, height: 100 }}
+          />
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={{ alignItems: "center" }}
+          style={{ flex: 1, width: "100%" }}
+          showsVerticalScrollIndicator={false}
+        >
+          {AttendanceData?.getAttendanceMobile.map(
+            (attendance: any, index: number) => (
+              <Animatable.View
+                style={AttendanceStyle.AttendanceBodyContainer}
+                key={index}
+                animation={load ? "fadeInUp" : "fadeInUp"}
+              >
+                <View style={AttendanceStyle.AttendanceDateTitleContainer}>
                   <Text
                     style={
                       dimension === "sm"
@@ -165,37 +142,83 @@ export default function AttendanceScreen() {
                         : AttendanceStyle.AttendanceBodyText
                     }
                   >
-                    ${attendance?.fine}
+                    {moment(attendance?.date).format("DD MMM YY")}
                   </Text>
-                )}
-              </View>
-            </View>
-          )
-        )}
-        {AttendanceData?.getAttendanceMobile.length >= limit ? (
-          <TouchableOpacity
-            onPress={() => {
-              setLimit(10 + limit);
-            }}
-            style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 40,
-            }}
-          >
-            <Text
+                </View>
+                <View style={AttendanceStyle.AttendanceTitleContainer}>
+                  <Text
+                    style={
+                      dimension === "sm"
+                        ? AttendanceStyle.AttendanceBodyTextSM
+                        : AttendanceStyle.AttendanceBodyText
+                    }
+                  >
+                    {attendance?.morning}
+                  </Text>
+                </View>
+                <View style={AttendanceStyle.AttendanceTitleContainer}>
+                  <Text
+                    style={
+                      dimension === "sm"
+                        ? AttendanceStyle.AttendanceBodyTextSM
+                        : AttendanceStyle.AttendanceBodyText
+                    }
+                  >
+                    {attendance?.afternoon}
+                  </Text>
+                </View>
+                <View style={AttendanceStyle.AttendanceFineTitleContainer}>
+                  {attendance?.fine > 0 ? (
+                    <Text
+                      style={
+                        dimension === "sm"
+                          ? AttendanceStyle.AttendanceBodyFineTextSM
+                          : AttendanceStyle.AttendanceBodyFineText
+                      }
+                    >
+                      ${attendance?.fine}
+                    </Text>
+                  ) : (
+                    <Text
+                      style={
+                        dimension === "sm"
+                          ? AttendanceStyle.AttendanceBodyNoFineTextSM
+                          : AttendanceStyle.AttendanceBodyNoFineText
+                      }
+                    >
+                      ${attendance?.fine}
+                    </Text>
+                  )}
+                </View>
+              </Animatable.View>
+            )
+          )}
+
+          {AttendanceData?.getAttendanceMobile.length >= limit ? (
+            <TouchableOpacity
+              onPress={() => {
+                setLimit(10 + limit);
+              }}
               style={{
-                fontFamily: "Kantumruy-Bold",
-                color: "#3c6efb",
-                fontSize: dimension === "sm" ? 12 : 16,
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 40,
               }}
             >
-              {"see more"}
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-      </ScrollView>
+              <Text
+                style={{
+                  fontFamily: "Kantumruy-Bold",
+                  color: "#3c6efb",
+                  fontSize: dimension === "sm" ? 12 : 16,
+                }}
+              >
+                {"see more..."}
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+        </ScrollView>
+      )}
     </View>
   );
 }

@@ -544,7 +544,7 @@ export default function HomeLeaveScreen() {
             backgroundColor: "#f8f8f8",
             borderRadius: 10,
             borderWidth: 1,
-            borderColor: "#082b9e",
+            borderColor: "#177a02",
           }}
         />
 
@@ -593,30 +593,35 @@ export default function HomeLeaveScreen() {
         >
           <Text style={HomeStyle.HomeMainSelectDateButtonLabel}> </Text>
         </View>
-        <TouchableOpacity
-          style={
-            dimension === "sm"
-              ? HomeStyle.HomeLeaveRequestButtonSM
-              : HomeStyle.HomeLeaveRequestButton
-          }
-          onPress={() => {
-            if (reason !== "" && timeId !== "") {
-              handlRequest();
-            } else {
-              Alert.alert("Oop!", "Please field the reason or choose time off");
-            }
-          }}
-        >
-          <Text
+        {isKeyboardVisible ? null : (
+          <TouchableOpacity
             style={
               dimension === "sm"
-                ? HomeStyle.HomeLeaveRequestButtonTextSM
-                : HomeStyle.HomeLeaveRequestButtonText
+                ? HomeStyle.HomeLeaveRequestButtonSM
+                : HomeStyle.HomeLeaveRequestButton
             }
+            onPress={() => {
+              if (reason !== "" && timeId !== "") {
+                handlRequest();
+              } else {
+                Alert.alert(
+                  "Oop!",
+                  "Please field the reason or choose time off"
+                );
+              }
+            }}
           >
-            Request
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={
+                dimension === "sm"
+                  ? HomeStyle.HomeLeaveRequestButtonTextSM
+                  : HomeStyle.HomeLeaveRequestButtonText
+              }
+            >
+              Request
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
     </View>
   );

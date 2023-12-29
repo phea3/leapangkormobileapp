@@ -7,6 +7,10 @@
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
   align-items: center;
+  border-top-width: 1px;
+  border-right-width: 1px;
+  border-left-width: 1px;
+  border-color: $color-green;
 }
 
 .LeaveBackButtonContainer {
@@ -42,14 +46,16 @@
 }
 
 .LeaveBackButtonTitleSM {
+  text-transform: uppercase;
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .LeaveBackButtonTitle {
+  text-transform: uppercase;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .LeaveTitlesContainer {
@@ -57,7 +63,7 @@
   height: 40px;
   flex-direction: row;
   align-items: center;
-  background-color: $color-light-blue;
+  background-color: $color-light-green;
 }
 
 .LeaveTitleContainer {
@@ -78,12 +84,12 @@
 .LeaveTitleTextSM {
   font-size: 10px;
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .LeaveTitleText {
   font-family: $kantumruy-bold;
-  color: $color-dark-blue;
+  color: $color-dark-green;
 }
 
 .LeaveBodyContainer {
@@ -92,16 +98,37 @@
   flex-direction: row;
   align-items: center;
   border-bottom-width: 0.5px;
-  border-bottom-color: $color-black;
+  border-bottom-color: $color-gray;
+}
+
+.LeaveBodyReasonTextSM {
+  font-family: $kantumruy-regular;
+  font-size: 9px;
+}
+
+.LeaveBodyReasonText {
+  font-family: $kantumruy-regular;
+  font-size: 14px;
 }
 
 .LeaveBodyTextSM {
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
-  font-size: 9px;
+  font-size: 10px;
 }
+
 .LeaveBodyText {
   font-family: $kantumruy-regular;
-  color: $color-dark-blue;
   font-size: 14px;
+}
+
+.LeaveApproveTextSM {
+  text-transform: capitalize;
+  font-family: $kantumruy-bold;
+  font-size: 10px;
+}
+
+.LeaveApproveText {
+  text-transform: capitalize;
+  font-family: $kantumruy-bold;
+  font-size: 12px;
 }

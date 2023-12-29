@@ -9,7 +9,7 @@ import moment from "moment";
 
 const Features = [
   {
-    title: "Leave Request",
+    title: "Leaves",
     icon: require("../assets/Images/blogger.png"),
   },
   {
@@ -17,11 +17,11 @@ const Features = [
     icon: require("../assets/Images/completed-task.png"),
   },
   {
-    title: "Attendance",
+    title: "Attendances",
     icon: require("../assets/Images/check-list.png"),
   },
   {
-    title: "Meeting",
+    title: "Meetings",
     icon: require("../assets/Images/conversation.png"),
   },
 ];
@@ -58,7 +58,7 @@ export default function HomeMainScreen() {
               : HomeStyle.HomeFeaturesTitleText
           }
         >
-          Features
+          FEATURES
         </Text>
       </View>
       <View
@@ -71,13 +71,13 @@ export default function HomeMainScreen() {
         {Features.map((feature: any, index: number) => (
           <TouchableOpacity
             onPress={() => {
-              if (feature.title === "Leave Request") {
+              if (feature.title === "Leaves") {
                 navigate("/leave");
               } else if (feature.title === "Check-In/Out") {
                 navigate("/check");
-              } else if (feature.title === "Attendance") {
+              } else if (feature.title === "Attendances") {
                 navigate("/attendance");
-              } else if (feature.title === "Meeting") {
+              } else if (feature.title === "Meetings") {
                 navigate("/meeting");
               }
             }}
@@ -131,7 +131,7 @@ export default function HomeMainScreen() {
               : HomeStyle.HomeLeaveRequestText
           }
         >
-          Leave
+          REQUEST LEAVE
         </Text>
       </TouchableOpacity>
       <ScrollView

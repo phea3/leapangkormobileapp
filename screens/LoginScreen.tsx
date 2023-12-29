@@ -336,7 +336,7 @@ export default function LoginScreen() {
               }
             >
               {/* ភ្លេចពាក្យសម្ងាត់? */}
-              Foget password?
+              Forget password?
             </Text>
           </TouchableOpacity>
         </View>

@@ -6,12 +6,13 @@
 }
 
 .ActionCardContainer {
-  width: 100%;
-  padding: 10px;
+  width: 90%;
+  padding-top: 10px;
+  padding-bottom: 10px;
   flex-direction: row;
   align-items: center;
   border-bottom-width: 0.5px;
-  border-bottom-color: $color-black;
+  border-bottom-color: $color-gray;
 }
 
 .ActionCardBodyLeft {
@@ -21,7 +22,7 @@
 .ActionCardIcon {
   height: 40px;
   width: 40px;
-  background-color: #2058e8;
+  background-color: $color-dark-green;
   border-radius: 50px;
   align-items: center;
   justify-content: center;
@@ -29,7 +30,7 @@
 .ActionCardIconSM {
   height: 35px;
   width: 35px;
-  background-color: #2058e8;
+  background-color: $color-dark-green;
   border-radius: 50px;
   align-items: center;
   justify-content: center;
@@ -65,63 +66,69 @@
   width: 85%;
 }
 .ActionLeaveTitle {
-  font-family: $font-body;
-  font-size: 15px;
-  color: $color-background;
+  font-family: $kantumruy-bold;
+  color: $color-dark-green;
 }
+
 .ActionLeaveTitleSM {
-  font-family: $font-body;
-  font-size: 12px;
-  color: $color-background;
+  font-family: $kantumruy-bold;
+  font-size: 10px;
+  color: $color-dark-green;
 }
+
 .ActionLeaveTitleRed {
-  font-family: $font-body;
-  font-size: 15px;
+  font-family: $kantumruy-bold;
   color: $color-red;
 }
+
 .ActionLeaveTitleRedSM {
-  font-family: $font-body;
-  font-size: 12px;
+  font-family: $kantumruy-bold;
+  font-size: 10px;
   color: $color-red;
 }
 
 .ActionDatTime {
-  font-family: $font-body;
+  font-family: $kantumruy-bold;
   font-size: 12px;
-  color: $color-background;
+  color: $color-dark-green;
 }
+
 .ActionDatTimeSM {
-  font-family: $font-body;
+  font-family: $kantumruy-regular;
   font-size: 8px;
-  color: $color-background;
+  color: $color-dark-green;
 }
 
 .ActionDatTimeRed {
-  font-family: $font-body;
-  font-size: 11px;
+  font-family: $kantumruy-bold;
+  font-size: 12px;
   color: $color-red;
 }
+
 .ActionDatTimeRedSM {
-  font-family: $font-body;
+  font-family: $kantumruy-bold;
   font-size: 8px;
   color: $color-red;
 }
 
 .ActionComment {
-  font-family: $font-body;
-  font-size: 13px;
+  font-family: $kantumruy-regular;
+  color: $color-dark-grey;
 }
+
 .ActionCommentSM {
-  font-family: $font-body;
+  font-family: $kantumruy-regular;
   font-size: 10px;
+  color: $color-dark-grey;
 }
+
 .ActionCommentRed {
-  font-family: $font-body;
-  font-size: 13px;
+  font-family: $kantumruy-regular;
   color: $color-red;
 }
+
 .ActionCommentRedSM {
-  font-family: $font-body;
+  font-family: $kantumruy-regular;
   font-size: 10px;
   color: $color-red;
 }
