@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import LeaveStyle from "../styles/LeaveStyle.scss";
 import { useLocation, useNavigate } from "react-router-native";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { EMPLOYEECHECKATTENDANCE } from "../graphql/EmployeeCheckAttendance";
 import CheckStyle from "../styles/CheckStyle.scss";
 import { useContext, useEffect, useState } from "react";
@@ -19,8 +19,11 @@ import ModalStyle from "../styles/ModalStyle.scss";
 import * as Location from "expo-location";
 import CheckModal from "../components/CheckModal";
 import { AuthContext } from "../Context/AuthContext";
+import { getDistance, getPreciseDistance, isPointWithinRadius } from "geolib";
+import { GET_EMPLOYEEBYID } from "../graphql/GetEmployeeById";
 
 export default function ChecKAttendance({ locate }: any) {
+  const { uid } = useContext(AuthContext);
   const navigate = useNavigate();
   const located = useLocation();
   const [isVisible, setVisible] = useState(false);
@@ -37,6 +40,43 @@ export default function ChecKAttendance({ locate }: any) {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [morning, setMorning] = useState(true);
   const [afternoon, setAfternoon] = useState(false);
+
+  const { data: employeeData, refetch: employeeRefetch } = useQuery(
+    GET_EMPLOYEEBYID,
+    {
+      pollInterval: 2000,
+      variables: {
+        id: uid ? uid : "",
+      },
+      onCompleted: ({ getEmployeeById }) => {},
+    }
+  );
+
+  useEffect(() => {
+    employeeRefetch();
+  }, [uid]);
+
+  const distance = getDistance(
+    {
+      latitude: locate?.coords.latitude ? locate?.coords.latitude : 0,
+      longitude: locate?.coords.longitude ? locate?.coords.longitude : 0,
+    },
+    {
+      latitude: parseFloat(
+        employeeData?.getEmployeeById?.latitude
+          ? employeeData?.getEmployeeById?.latitude
+          : ""
+      ),
+      longitude: parseFloat(
+        employeeData?.getEmployeeById?.longitude
+          ? employeeData?.getEmployeeById?.longitude
+          : ""
+      ),
+    }
+    // { latitude: 13.3564631 , longitude: 103.8332306 }
+  );
+
+  // console.log(distance);
 
   const handleCheckClose = () => {
     setCheckVisible(false);
@@ -455,10 +495,8 @@ export default function ChecKAttendance({ locate }: any) {
                     padding: 10,
                     marginTop: 10,
                     borderColor:
-                      locate?.coords.latitude >= 13.34572060724703 &&
-                      locate?.coords.latitude <= 13.349565026819539 &&
-                      locate?.coords.longitude >= 103.84319363518682 &&
-                      locate?.coords.longitude <= 103.84595763628897
+                      distance <=
+                      employeeData?.getEmployeeById?.checkAttendanceDistance
                         ? "green"
                         : "red",
                   },
@@ -471,22 +509,20 @@ export default function ChecKAttendance({ locate }: any) {
                       : CheckStyle.CheckOutLocationTitle,
                     {
                       color:
-                        // location?.coords.latitude || locate?.coords.latitude
-                        locate?.coords.latitude >= 13.34572060724703 &&
-                        locate?.coords.latitude <= 13.349565026819539 &&
-                        locate?.coords.longitude >= 103.84319363518682 &&
-                        locate?.coords.longitude <= 103.84595763628897
+                        distance <=
+                        employeeData?.getEmployeeById?.checkAttendanceDistance
                           ? "green"
                           : "red",
                     },
                   ]}
                 >
-                  {locate?.coords.latitude >= 13.34572060724703 &&
-                  locate?.coords.latitude <= 13.349565026819539 &&
-                  locate?.coords.longitude >= 103.84319363518682 &&
-                  locate?.coords.longitude <= 103.84595763628897
+                  {distance <=
+                  employeeData?.getEmployeeById?.checkAttendanceDistance
                     ? "Coordinates are within the specified range."
-                    : "Coordinates are outside the specified range."}
+                    : `Coordinates are outside (${
+                        distance -
+                        employeeData?.getEmployeeById?.checkAttendanceDistance
+                      }m)  the specified range.`}
                 </Text>
 
                 <Text
@@ -497,10 +533,8 @@ export default function ChecKAttendance({ locate }: any) {
                     {
                       color:
                         // location?.coords.latitude || locate?.coords.latitude
-                        locate?.coords.latitude >= 13.34572060724703 &&
-                        locate?.coords.latitude <= 13.349565026819539 &&
-                        locate?.coords.longitude >= 103.84319363518682 &&
-                        locate?.coords.longitude <= 103.84595763628897
+                        distance <=
+                        employeeData?.getEmployeeById?.checkAttendanceDistance
                           ? "green"
                           : "red",
                       paddingTop: 10,
@@ -525,10 +559,8 @@ export default function ChecKAttendance({ locate }: any) {
               >
                 <Image
                   source={
-                    locate?.coords.latitude >= 13.34572060724703 &&
-                    locate?.coords.latitude <= 13.349565026819539 &&
-                    locate?.coords.longitude >= 103.84319363518682 &&
-                    locate?.coords.longitude <= 103.84595763628897
+                    distance <=
+                    employeeData?.getEmployeeById?.checkAttendanceDistance
                       ? require("../assets/Images/allowlocation.gif")
                       : require("../assets/Images/redlocation.gif")
                   }
