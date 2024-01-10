@@ -1,0 +1,86 @@
+@import "../themes.scss";
+
+.PayslipBodyContainer {
+  flex: 1;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.PayslipButtonContainer {
+  width: 95%;
+  padding: 10px;
+  border-width: 1px;
+  border-radius: 10px;
+  flex-direction: row;
+  align-items: center;
+  border-color: $color-dark-green;
+}
+
+.MonthlyPayslipBodyContainer {
+  flex: 1;
+  width: 95%;
+}
+
+.MonthlyPayslipEmployeeCard {
+  width: 100%;
+  background-color: #f8f8f8;
+  flex-direction: row;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.MonthlyPayslipGrossEmployeeContentCard {
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 5px;
+}
+
+.MonthlyPayslipEmployeeContentCard {
+  flex: 1;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+
+.MonthlyPayslipGrossSalaryEmployeeContentCard {
+  flex: 1;
+  background-color: $color-white;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.MonthlyPayslipGrossTitle {
+  font-family: $kantumruy-bold;
+}
+
+.MonthlyPayslipGrossBody {
+  font-family: $kantumruy-regular;
+}
+
+.MonthlyPayslipDataBody {
+  font-family: $kantumruy-regular;
+  color: $color-grey;
+}
+
+.MonthlyPayslipGrossSalaryTitle {
+  font-size: 20px;
+  font-family: $kantumruy-bold;
+  padding-right: 10px;
+}
+
+.MonthlyPayslipContentTextRight {
+  flex: 1;
+  align-items: flex-end;
+}
+
+.MonthlyPayslipContentTextCenter {
+  flex: 1;
+  align-items: center;
+}

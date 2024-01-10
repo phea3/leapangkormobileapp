@@ -447,46 +447,88 @@ export default function ChecKAttendance({ locate }: any) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={
-                dimension === "sm"
-                  ? CheckStyle.CheckInButtonContainerSM
-                  : CheckStyle.CheckInButtonContainer
-              }
-              onPress={async () => {
-                HandleCheckAttendance("checkIn");
-              }}
-            >
-              <Text
-                style={
-                  dimension === "sm"
-                    ? CheckStyle.CheckButtonTextSM
-                    : CheckStyle.CheckButtonText
-                }
-              >
-                CHECK IN
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={
-                dimension === "sm"
-                  ? CheckStyle.CheckOutButtonContainerSM
-                  : CheckStyle.CheckOutButtonContainer
-              }
-              onPress={() => {
-                HandleCheckAttendance("checkOut");
-              }}
-            >
-              <Text
-                style={
-                  dimension === "sm"
-                    ? CheckStyle.CheckButtonTextSM
-                    : CheckStyle.CheckButtonText
-                }
-              >
-                CHECK OUT
-              </Text>
-            </TouchableOpacity>
+            {locate ? (
+              <>
+                <TouchableOpacity
+                  style={
+                    dimension === "sm"
+                      ? CheckStyle.CheckInButtonContainerSM
+                      : CheckStyle.CheckInButtonContainer
+                  }
+                  onPress={async () => {
+                    HandleCheckAttendance("checkIn");
+                  }}
+                >
+                  <Text
+                    style={
+                      dimension === "sm"
+                        ? CheckStyle.CheckButtonTextSM
+                        : CheckStyle.CheckButtonText
+                    }
+                  >
+                    CHECK IN
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={
+                    dimension === "sm"
+                      ? CheckStyle.CheckOutButtonContainerSM
+                      : CheckStyle.CheckOutButtonContainer
+                  }
+                  onPress={() => {
+                    HandleCheckAttendance("checkOut");
+                  }}
+                >
+                  <Text
+                    style={
+                      dimension === "sm"
+                        ? CheckStyle.CheckButtonTextSM
+                        : CheckStyle.CheckButtonText
+                    }
+                  >
+                    CHECK OUT
+                  </Text>
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <View
+                  style={
+                    dimension === "sm"
+                      ? CheckStyle.CheckInDisableButtonContainerSM
+                      : CheckStyle.CheckInDisableButtonContainer
+                  }
+                >
+                  <Text
+                    style={
+                      dimension === "sm"
+                        ? CheckStyle.CheckButtonTextSM
+                        : CheckStyle.CheckButtonText
+                    }
+                  >
+                    CHECK IN
+                  </Text>
+                </View>
+                <View
+                  style={
+                    dimension === "sm"
+                      ? CheckStyle.CheckOutDisableButtonContainerSM
+                      : CheckStyle.CheckOutDisableButtonContainer
+                  }
+                >
+                  <Text
+                    style={
+                      dimension === "sm"
+                        ? CheckStyle.CheckButtonTextSM
+                        : CheckStyle.CheckButtonText
+                    }
+                  >
+                    CHECK OUT
+                  </Text>
+                </View>
+              </>
+            )}
+
             <View style={CheckStyle.CheckOutLocationFullContainer}>
               <View
                 style={[

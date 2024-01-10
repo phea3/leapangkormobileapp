@@ -13,7 +13,7 @@ import LoginScreen from "./screens/LoginScreen";
 import { AuthContext } from "./Context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import useLoginUser from "./Hook/useLoginUser";
-import { Dimensions, Platform } from "react-native";
+import { Alert, Dimensions, Platform } from "react-native";
 import HomeMainScreen from "./screens/HomeMainScreen";
 import HomeLeaveScreen from "./screens/HomeLeaveScreen";
 import LeaveScreen from "./screens/LeaveScreen";
@@ -28,6 +28,8 @@ import NotificationActiveScreen from "./screens/NotificationActiveScreen";
 import NotificationMeetingScreen from "./screens/NotificationMeetingScreen";
 import MeetingScreen from "./screens/MeetingScreen";
 import LoginLayout from "./layouts/LoginLayout";
+import PayslipScreen from "./screens/PayslipScreen";
+import MonthlyPayslipReportScreen from "./screens/MonthlyPayslipReportScreen";
 
 export default function Router() {
   const { expoPushToken, notificationResponse } = usePushNotifications();
@@ -42,7 +44,7 @@ export default function Router() {
   useEffect(() => {
     setTimeout(() => {
       setLoad(false);
-    }, 9000);
+    }, 1000);
   }, []);
 
   useEffect(() => {
@@ -87,7 +89,7 @@ export default function Router() {
   async function getLocation() {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
+      setErrorMsg("Permission to access location was denied.");
       return;
     }
 
@@ -161,6 +163,8 @@ export default function Router() {
         { path: "/attendance", element: <AttendanceScreen /> },
         { path: "/profile", element: <ProfileScreen /> },
         { path: "/meeting", element: <MeetingScreen /> },
+        { path: "/payslip", element: <PayslipScreen /> },
+        { path: "/monthlypayslip", element: <MonthlyPayslipReportScreen /> },
         {
           path: "/notification",
           element: <NotificationLayout />,
@@ -202,7 +206,13 @@ export default function Router() {
     },
   ]);
 
-  if ((locate === null && !errorMsg) || load) {
+  useEffect(() => {
+    if (errorMsg === "Permission to access location was denied") {
+      Alert.alert("Oop!", "Permission to access location was denied.");
+    }
+  }, [errorMsg]);
+
+  if (load) {
     return loadScreen;
   } else {
     if (token !== "" && token !== undefined) {

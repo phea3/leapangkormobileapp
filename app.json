@@ -2,7 +2,7 @@
   "expo": {
     "name": "LA HR",
     "slug": "Leap-Ankor-HR",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/playstore.png",
     "userInterfaceStyle": "light",
@@ -52,7 +52,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.leapangkor.humanresource",
-      "versionCode": 2
+      "versionCode": 4
     },
     "plugins": [
       [
@@ -78,6 +78,14 @@
             "./assets/Images/notification_sound_other.wav"
           ],
           "mode": "production"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
         }
       ]
     ],

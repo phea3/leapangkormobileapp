@@ -21,7 +21,7 @@ const Features = [
     icon: require("../assets/Images/check-list.png"),
   },
   {
-    title: "Meetings",
+    title: "Payslip",
     icon: require("../assets/Images/conversation.png"),
   },
 ];
@@ -77,8 +77,8 @@ export default function HomeMainScreen() {
                 navigate("/check");
               } else if (feature.title === "Attendances") {
                 navigate("/attendance");
-              } else if (feature.title === "Meetings") {
-                navigate("/meeting");
+              } else if (feature.title === "Payslip") {
+                navigate("/payslip");
               }
             }}
             style={
