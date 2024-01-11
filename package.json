@@ -40,6 +40,7 @@
     "react-native-animatable": "^1.4.0",
     "react-native-animated-pagination-dots": "^0.1.73",
     "react-native-gesture-handler": "~2.12.0",
+    "react-native-image-viewing": "^0.2.2",
     "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-popup-menu": "^0.16.1",
     "react-native-reanimated": "~3.3.0",

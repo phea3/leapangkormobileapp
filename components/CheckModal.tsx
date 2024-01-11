@@ -1,14 +1,30 @@
 import { Image, Modal, Text, TouchableOpacity } from "react-native";
 import ModalStyle from "../styles/ModalStyle.scss";
 import { View } from "react-native-animatable";
-import { useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-native";
+import { moderateScale } from "../ Metrics";
 
-export default function CheckModal({ isVisible, handleClose, data }: any) {
-  const { dimension } = useContext(AuthContext);
-  // console.log(data);
+export default function CheckModal({
+  location,
+  isVisible,
+  handleClose,
+  data,
+  load,
+}: any) {
   const navigate = useNavigate();
+  const { dimension } = useContext(AuthContext);
+
+  // console.log(data);
+  useEffect(() => {
+    if (data?.status === true) {
+      setTimeout(() => {
+        navigate("/attendance");
+      }, 500);
+    }
+  }, [data?.status]);
+
   return (
     <Modal
       visible={isVisible}
@@ -19,52 +35,60 @@ export default function CheckModal({ isVisible, handleClose, data }: any) {
       <View style={ModalStyle.ModalContainer}>
         <TouchableOpacity
           style={ModalStyle.ModalBackgroundOpacity}
-          onPress={() => {
-            handleClose();
-            setTimeout(() => {
-              if (data?.status === true) {
-                navigate("/attendance");
-              }
-            }, 500);
-          }}
+          // onPress={() => {
+          //   handleClose();
+          // }}
           activeOpacity={0.2}
         />
         <View
-          style={
-            data?.status === true
-              ? ModalStyle.ModalButtonContainer
-              : ModalStyle.ModalButtonContainerFail
-          }
+          style={[
+            ModalStyle.ModalButtonContainer,
+            {
+              height: moderateScale(200),
+              borderRadius: moderateScale(10),
+              borderWidth: moderateScale(1),
+            },
+          ]}
         >
           <Image
             source={
-              data?.status === true
+              load
+                ? require("../assets/Images/loader-1.gif")
+                : data?.status === null
+                ? require("../assets/Images/cross-outline.gif")
+                : data?.status === true
                 ? require("../assets/Images/check-outline.gif")
                 : require("../assets/Images/cross-outline.gif")
             }
-            style={
-              dimension === "sm"
-                ? ModalStyle.ModalImageAfterCheckSM
-                : ModalStyle.ModalImageAfterCheck
-            }
+            style={{ width: moderateScale(80), height: moderateScale(80) }}
           />
           <Text
-            style={
-              dimension === "sm"
-                ? ModalStyle.ModalButtonTextTitleSM
-                : ModalStyle.ModalButtonTextTitle
-            }
+            style={[
+              ModalStyle.ModalButtonTextTitle,
+              { fontSize: moderateScale(18) },
+            ]}
           >
-            {data?.status === true ? "Success!" : "Fail!"}
+            {load
+              ? "Loading"
+              : data?.status === null
+              ? "Can't get your location."
+              : data?.status === true
+              ? "Success!"
+              : "Fail!"}
           </Text>
           <Text
-            style={
-              dimension === "sm"
-                ? ModalStyle.ModalButtonTextBodySM
-                : ModalStyle.ModalButtonTextBody
-            }
+            style={[
+              ModalStyle.ModalButtonTextBody,
+              { fontSize: moderateScale(14) },
+            ]}
           >
-            {data ? data?.message : ""}
+            {load
+              ? `Getting your current location. \n please wait... \n it's depend on your device.`
+              : data?.status === null
+              ? "Please try again."
+              : data
+              ? data?.message
+              : ""}
           </Text>
         </View>
       </View>

@@ -4,8 +4,6 @@
   width: 100%;
   height: 100%;
   background-color: white;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
   align-items: center;
 }
 
@@ -13,10 +11,6 @@
   width: 100%;
 }
 
-.MeetingTitleSM {
-  font-size: 10px;
-  font-family: $kantumruy-bold;
-}
 .MeetingTitle {
   font-family: $kantumruy-bold;
 }
@@ -31,28 +25,9 @@
 
 .MeetingBackButton {
   width: 40%;
-  padding: 10px;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-}
-
-.MeetingBackButtonIconSM {
-  width: 15px;
-  height: 15px;
-  margin-right: 5px;
-}
-
-.MeetingBackButtonIcon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.MeetingBackButtonTitleSM {
-  font-size: 10px;
-  font-family: $kantumruy-bold;
-  color: $color-dark-green;
 }
 
 .MeetingBackButtonTitle {

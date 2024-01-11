@@ -51,7 +51,7 @@ export default function LoadingScreen() {
             }
           />
         </View>
-        <View style={LoadingStyle.LoadingImageContainer}>
+        {/* <View style={LoadingStyle.LoadingImageContainer}>
           {isConnected ? (
             <Image
               source={require("../assets/Images/18-location-pin-gradient.gif")}
@@ -60,7 +60,7 @@ export default function LoadingScreen() {
           ) : (
             <Text style={LoadingStyle.LoadingNointernetacess}>No internet</Text>
           )}
-        </View>
+        </View> */}
       </TouchableOpacity>
     </ImageBackground>
   );

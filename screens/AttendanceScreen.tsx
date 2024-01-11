@@ -8,6 +8,7 @@ import moment from "moment";
 import { AuthContext } from "../Context/AuthContext";
 import HomeStyle from "../styles/HomeStyle.scss";
 import * as Animatable from "react-native-animatable";
+import { moderateScale } from "../ Metrics";
 
 export default function AttendanceScreen() {
   const navigate = useNavigate();
@@ -42,73 +43,87 @@ export default function AttendanceScreen() {
   }, []);
 
   return (
-    <View style={AttendanceStyle.AttendanceContainer}>
+    <View
+      style={[
+        AttendanceStyle.AttendanceContainer,
+        {
+          borderTopLeftRadius: moderateScale(15),
+          borderTopRightRadius: moderateScale(15),
+          borderTopWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+        },
+      ]}
+    >
       <View style={AttendanceStyle.AttendanceBackButtonContainer}>
         <TouchableOpacity
           onPress={() => navigate("/home")}
-          style={AttendanceStyle.AttendanceBackButton}
+          style={[
+            AttendanceStyle.AttendanceBackButton,
+            { padding: moderateScale(15) },
+          ]}
         >
           <Image
             source={require("../assets/Images/back-dark-blue.png")}
-            style={
-              dimension === "sm"
-                ? AttendanceStyle.AttendanceBackButtonIconSM
-                : AttendanceStyle.AttendanceBackButtonIcon
-            }
+            style={{
+              width: moderateScale(20),
+              height: moderateScale(20),
+              marginRight: moderateScale(10),
+            }}
           />
           <Text
-            style={
-              dimension === "sm"
-                ? AttendanceStyle.AttendanceBackButtonTitleSM
-                : AttendanceStyle.AttendanceBackButtonTitle
-            }
+            style={[
+              AttendanceStyle.AttendanceBackButtonTitle,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Attendances
           </Text>
         </TouchableOpacity>
       </View>
 
-      <View style={AttendanceStyle.AttendanceTitlesContainer}>
+      <View
+        style={[
+          AttendanceStyle.AttendanceTitlesContainer,
+          { height: moderateScale(40) },
+        ]}
+      >
         <View style={AttendanceStyle.AttendanceDateTitleContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? AttendanceStyle.AttendanceTitleTextSM
-                : AttendanceStyle.AttendanceTitleText
-            }
+            style={[
+              AttendanceStyle.AttendanceTitleText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Date
           </Text>
         </View>
         <View style={AttendanceStyle.AttendanceTitleContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? AttendanceStyle.AttendanceTitleTextSM
-                : AttendanceStyle.AttendanceTitleText
-            }
+            style={[
+              AttendanceStyle.AttendanceTitleText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Morning
           </Text>
         </View>
         <View style={AttendanceStyle.AttendanceTitleContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? AttendanceStyle.AttendanceTitleTextSM
-                : AttendanceStyle.AttendanceTitleText
-            }
+            style={[
+              AttendanceStyle.AttendanceTitleText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Afternoon
           </Text>
         </View>
         <View style={AttendanceStyle.AttendanceFineTitleContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? AttendanceStyle.AttendanceTitleTextSM
-                : AttendanceStyle.AttendanceTitleText
-            }
+            style={[
+              AttendanceStyle.AttendanceTitleText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Fine
           </Text>
@@ -118,7 +133,10 @@ export default function AttendanceScreen() {
         <View style={HomeStyle.HomeContentContainer}>
           <Image
             source={require("../assets/Images/loader-1.gif")}
-            style={{ width: 100, height: 100 }}
+            style={{
+              width: moderateScale(100),
+              height: moderateScale(100),
+            }}
           />
         </View>
       ) : (
@@ -130,39 +148,39 @@ export default function AttendanceScreen() {
           {AttendanceData?.getAttendanceMobile.map(
             (attendance: any, index: number) => (
               <Animatable.View
-                style={AttendanceStyle.AttendanceBodyContainer}
+                style={[
+                  AttendanceStyle.AttendanceBodyContainer,
+                  { height: moderateScale(55) },
+                ]}
                 key={index}
                 animation={load ? "fadeInUp" : "fadeInUp"}
               >
                 <View style={AttendanceStyle.AttendanceDateTitleContainer}>
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? AttendanceStyle.AttendanceBodyTextSM
-                        : AttendanceStyle.AttendanceBodyText
-                    }
+                    style={[
+                      AttendanceStyle.AttendanceBodyText,
+                      { fontSize: moderateScale(12) },
+                    ]}
                   >
                     {moment(attendance?.date).format("DD MMM YY")}
                   </Text>
                 </View>
                 <View style={AttendanceStyle.AttendanceTitleContainer}>
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? AttendanceStyle.AttendanceBodyTextSM
-                        : AttendanceStyle.AttendanceBodyText
-                    }
+                    style={[
+                      AttendanceStyle.AttendanceBodyText,
+                      { fontSize: moderateScale(12) },
+                    ]}
                   >
                     {attendance?.morning}
                   </Text>
                 </View>
                 <View style={AttendanceStyle.AttendanceTitleContainer}>
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? AttendanceStyle.AttendanceBodyTextSM
-                        : AttendanceStyle.AttendanceBodyText
-                    }
+                    style={[
+                      AttendanceStyle.AttendanceBodyText,
+                      { fontSize: moderateScale(12) },
+                    ]}
                   >
                     {attendance?.afternoon}
                   </Text>
@@ -170,21 +188,19 @@ export default function AttendanceScreen() {
                 <View style={AttendanceStyle.AttendanceFineTitleContainer}>
                   {attendance?.fine > 0 ? (
                     <Text
-                      style={
-                        dimension === "sm"
-                          ? AttendanceStyle.AttendanceBodyFineTextSM
-                          : AttendanceStyle.AttendanceBodyFineText
-                      }
+                      style={[
+                        AttendanceStyle.AttendanceBodyFineText,
+                        { fontSize: moderateScale(12) },
+                      ]}
                     >
                       ${attendance?.fine}
                     </Text>
                   ) : (
                     <Text
-                      style={
-                        dimension === "sm"
-                          ? AttendanceStyle.AttendanceBodyNoFineTextSM
-                          : AttendanceStyle.AttendanceBodyNoFineText
-                      }
+                      style={[
+                        AttendanceStyle.AttendanceBodyNoFineText,
+                        { fontSize: moderateScale(12) },
+                      ]}
                     >
                       ${attendance?.fine}
                     </Text>
@@ -203,14 +219,14 @@ export default function AttendanceScreen() {
                 width: "100%",
                 alignItems: "center",
                 justifyContent: "center",
-                height: 40,
+                height: moderateScale(50),
               }}
             >
               <Text
                 style={{
                   fontFamily: "Kantumruy-Bold",
-                  color: "#3c6efb",
-                  fontSize: dimension === "sm" ? 12 : 16,
+                  color: "#4cbb17",
+                  fontSize: moderateScale(16),
                 }}
               >
                 {"see more..."}

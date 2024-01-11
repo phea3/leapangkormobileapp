@@ -4,19 +4,19 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ImageBackground,
   TextInput,
   Keyboard,
   Alert,
-  Modal,
-  Platform,
 } from "react-native";
 import { useNavigate } from "react-router";
 import { useLazyQuery } from "@apollo/client";
-
+import LoginStyle from "../styles/LoginStyle.scss";
 import ForgotPasswordStyle from "../styles/ForgotPasswordStyle.scss";
 import { AuthContext } from "../Context/AuthContext";
 import { FORGOT_PASSWORD } from "../graphql/ForgotPassword";
+import { moderateScale } from "../ Metrics";
+import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ForgotPasswordScreen() {
   const navigate = useNavigate();
@@ -80,142 +80,186 @@ export default function ForgotPasswordScreen() {
     };
   }, []);
 
+  useEffect(() => {
+    async function getAccount() {
+      let userGmail = await AsyncStorage.getItem("@gmail");
+      // console.log(userGmail + "\n" + userPassword);
+      if (userGmail) {
+        setEmail(userGmail);
+      }
+    }
+    getAccount();
+  }, []);
+
   return (
     <View style={ForgotPasswordStyle.ForgotPassScreenContainer}>
       <View style={ForgotPasswordStyle.ForgotTopcontainer}>
         {!isKeyboardVisible ? (
-          <View
-            style={
-              dimension === "sm"
-                ? ForgotPasswordStyle.LogoImageScreenContainerSm
-                : ForgotPasswordStyle.LogoImageScreenContainer
-            }
-          >
-            <Image
-              style={
-                dimension === "sm"
-                  ? ForgotPasswordStyle.LogoImageSm
-                  : ForgotPasswordStyle.LogoImage
-              }
-              source={require("../assets/logo.png")}
-              resizeMode="contain"
-            />
-          </View>
-        ) : null}
+          <>
+            <View
+              style={[
+                ForgotPasswordStyle.LogoImageScreenContainer,
+                { height: moderateScale(180) },
+              ]}
+            >
+              <Image
+                style={[
+                  ForgotPasswordStyle.LogoImage,
+                  { width: moderateScale(130), height: moderateScale(130) },
+                ]}
+                source={require("../assets/logo.png")}
+                resizeMode="contain"
+              />
+            </View>
 
-        {/* {isKeyboardVisible ? (
+            {/* {isKeyboardVisible ? (
           <View style={{ height: dimension === "sm" ? 10 : 20 }} />
         ) : null} */}
 
-        <Text
-          style={
-            dimension === "sm"
-              ? ForgotPasswordStyle.ForgotScreenTitle1Sm
-              : ForgotPasswordStyle.ForgotScreenTitle1
-          }
-        >
-          Welcome Back!
-        </Text>
-        <Text
-          style={
-            dimension === "sm"
-              ? ForgotPasswordStyle.ForgotScreenTitle2Sm
-              : ForgotPasswordStyle.ForgotScreenTitle2
-          }
-        >
-          Leap Angkor Human Resource
-        </Text>
-
+            <Text
+              style={[
+                ForgotPasswordStyle.ForgotScreenTitle1,
+                { fontSize: moderateScale(20) },
+              ]}
+            >
+              Welcome Back!
+            </Text>
+            <Text
+              style={[
+                ForgotPasswordStyle.ForgotScreenTitle2,
+                { fontSize: moderateScale(20), marginTop: moderateScale(10) },
+              ]}
+            >
+              Leap Angkor Human Resource
+            </Text>
+          </>
+        ) : null}
         <View
-          style={
-            dimension === "sm"
-              ? ForgotPasswordStyle.ForgotTextInputContainerSm
-              : ForgotPasswordStyle.ForgotTextInputContainer
-          }
+          style={[
+            ForgotPasswordStyle.ForgotTextInputContainer,
+            {
+              marginTop: moderateScale(10),
+              borderWidth: moderateScale(2),
+              padding: moderateScale(15),
+              borderRadius: moderateScale(10),
+            },
+          ]}
         >
           <Text
-            style={
-              dimension === "sm"
-                ? ForgotPasswordStyle.ForgotScreenTextInputTextSM
-                : ForgotPasswordStyle.ForgotScreenTextInputText
-            }
+            style={[
+              ForgotPasswordStyle.ForgotScreenTextInputText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Email*
           </Text>
           <View
-            style={
-              dimension === "sm"
-                ? ForgotPasswordStyle.ForgotScreenTextInputBoxSM
-                : ForgotPasswordStyle.ForgotScreenTextInputBox
-            }
+            style={[
+              ForgotPasswordStyle.ForgotScreenTextInputBox,
+              {
+                borderWidth: moderateScale(1),
+                borderRadius: moderateScale(10),
+                padding: moderateScale(10),
+                marginTop: moderateScale(10),
+              },
+            ]}
           >
             <TextInput
               value={email}
               placeholder="mail@gmail.com"
-              style={
-                dimension === "sm"
-                  ? ForgotPasswordStyle.ForgotScreenTextInputTextSM
-                  : ForgotPasswordStyle.ForgotScreenTextInputText
-              }
-              onChangeText={(e) => setEmail(e)}
+              style={[
+                ForgotPasswordStyle.ForgotScreenTextInputText,
+                { fontSize: moderateScale(14) },
+              ]}
+              onChangeText={(e) => {
+                const updatedText = e.replace(/\s/g, "");
+                setEmail(updatedText);
+              }}
               keyboardType="default"
               secureTextEntry={false}
             />
           </View>
+          {email === "" ? (
+            <Text
+              style={[
+                LoginStyle.LoginRequireScreenTextInputText,
+                { fontSize: moderateScale(12) },
+              ]}
+            >
+              Required!
+            </Text>
+          ) : email.indexOf(" ") !== -1 ? (
+            <Text
+              style={[
+                LoginStyle.LoginRequireScreenTextInputText,
+                { fontSize: moderateScale(12) },
+              ]}
+            >
+              Invalid email!, email cannot contain spaces
+            </Text>
+          ) : email.includes("@gmail.com") ? null : (
+            <Text
+              style={[
+                LoginStyle.LoginRequireScreenTextInputText,
+                { fontSize: moderateScale(12) },
+              ]}
+            >
+              Oop!, invalid email
+            </Text>
+          )}
           <View style={ForgotPasswordStyle.ForgotScreenBtnContainer}>
             <TouchableOpacity
-              style={
-                dimension === "sm"
-                  ? ForgotPasswordStyle.ForgotScreenForgotButtonSM
-                  : ForgotPasswordStyle.ForgotScreenForgotButton
-              }
+              style={[
+                ForgotPasswordStyle.ForgotScreenForgotButtonBack,
+                {
+                  borderRadius: moderateScale(10),
+                  padding: moderateScale(10),
+                  marginTop: moderateScale(10),
+                },
+              ]}
               onPress={() => navigate("/")}
             >
               <Text
-                style={
-                  dimension === "sm"
-                    ? ForgotPasswordStyle.ForgotScreenForgotButtonTextSM
-                    : ForgotPasswordStyle.ForgotScreenForgotButtonText
-                }
+                style={[
+                  ForgotPasswordStyle.ForgotScreenForgotButtonText,
+                  { fontSize: moderateScale(14) },
+                ]}
               >
                 Back
               </Text>
             </TouchableOpacity>
             {loadingPage ? (
               <TouchableOpacity
-                style={
-                  dimension === "sm"
-                    ? ForgotPasswordStyle.ForgotScreenForgotButtonSM
-                    : ForgotPasswordStyle.ForgotScreenForgotButton
-                }
+                style={ForgotPasswordStyle.ForgotScreenForgotButton}
               >
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? ForgotPasswordStyle.ForgotScreenForgotButtonTextSM
-                      : ForgotPasswordStyle.ForgotScreenForgotButtonText
-                  }
+                  style={[
+                    ForgotPasswordStyle.ForgotScreenForgotButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
                 >
                   Loading...
                 </Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
-                style={
-                  dimension === "sm"
-                    ? ForgotPasswordStyle.ForgotScreenForgotButtonSM
-                    : ForgotPasswordStyle.ForgotScreenForgotButton
-                }
+                style={[
+                  ForgotPasswordStyle.ForgotScreenForgotButton,
+                  {
+                    borderRadius: moderateScale(10),
+                    padding: moderateScale(10),
+                    marginTop: moderateScale(10),
+                  },
+                ]}
                 onPress={() => {
                   handleSendEmail();
                 }}
               >
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? ForgotPasswordStyle.ForgotScreenForgotButtonTextSM
-                      : ForgotPasswordStyle.ForgotScreenForgotButtonText
-                  }
+                  style={[
+                    ForgotPasswordStyle.ForgotScreenForgotButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
                 >
                   Ok
                 </Text>
@@ -226,15 +270,14 @@ export default function ForgotPasswordScreen() {
       </View>
       {!isKeyboardVisible ? (
         <View style={ForgotPasswordStyle.ForgotBottomContainer}>
-          <Image
-            source={require("../assets/Images/bottomImage.png")}
-            style={
-              dimension === "sm"
-                ? ForgotPasswordStyle.ForgotScreenFooterImage
-                : ForgotPasswordStyle.ForgotScreenFooterImage
-            }
-            resizeMode="contain"
-          />
+          <Text
+            style={[
+              LoginStyle.LoginScreenText1,
+              { fontSize: moderateScale(14) },
+            ]}
+          >
+            © {moment(new Date()).format("YYYY")} Go Global School.
+          </Text>
         </View>
       ) : null}
     </View>

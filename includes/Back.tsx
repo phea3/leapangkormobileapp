@@ -4,6 +4,7 @@ import HeaderStyle from "../styles/HeaderStyle.scss";
 import { AuthContext } from "../Context/AuthContext";
 import { Image, Text, View } from "react-native";
 import { useNavigate } from "react-router-native";
+import { moderateScale } from "../ Metrics";
 
 export default function Back() {
   const { dimension } = useContext(AuthContext);
@@ -22,11 +23,11 @@ export default function Back() {
     >
       <Image
         source={require("../assets/Images/back.png")}
-        style={
-          dimension === "sm"
-            ? HeaderStyle.HeaderBackIconSM
-            : HeaderStyle.HeaderBackIcon
-        }
+        style={{
+          width: moderateScale(20),
+          height: moderateScale(20),
+          marginRight: moderateScale(10),
+        }}
       />
       <View
         style={
@@ -36,11 +37,7 @@ export default function Back() {
         }
       >
         <Text
-          style={
-            dimension === "sm"
-              ? HeaderStyle.HeaderTitle1SM
-              : HeaderStyle.HeaderTitle1
-          }
+          style={[HeaderStyle.HeaderTitle1, { fontSize: moderateScale(14) }]}
         >
           ការគ្រប់គ្រងកម្មវិធី
         </Text>

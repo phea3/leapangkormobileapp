@@ -9,6 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import { moderateScale } from "../ Metrics";
 
 export default function TabView() {
   const navigate = useNavigate();
@@ -24,68 +25,69 @@ export default function TabView() {
   });
 
   useEffect(() => {
-    if (location.pathname === "/notification") {
+    if (location.pathname === "/notification/action") {
       offset.value = withTiming(0);
     } else if (location.pathname === "/notification/meeting") {
       offset.value = withTiming(0.95);
     }
   }, [navigate]);
 
+  // console.log(location.pathname);
   return (
     <View style={TabViewStyle.TabViewContainer}>
       <View style={TabViewStyle.TabViewContainerFlex}>
         <Animated.View
-          style={[TabViewStyle.TabViewContainerFlexAnimation, animatedStyles]}
+          style={[
+            TabViewStyle.TabViewContainerFlexAnimation,
+            animatedStyles,
+            {
+              borderRadius: moderateScale(2),
+              borderBottomWidth: moderateScale(3),
+            },
+          ]}
         />
         <TouchableOpacity
-          style={
+          style={[
             location.pathname === "/notification/action"
               ? TabViewStyle.TabViewButtonActive
-              : TabViewStyle.TabViewButton
-          }
+              : TabViewStyle.TabViewButton,
+            { borderBottomWidth: moderateScale(0.5) },
+          ]}
           onPress={() => {
             navigate("/notification/action");
             offset.value = withTiming(0);
           }}
         >
           <Text
-            style={
-              location.pathname === "/notification/action" && dimension === "sm"
-                ? TabViewStyle.TabViewButtonTextActiveSM
-                : location.pathname === "/notification/action" &&
-                  dimension !== "sm"
+            style={[
+              location.pathname === "/notification/action"
                 ? TabViewStyle.TabViewButtonTextActive
-                : dimension === "sm"
-                ? TabViewStyle.TabViewButtonTextSM
-                : TabViewStyle.TabViewButtonText
-            }
+                : TabViewStyle.TabViewButtonText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             ACTION
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={
+          style={[
             location.pathname === "/notification/meeting"
               ? TabViewStyle.TabViewButtonActive
-              : TabViewStyle.TabViewButton
-          }
+              : TabViewStyle.TabViewButton,
+            { borderBottomWidth: moderateScale(0.5) },
+          ]}
           onPress={() => {
             navigate("/notification/meeting");
             offset.value = withTiming(0.95);
           }}
         >
           <Text
-            style={
-              location.pathname === "/notification/meeting" &&
-              dimension === "sm"
-                ? TabViewStyle.TabViewButtonTextActiveSM
-                : location.pathname === "/notification/meeting" &&
-                  dimension !== "sm"
+            style={[
+              location.pathname === "/notification/meeting"
                 ? TabViewStyle.TabViewButtonTextActive
-                : dimension === "sm"
-                ? TabViewStyle.TabViewButtonTextSM
-                : TabViewStyle.TabViewButtonText
-            }
+                : TabViewStyle.TabViewButtonText,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             MEETING
           </Text>

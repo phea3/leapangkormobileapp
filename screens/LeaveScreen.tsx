@@ -7,6 +7,7 @@ import LeaveStyle from "../styles/LeaveStyle.scss";
 import { GET_LEAVE_LIST } from "../graphql/RequestLeave";
 import { AuthContext } from "../Context/AuthContext";
 import * as Animatable from "react-native-animatable";
+import { moderateScale } from "../ Metrics";
 
 export default function LeaveScreen() {
   const navigate = useNavigate();
@@ -40,73 +41,80 @@ export default function LeaveScreen() {
   }, []);
 
   return (
-    <View style={LeaveStyle.LeaveContainer}>
+    <View
+      style={[
+        LeaveStyle.LeaveContainer,
+        {
+          borderTopLeftRadius: moderateScale(15),
+          borderTopRightRadius: moderateScale(15),
+          borderTopWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+        },
+      ]}
+    >
       <View style={LeaveStyle.LeaveBackButtonContainer}>
         <TouchableOpacity
           onPress={() => navigate("/home")}
-          style={LeaveStyle.LeaveBackButton}
+          style={[
+            HomeStyle.HomeFeaturesTitleButton,
+            { padding: moderateScale(15) },
+          ]}
         >
           <Image
             source={require("../assets/Images/back-dark-blue.png")}
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveBackButtonIconSM
-                : LeaveStyle.LeaveBackButtonIcon
-            }
+            style={{
+              width: moderateScale(20),
+              height: moderateScale(20),
+              marginRight: moderateScale(10),
+            }}
           />
           <Text
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveBackButtonTitleSM
-                : LeaveStyle.LeaveBackButtonTitle
-            }
+            style={[
+              LeaveStyle.LeaveBackButtonTitle,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             Leaves
           </Text>
         </TouchableOpacity>
       </View>
 
-      <View style={LeaveStyle.LeaveTitlesContainer}>
-        <View style={LeaveStyle.LeaveTitleLeftContainer}>
+      <View
+        style={[LeaveStyle.LeaveTitlesContainer, { height: moderateScale(40) }]}
+      >
+        <View
+          style={[
+            LeaveStyle.LeaveTitleLeftContainer,
+            { marginLeft: moderateScale(6) },
+          ]}
+        >
           <Text
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveTitleTextSM
-                : LeaveStyle.LeaveTitleText
-            }
+            style={[LeaveStyle.LeaveTitleText, { fontSize: moderateScale(14) }]}
           >
             Discription
           </Text>
         </View>
         <View style={LeaveStyle.LeaveTitleLeftContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveTitleTextSM
-                : LeaveStyle.LeaveTitleText
-            }
+            style={[
+              LeaveStyle.LeaveTitleText,
+              { fontSize: moderateScale(14), textAlign: "center" },
+            ]}
           >
             Date
           </Text>
         </View>
         <View style={LeaveStyle.LeaveTitleContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveTitleTextSM
-                : LeaveStyle.LeaveTitleText
-            }
+            style={[LeaveStyle.LeaveTitleText, { fontSize: moderateScale(14) }]}
           >
             Shift
           </Text>
         </View>
         <View style={LeaveStyle.LeaveTitleContainer}>
           <Text
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveTitleTextSM
-                : LeaveStyle.LeaveTitleText
-            }
+            style={[LeaveStyle.LeaveTitleText, { fontSize: moderateScale(14) }]}
           >
             Status
           </Text>
@@ -116,7 +124,10 @@ export default function LeaveScreen() {
         <View style={HomeStyle.HomeContentContainer}>
           <Image
             source={require("../assets/Images/loader-1.gif")}
-            style={{ width: 100, height: 100 }}
+            style={{
+              width: moderateScale(100),
+              height: moderateScale(100),
+            }}
           />
         </View>
       ) : (
@@ -127,40 +138,44 @@ export default function LeaveScreen() {
         >
           {leavListData?.map((attendance: any, index: number) => (
             <Animatable.View
-              style={LeaveStyle.LeaveBodyContainer}
+              style={[
+                LeaveStyle.LeaveBodyContainer,
+                { height: moderateScale(55) },
+              ]}
               key={index}
               animation={load ? "fadeInUp" : "fadeInUp"}
             >
-              <View style={LeaveStyle.LeaveTitleLeftContainer}>
+              <View
+                style={[
+                  LeaveStyle.LeaveTitleLeftContainer,
+                  { marginLeft: moderateScale(6) },
+                ]}
+              >
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? LeaveStyle.LeaveBodyReasonTextSM
-                      : LeaveStyle.LeaveBodyReasonText
-                  }
-                  numberOfLines={1}
+                  style={[
+                    LeaveStyle.LeaveBodyReasonText,
+                    { fontSize: moderateScale(12) },
+                  ]}
                 >
                   {attendance?.description}
                 </Text>
               </View>
               <View style={LeaveStyle.LeaveTitleLeftContainer}>
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? LeaveStyle.LeaveBodyTextSM
-                      : LeaveStyle.LeaveBodyText
-                  }
+                  style={[
+                    LeaveStyle.LeaveBodyText,
+                    { fontSize: moderateScale(12), textAlign: "center" },
+                  ]}
                 >
                   {attendance?.date}
                 </Text>
               </View>
               <View style={LeaveStyle.LeaveTitleContainer}>
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? LeaveStyle.LeaveBodyTextSM
-                      : LeaveStyle.LeaveBodyText
-                  }
+                  style={[
+                    LeaveStyle.LeaveBodyText,
+                    { fontSize: moderateScale(12) },
+                  ]}
                 >
                   {attendance?.shife ? attendance?.shife : "--:--"}
                 </Text>
@@ -168,10 +183,9 @@ export default function LeaveScreen() {
               <View style={LeaveStyle.LeaveTitleContainer}>
                 <Text
                   style={[
-                    dimension === "sm"
-                      ? LeaveStyle.LeaveApproveTextSM
-                      : LeaveStyle.LeaveApproveText,
+                    LeaveStyle.LeaveApproveText,
                     {
+                      fontSize: moderateScale(12),
                       color:
                         attendance?.status === "cancel"
                           ? "red"
@@ -198,15 +212,15 @@ export default function LeaveScreen() {
                 width: "100%",
                 alignItems: "center",
                 justifyContent: "center",
-                height: 40,
+                height: moderateScale(40),
               }}
             >
               <Text
                 style={{
                   textTransform: "lowercase",
                   fontFamily: "Kantumruy-Bold",
-                  color: "#3c6efb",
-                  fontSize: dimension === "sm" ? 12 : 16,
+                  color: "#4cbb17",
+                  fontSize: moderateScale(16),
                 }}
               >
                 {"see more..."}
@@ -215,8 +229,6 @@ export default function LeaveScreen() {
           ) : null}
         </ScrollView>
       )}
-
-      <View></View>
     </View>
   );
 }

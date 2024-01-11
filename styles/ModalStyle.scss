@@ -17,64 +17,36 @@
 
 .ModalButtonContainerMain {
   width: 65%;
-  height: 200px;
   background-color: $color-white;
   justify-content: space-between;
   align-items: center;
-  border-radius: 10px;
-  border-width: 1px;
   border-color: $color-gray;
 }
 
 .ModalButtonContainer {
   width: 65%;
-  height: 200px;
   background-color: $color-white;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
-  border-radius: 10px;
-  border-width: 1px;
   border-color: $color-gray;
 }
 
 .ModalButtonContainerFail {
   width: 65%;
-  height: 200px;
   background-color: $color-white;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
-  border-radius: 10px;
-  border-width: 1px;
   border-color: $color-gray;
 }
 
-.ModalButtonTextTitleSM {
-  font-size: 14px;
-  font-family: $kantumruy-bold;
-  text-align: center;
-}
-
 .ModalButtonTextTitle {
-  font-size: 18px;
   font-family: $kantumruy-bold;
   text-align: center;
-}
-
-.ModalButtonTextTitle {
-  font-size: 18px;
-  font-family: $kantumruy-bold;
-  text-align: center;
-}
-
-.ModalButtonTextBodySM {
-  font-size: 10px;
-  font-family: $kantumruy-regular;
 }
 
 .ModalButtonTextBody {
   font-family: $kantumruy-regular;
+  text-align: center;
 }
 
 .ModalButtonOptionContainer {
@@ -86,39 +58,18 @@
 
 .ModalButtonOptionLeft {
   width: 50%;
-  padding: 15px;
   justify-content: center;
   align-items: center;
-  border-top-width: 1px;
   border-color: $color-gray;
-}
-
-.ModalButtonTextTitleMainSM {
-  color: $color-dark-blue;
-  font-family: $kantumruy-bold;
-  text-align: center;
-  font-size: 12px;
 }
 
 .ModalButtonTextTitleMain {
   color: $color-dark-blue;
   font-family: $kantumruy-bold;
   text-align: center;
-  font-size: 16px;
 }
 
 .ModalButtonTextTitleContainerMain {
   flex: 1;
-  padding: 20px;
   justify-content: center;
-}
-
-.ModalImageAfterCheckSM {
-  width: 60px;
-  height: 60px;
-}
-
-.ModalImageAfterCheck {
-  width: 80px;
-  height: 80px;
 }

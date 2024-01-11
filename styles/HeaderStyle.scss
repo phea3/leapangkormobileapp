@@ -50,9 +50,6 @@
 }
 
 .HeaderUserProfileImageSM {
-  width: 35px;
-  height: 35px;
-  margin: 4px;
   border-radius: 100px;
   background-color: $color-white;
 }
@@ -79,19 +76,8 @@
   font-size: 12px;
   font-family: $kantumruy-bold;
 }
-.HeaderTitle1BlueSM {
-  font-size: 13px;
-  font-family: $kantumruy-bold;
-  color: $color-green;
-}
 
-.HeaderTitle1SM {
-  font-size: 12px;
-  font-family: $kantumruy-bold;
-  color: $color-white;
-}
 .HeaderTitle1Blue {
-  font-size: 16px;
   font-family: $kantumruy-bold;
   color: $color-green;
 }
@@ -102,25 +88,13 @@
 }
 
 .HeaderTitle1 {
-  font-size: 16px;
   font-family: $kantumruy-bold;
   color: $color-white;
 }
 
-.HeaderTitle2SM {
-  font-size: 10px;
-  font-family: $kantumruy-regular;
-  color: $color-white;
-}
-
 .HeaderTitle2 {
-  font-size: 13px;
   font-family: $kantumruy-regular;
   color: $color-white;
-}
-
-.HeaderTitleContainerSM {
-  padding: 5px;
 }
 
 .HeaderTitleContainer {
@@ -140,17 +114,9 @@
 }
 
 .ProfileBackButton {
-  // width: 40%;
-  padding: 10px;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-}
-
-.ProfileBackButtonIcon {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
 }
 
 .ProfileBackButtonTitle {

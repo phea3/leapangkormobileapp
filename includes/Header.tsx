@@ -8,6 +8,7 @@ import {
   initMobileUserLogin,
 } from "../functions/FetchDataLocalStorage";
 import Back from "./Back";
+import { moderateScale } from "../ Metrics";
 
 export default function Header() {
   const [mobileUserLogin, setMobileUserLogin] = useState(initMobileUserLogin);
@@ -65,25 +66,18 @@ export default function Header() {
             >
               <Image
                 source={require("../assets/Images/back-dark-blue.png")}
-                style={
-                  dimension === "sm"
-                    ? HeaderStyle.HeaderBackIconSM
-                    : HeaderStyle.HeaderBackIcon
-                }
+                style={{
+                  width: moderateScale(22),
+                  height: moderateScale(22),
+                  margin: moderateScale(8),
+                }}
               />
-              <View
-                style={
-                  dimension === "sm"
-                    ? HeaderStyle.HeaderTitleContainerSM
-                    : HeaderStyle.HeaderTitleContainer
-                }
-              >
+              <View style={{ padding: moderateScale(5) }}>
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? HeaderStyle.HeaderTitle1BlueSM
-                      : HeaderStyle.HeaderTitle1Blue
-                  }
+                  style={[
+                    HeaderStyle.HeaderTitle1Blue,
+                    { fontSize: moderateScale(14) },
+                  ]}
                 >
                   NOTIFICATIONS
                 </Text>
@@ -102,13 +96,25 @@ export default function Header() {
               >
                 <TouchableOpacity
                   onPress={() => navigate(-1)}
-                  style={HeaderStyle.ProfileBackButton}
+                  style={[
+                    HeaderStyle.ProfileBackButton,
+                    { padding: moderateScale(10) },
+                  ]}
                 >
                   <Image
                     source={require("../assets/Images/back-white.png")}
-                    style={HeaderStyle.ProfileBackButtonIcon}
+                    style={{
+                      width: moderateScale(20),
+                      height: moderateScale(20),
+                      marginRight: moderateScale(10),
+                    }}
                   />
-                  <Text style={HeaderStyle.ProfileBackButtonTitle}>
+                  <Text
+                    style={[
+                      HeaderStyle.ProfileBackButtonTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
                     Profile
                   </Text>
                 </TouchableOpacity>
@@ -133,34 +139,34 @@ export default function Header() {
                       ? { uri: mobileUserLogin?.profileImg }
                       : require("../assets/Images/user.png")
                   }
-                  style={
-                    dimension === "sm"
-                      ? HeaderStyle.HeaderUserProfileImageSM
-                      : HeaderStyle.HeaderUserProfileImage
-                  }
+                  style={[
+                    HeaderStyle.HeaderUserProfileImage,
+                    {
+                      height: moderateScale(40),
+                      width: moderateScale(40),
+                      margin: moderateScale(8),
+                    },
+                  ]}
                 />
                 <View
-                  style={
-                    dimension === "sm"
-                      ? HeaderStyle.HeaderTitleContainerSM
-                      : HeaderStyle.HeaderTitleContainer
-                  }
+                  style={[
+                    HeaderStyle.HeaderTitleContainer,
+                    { height: moderateScale(40) },
+                  ]}
                 >
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? HeaderStyle.HeaderTitle1SM
-                        : HeaderStyle.HeaderTitle1
-                    }
+                    style={[
+                      HeaderStyle.HeaderTitle1,
+                      { fontSize: moderateScale(14) },
+                    ]}
                   >
                     Hi {mobileUserLogin?.englishName}!
                   </Text>
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? HeaderStyle.HeaderTitle2SM
-                        : HeaderStyle.HeaderTitle2
-                    }
+                    style={[
+                      HeaderStyle.HeaderTitle2,
+                      { fontSize: moderateScale(12) },
+                    ]}
                   >
                     View Profile{" >"}
                   </Text>
@@ -178,11 +184,10 @@ export default function Header() {
           >
             <Image
               source={require("../assets/Images/bell.png")}
-              style={
-                dimension === "sm"
-                  ? HeaderStyle.HeaderUserBellSM
-                  : HeaderStyle.HeaderUserBell
-              }
+              style={{
+                height: moderateScale(30),
+                width: moderateScale(30),
+              }}
             />
           </TouchableOpacity>
         )}

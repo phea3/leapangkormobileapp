@@ -6,6 +6,7 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
+  Vibration,
   View,
 } from "react-native";
 import LeaveStyle from "../styles/LeaveStyle.scss";
@@ -21,6 +22,7 @@ import CheckModal from "../components/CheckModal";
 import { AuthContext } from "../Context/AuthContext";
 import { getDistance, getPreciseDistance, isPointWithinRadius } from "geolib";
 import { GET_EMPLOYEEBYID } from "../graphql/GetEmployeeById";
+import { moderateScale } from "../ Metrics";
 
 export default function ChecKAttendance({ locate }: any) {
   const { uid } = useContext(AuthContext);
@@ -30,16 +32,21 @@ export default function ChecKAttendance({ locate }: any) {
   const [CheckIsVisible, setCheckVisible] = useState(false);
   const [scanType, setScanType] = useState("");
   const { dimension } = useContext(AuthContext);
-  const [checkData, setCheckData] = useState({
+  const [checkData, setCheckData] = useState<{
+    message: string;
+    status: boolean | null;
+  }>({
     message: "",
-    status: false,
+    status: null,
   });
+
   const [location, setLocation] = useState<Location.LocationObject | null>(
     null
   );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [morning, setMorning] = useState(true);
   const [afternoon, setAfternoon] = useState(false);
+  const [load, setLoad] = useState(true);
 
   const { data: employeeData, refetch: employeeRefetch } = useQuery(
     GET_EMPLOYEEBYID,
@@ -83,8 +90,15 @@ export default function ChecKAttendance({ locate }: any) {
   };
 
   const handleClose = () => {
-    navigate("/attendance");
     setVisible(false);
+    setTimeout(() => {
+      setCheckData({
+        message: "",
+        status: null,
+      });
+    }, 500);
+    setLocation(null);
+    setLoad(true);
   };
 
   const handleCheckOpen = () => {
@@ -128,41 +142,16 @@ export default function ChecKAttendance({ locate }: any) {
     }
   };
 
-  async function getLocation() {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
-      return;
-    }
-
-    // Get the current location
-    try {
-      const location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
-    } catch (error) {
-      setErrorMsg("Error getting location");
-    }
-  }
-
-  useEffect(() => {
-    getLocation();
-  }, [located.pathname]);
-
   // console.log(locate);
   const [employeeCheckAttendance] = useMutation(EMPLOYEECHECKATTENDANCE);
 
-  const HandleCheckAttendance = async (check: string) => {
-    setScanType(check);
-    handleCheckOpen();
-  };
-
-  const CheckInOut = async () => {
+  const CheckInOut = async (located: any) => {
     let createValue = {
-      longitude: locate?.coords.longitude
-        ? locate?.coords.longitude.toString()
+      longitude: located?.coords.longitude
+        ? located?.coords.longitude.toString()
         : "",
-      latitude: locate?.coords.latitude
-        ? locate?.coords.latitude.toString()
+      latitude: located?.coords.latitude
+        ? located?.coords.latitude.toString()
         : "",
       shift: morning ? "morning" : afternoon ? "afternoon" : "",
       scan: scanType,
@@ -174,12 +163,18 @@ export default function ChecKAttendance({ locate }: any) {
       },
       onCompleted(data) {
         // console.log("Succeed", data);
+        if (data?.employeeCheckAttendance?.status === false) {
+          Vibration.vibrate();
+        }
         setCheckData({
           message: data?.employeeCheckAttendance?.message,
           status: data?.employeeCheckAttendance?.status,
         });
+        setLoad(false);
         if (checkData) {
-          handleOpen();
+          setTimeout(() => {
+            handleClose();
+          }, 1500);
         }
       },
       onError(error: any) {
@@ -188,37 +183,95 @@ export default function ChecKAttendance({ locate }: any) {
           message: error?.message,
           status: error?.status,
         });
-        handleOpen();
+        setLoad(false);
+        setTimeout(() => {
+          handleClose();
+        }, 1500);
       },
     });
   };
 
+  async function getLocation() {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    try {
+      const $location = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.Low,
+      });
+      // const $location = null;
+      // console.log($location);
+      setLocation($location);
+      if ($location) {
+        handleOpen();
+        setTimeout(() => {
+          CheckInOut($location);
+        }, 500);
+      } else if ($location === null) {
+        handleOpen();
+        setCheckData({
+          message: "Cannot get your location!",
+          status: null,
+        });
+        setLoad(false);
+        setTimeout(() => {
+          handleClose();
+        }, 1500);
+      }
+    } catch (error) {
+      handleClose();
+      setErrorMsg("Error getting location");
+    }
+  }
+
+  const HandleCheckAttendance = async (check: string) => {
+    setScanType(check);
+    handleCheckOpen();
+  };
+
+  useEffect(() => {
+    if (errorMsg === "Permission to access location was denied.") {
+      Alert.alert("Oop!", "Permission to access location was denied.");
+    } else if (errorMsg === "Error getting location") {
+      Alert.alert("Error getting location");
+    }
+  }, [errorMsg]);
+
   if (errorMsg) {
     return (
-      <View style={LeaveStyle.LeaveContainer}>
+      <View
+        style={[
+          LeaveStyle.LeaveContainer,
+          {
+            borderTopLeftRadius: moderateScale(15),
+            borderTopRightRadius: moderateScale(15),
+            borderTopWidth: moderateScale(1),
+            borderRightWidth: moderateScale(1),
+            borderLeftWidth: moderateScale(1),
+          },
+        ]}
+      >
         <View style={LeaveStyle.LeaveBackButtonContainer}>
           <TouchableOpacity
             onPress={() => navigate("/home")}
-            style={
-              dimension === "sm"
-                ? LeaveStyle.LeaveBackButtonSM
-                : LeaveStyle.LeaveBackButton
-            }
+            style={[LeaveStyle.LeaveBackButton, { padding: moderateScale(15) }]}
           >
             <Image
               source={require("../assets/Images/back-dark-blue.png")}
-              style={
-                dimension === "sm"
-                  ? LeaveStyle.LeaveBackButtonIconSM
-                  : LeaveStyle.LeaveBackButtonIcon
-              }
+              style={{
+                width: moderateScale(20),
+                height: moderateScale(20),
+                marginRight: moderateScale(10),
+              }}
             />
             <Text
-              style={
-                dimension === "sm"
-                  ? LeaveStyle.LeaveBackButtonTitleSM
-                  : LeaveStyle.LeaveBackButtonTitle
-              }
+              style={[
+                LeaveStyle.LeaveBackButtonTitle,
+                { fontSize: moderateScale(14) },
+              ]}
             >
               Leave Check
             </Text>
@@ -229,12 +282,16 @@ export default function ChecKAttendance({ locate }: any) {
             onPress={() => {
               handleLocationPermission();
             }}
-            style={{ backgroundColor: "#082b9e", padding: 10, marginTop: 5 }}
+            style={{
+              backgroundColor: "#082b9e",
+              padding: moderateScale(10),
+              marginTop: moderateScale(5),
+            }}
           >
             <Text
               style={[
                 CheckStyle.LeaveErrorTitle,
-                { fontSize: dimension === "sm" ? 12 : 16 },
+                { fontSize: moderateScale(16) },
               ]}
             >
               Permission to access location was denied.
@@ -259,30 +316,50 @@ export default function ChecKAttendance({ locate }: any) {
               onPress={handleCheckClose}
               activeOpacity={0.2}
             />
-            <View style={ModalStyle.ModalButtonContainerMain}>
-              <View style={ModalStyle.ModalButtonTextTitleContainerMain}>
+            <View
+              style={[
+                ModalStyle.ModalButtonContainerMain,
+                {
+                  height: moderateScale(200),
+                  borderRadius: moderateScale(10),
+                  borderWidth: moderateScale(1),
+                },
+              ]}
+            >
+              <View
+                style={[
+                  ModalStyle.ModalButtonTextTitleContainerMain,
+                  { padding: moderateScale(20) },
+                ]}
+              >
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? ModalStyle.ModalButtonTextTitleMainSM
-                      : ModalStyle.ModalButtonTextTitleMain
-                  }
+                  style={[
+                    ModalStyle.ModalButtonTextTitleMain,
+                    { fontSize: moderateScale(16) },
+                  ]}
                 >
-                  Do you want to check in/out?
+                  {scanType === "checkIn"
+                    ? "Do you want to check in?"
+                    : "Do you want to check out?"}
                 </Text>
               </View>
 
               <View style={ModalStyle.ModalButtonOptionContainer}>
                 <TouchableOpacity
                   onPress={() => handleCheckClose()}
-                  style={ModalStyle.ModalButtonOptionLeft}
+                  style={[
+                    ModalStyle.ModalButtonOptionLeft,
+                    {
+                      padding: moderateScale(15),
+                      borderTopWidth: moderateScale(1),
+                    },
+                  ]}
                 >
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? ModalStyle.ModalButtonTextTitleMainSM
-                        : ModalStyle.ModalButtonTextTitleMain
-                    }
+                    style={[
+                      ModalStyle.ModalButtonTextTitleMain,
+                      { fontSize: moderateScale(16) },
+                    ]}
                   >
                     No
                   </Text>
@@ -290,19 +367,22 @@ export default function ChecKAttendance({ locate }: any) {
                 <TouchableOpacity
                   onPress={() => {
                     handleCheckClose();
-                    CheckInOut();
+                    getLocation();
                   }}
                   style={[
                     ModalStyle.ModalButtonOptionLeft,
-                    { borderLeftWidth: 1 },
+                    {
+                      padding: moderateScale(15),
+                      borderLeftWidth: moderateScale(1),
+                      borderTopWidth: moderateScale(1),
+                    },
                   ]}
                 >
                   <Text
-                    style={
-                      dimension === "sm"
-                        ? ModalStyle.ModalButtonTextTitleMainSM
-                        : ModalStyle.ModalButtonTextTitleMain
-                    }
+                    style={[
+                      ModalStyle.ModalButtonTextTitleMain,
+                      { fontSize: moderateScale(16) },
+                    ]}
                   >
                     Yes
                   </Text>
@@ -314,34 +394,45 @@ export default function ChecKAttendance({ locate }: any) {
 
         {/* ============= Alert After Check Attendance ============= */}
         <CheckModal
+          location={location}
           isVisible={isVisible}
           handleClose={handleClose}
           data={checkData}
+          load={load}
         />
-        <View style={CheckStyle.CheckContainer}>
+        <View
+          style={[
+            CheckStyle.CheckContainer,
+            {
+              borderTopLeftRadius: moderateScale(15),
+              borderTopRightRadius: moderateScale(15),
+              borderTopWidth: moderateScale(1),
+              borderRightWidth: moderateScale(1),
+              borderLeftWidth: moderateScale(1),
+            },
+          ]}
+        >
           <View style={LeaveStyle.LeaveBackButtonContainer}>
             <TouchableOpacity
               onPress={() => navigate("/home")}
-              style={
-                dimension === "sm"
-                  ? LeaveStyle.LeaveBackButtonSM
-                  : LeaveStyle.LeaveBackButton
-              }
+              style={[
+                LeaveStyle.LeaveBackButton,
+                { padding: moderateScale(15) },
+              ]}
             >
               <Image
                 source={require("../assets/Images/back-dark-blue.png")}
-                style={
-                  dimension === "sm"
-                    ? LeaveStyle.LeaveBackButtonIconSM
-                    : LeaveStyle.LeaveBackButtonIcon
-                }
+                style={{
+                  width: moderateScale(20),
+                  height: moderateScale(20),
+                  marginRight: moderateScale(10),
+                }}
               />
               <Text
-                style={
-                  dimension === "sm"
-                    ? LeaveStyle.LeaveBackButtonTitleSM
-                    : LeaveStyle.LeaveBackButtonTitle
-                }
+                style={[
+                  LeaveStyle.LeaveBackButtonTitle,
+                  { fontSize: moderateScale(14) },
+                ]}
               >
                 Check In/Out
               </Text>
@@ -352,30 +443,28 @@ export default function ChecKAttendance({ locate }: any) {
             contentContainerStyle={{
               alignItems: "center",
               backgroundColor: "#f8f8f8",
-              padding: 10,
-              borderRadius: 10,
-              borderWidth: 1,
+              padding: moderateScale(10),
+              borderRadius: moderateScale(10),
+              borderWidth: moderateScale(1),
               borderColor: "#dcdcdc",
             }}
             style={{
               flex: 1,
               width: "100%",
-              padding: 10,
+              padding: moderateScale(10),
             }}
           >
             <View
-              style={
-                dimension === "sm"
-                  ? HomeStyle.HomeMainSelectDateButtonLabelContainerSM
-                  : HomeStyle.HomeMainSelectDateButtonLabelContainer
-              }
+              style={[
+                HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                { height: moderateScale(40) },
+              ]}
             >
               <Text
-                style={
-                  dimension === "sm"
-                    ? HomeStyle.HomeMainSelectDateButtonLabelSM
-                    : HomeStyle.HomeMainSelectDateButtonLabel
-                }
+                style={[
+                  HomeStyle.HomeMainSelectDateButtonLabel,
+                  { fontSize: moderateScale(14) },
+                ]}
               >
                 Select Shifts
               </Text>
@@ -385,7 +474,10 @@ export default function ChecKAttendance({ locate }: any) {
                 style={[
                   CheckStyle.CheckMainSelectDateButton,
                   {
-                    marginRight: 10,
+                    height: moderateScale(40),
+                    marginRight: moderateScale(10),
+                    paddingHorizontal: moderateScale(10),
+                    borderRadius: moderateScale(10),
                   },
                 ]}
                 onPress={() => {
@@ -399,25 +491,30 @@ export default function ChecKAttendance({ locate }: any) {
                       ? require("../assets/Images/rec.png")
                       : require("../assets/Images/reced.png")
                   }
-                  style={[
-                    dimension === "sm"
-                      ? HomeStyle.HomeMainSelectIconSM
-                      : HomeStyle.HomeMainSelectIcon,
-                    { marginRight: 10 },
-                  ]}
+                  style={{
+                    width: moderateScale(20),
+                    height: moderateScale(20),
+                    marginRight: moderateScale(10),
+                  }}
                 />
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? HomeStyle.HomeMainSelectDateButtonPlaceholderSM
-                      : HomeStyle.HomeMainSelectDateButtonPlaceholder
-                  }
+                  style={[
+                    HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                    { fontSize: moderateScale(12) },
+                  ]}
                 >
                   Morning
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={CheckStyle.CheckMainSelectDateButton}
+                style={[
+                  CheckStyle.CheckMainSelectDateButton,
+                  {
+                    height: moderateScale(40),
+                    marginRight: moderateScale(10),
+                    borderRadius: moderateScale(10),
+                  },
+                ]}
                 onPress={() => {
                   setMorning(false);
                   setAfternoon(true);
@@ -429,113 +526,79 @@ export default function ChecKAttendance({ locate }: any) {
                       ? require("../assets/Images/rec.png")
                       : require("../assets/Images/reced.png")
                   }
-                  style={[
-                    dimension === "sm"
-                      ? HomeStyle.HomeMainSelectIconSM
-                      : HomeStyle.HomeMainSelectIcon,
-                    { marginRight: 10 },
-                  ]}
+                  style={{
+                    width: moderateScale(20),
+                    height: moderateScale(20),
+                    marginRight: moderateScale(10),
+                  }}
                 />
                 <Text
-                  style={
-                    dimension === "sm"
-                      ? HomeStyle.HomeMainSelectDateButtonPlaceholderSM
-                      : HomeStyle.HomeMainSelectDateButtonPlaceholder
-                  }
+                  style={[
+                    HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                    { fontSize: moderateScale(12) },
+                  ]}
                 >
                   Afternoon
                 </Text>
               </TouchableOpacity>
             </View>
-            {locate ? (
-              <>
-                <TouchableOpacity
-                  style={
-                    dimension === "sm"
-                      ? CheckStyle.CheckInButtonContainerSM
-                      : CheckStyle.CheckInButtonContainer
-                  }
-                  onPress={async () => {
-                    HandleCheckAttendance("checkIn");
-                  }}
-                >
-                  <Text
-                    style={
-                      dimension === "sm"
-                        ? CheckStyle.CheckButtonTextSM
-                        : CheckStyle.CheckButtonText
-                    }
-                  >
-                    CHECK IN
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={
-                    dimension === "sm"
-                      ? CheckStyle.CheckOutButtonContainerSM
-                      : CheckStyle.CheckOutButtonContainer
-                  }
-                  onPress={() => {
-                    HandleCheckAttendance("checkOut");
-                  }}
-                >
-                  <Text
-                    style={
-                      dimension === "sm"
-                        ? CheckStyle.CheckButtonTextSM
-                        : CheckStyle.CheckButtonText
-                    }
-                  >
-                    CHECK OUT
-                  </Text>
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
-                <View
-                  style={
-                    dimension === "sm"
-                      ? CheckStyle.CheckInDisableButtonContainerSM
-                      : CheckStyle.CheckInDisableButtonContainer
-                  }
-                >
-                  <Text
-                    style={
-                      dimension === "sm"
-                        ? CheckStyle.CheckButtonTextSM
-                        : CheckStyle.CheckButtonText
-                    }
-                  >
-                    CHECK IN
-                  </Text>
-                </View>
-                <View
-                  style={
-                    dimension === "sm"
-                      ? CheckStyle.CheckOutDisableButtonContainerSM
-                      : CheckStyle.CheckOutDisableButtonContainer
-                  }
-                >
-                  <Text
-                    style={
-                      dimension === "sm"
-                        ? CheckStyle.CheckButtonTextSM
-                        : CheckStyle.CheckButtonText
-                    }
-                  >
-                    CHECK OUT
-                  </Text>
-                </View>
-              </>
-            )}
+            <TouchableOpacity
+              style={[
+                CheckStyle.CheckInButtonContainer,
+                {
+                  padding: moderateScale(10),
+                  borderRadius: moderateScale(10),
+                  marginVertical: moderateScale(10),
+                },
+              ]}
+              onPress={async () => {
+                HandleCheckAttendance("checkIn");
+              }}
+            >
+              <Text
+                style={[
+                  CheckStyle.CheckButtonText,
+                  { fontSize: moderateScale(14) },
+                ]}
+              >
+                CHECK IN
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                CheckStyle.CheckOutButtonContainer,
+                {
+                  padding: moderateScale(10),
+                  borderRadius: moderateScale(10),
+                  marginBottom: moderateScale(10),
+                },
+              ]}
+              onPress={() => {
+                HandleCheckAttendance("checkOut");
+              }}
+            >
+              <Text
+                style={[
+                  CheckStyle.CheckButtonText,
+                  { fontSize: moderateScale(14) },
+                ]}
+              >
+                CHECK OUT
+              </Text>
+            </TouchableOpacity>
 
-            <View style={CheckStyle.CheckOutLocationFullContainer}>
+            <View
+              style={[
+                CheckStyle.CheckOutLocationFullContainer,
+                { height: moderateScale(100) },
+              ]}
+            >
               <View
                 style={[
                   CheckStyle.CheckOutLocationContainer,
                   {
-                    padding: 10,
-                    marginTop: 10,
+                    padding: moderateScale(10),
+                    marginTop: moderateScale(10),
                     borderColor:
                       distance <=
                       employeeData?.getEmployeeById?.checkAttendanceDistance
@@ -546,10 +609,9 @@ export default function ChecKAttendance({ locate }: any) {
               >
                 <Text
                   style={[
-                    dimension === "sm"
-                      ? CheckStyle.CheckOutLocationTitleSM
-                      : CheckStyle.CheckOutLocationTitle,
+                    CheckStyle.CheckOutLocationTitle,
                     {
+                      fontSize: moderateScale(14),
                       color:
                         distance <=
                         employeeData?.getEmployeeById?.checkAttendanceDistance
@@ -569,17 +631,16 @@ export default function ChecKAttendance({ locate }: any) {
 
                 <Text
                   style={[
-                    dimension === "sm"
-                      ? CheckStyle.CheckOutLocationBodySM
-                      : CheckStyle.CheckOutLocationBody,
+                    CheckStyle.CheckOutLocationBody,
                     {
+                      fontSize: moderateScale(12),
                       color:
                         // location?.coords.latitude || locate?.coords.latitude
                         distance <=
                         employeeData?.getEmployeeById?.checkAttendanceDistance
                           ? "green"
                           : "red",
-                      paddingTop: 10,
+                      paddingTop: moderateScale(10),
                     },
                   ]}
                 >
@@ -590,11 +651,10 @@ export default function ChecKAttendance({ locate }: any) {
                 </Text>
               </View>
               <TouchableOpacity
-                style={
-                  dimension === "sm"
-                    ? CheckStyle.CheckOutLocationRefetchButtonSM
-                    : CheckStyle.CheckOutLocationRefetchButton
-                }
+                style={[
+                  CheckStyle.CheckOutLocationRefetchButton,
+                  { borderRadius: moderateScale(10) },
+                ]}
                 onPress={() => {
                   getLocation();
                 }}
@@ -606,11 +666,13 @@ export default function ChecKAttendance({ locate }: any) {
                       ? require("../assets/Images/allowlocation.gif")
                       : require("../assets/Images/redlocation.gif")
                   }
-                  style={
-                    dimension === "sm"
-                      ? CheckStyle.CheckOutLocationRefetchIconSM
-                      : CheckStyle.CheckOutLocationRefetchIcon
-                  }
+                  style={[
+                    CheckStyle.CheckOutLocationRefetchIcon,
+                    {
+                      width: moderateScale(40),
+                      height: moderateScale(40),
+                    },
+                  ]}
                   resizeMode="contain"
                 />
               </TouchableOpacity>
