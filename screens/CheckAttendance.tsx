@@ -23,6 +23,7 @@ import { AuthContext } from "../Context/AuthContext";
 import { getDistance, getPreciseDistance, isPointWithinRadius } from "geolib";
 import { GET_EMPLOYEEBYID } from "../graphql/GetEmployeeById";
 import { moderateScale } from "../ Metrics";
+import { GETCHECKINOUTBUTTON } from "../graphql/GetCheckInOutButton";
 
 export default function ChecKAttendance({ locate }: any) {
   const { uid } = useContext(AuthContext);
@@ -47,6 +48,21 @@ export default function ChecKAttendance({ locate }: any) {
   const [morning, setMorning] = useState(true);
   const [afternoon, setAfternoon] = useState(false);
   const [load, setLoad] = useState(true);
+
+  const { data: getCheckInOutButtonData, refetch: getCheckInOutButtonRefetch } =
+    useQuery(GETCHECKINOUTBUTTON, {
+      pollInterval: 2000,
+      variables: {
+        shift: morning ? "morning" : afternoon ? "afternoon" : "",
+      },
+      onCompleted: ({ getCheckInOutButton }) => {
+        // console.log("getCheckInOutButton: ", getCheckInOutButton);
+      },
+    });
+
+  useEffect(() => {
+    getCheckInOutButtonRefetch();
+  }, [afternoon, morning]);
 
   const { data: employeeData, refetch: employeeRefetch } = useQuery(
     GET_EMPLOYEEBYID,
@@ -149,9 +165,13 @@ export default function ChecKAttendance({ locate }: any) {
     let createValue = {
       longitude: located?.coords.longitude
         ? located?.coords.longitude.toString()
+        : location?.coords.longitude
+        ? location?.coords.longitude.toString()
         : "",
       latitude: located?.coords.latitude
         ? located?.coords.latitude.toString()
+        : location?.coords.latitude
+        ? location?.coords.latitude.toString()
         : "",
       shift: morning ? "morning" : afternoon ? "afternoon" : "",
       scan: scanType,
@@ -199,31 +219,61 @@ export default function ChecKAttendance({ locate }: any) {
     }
 
     try {
-      const $location = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.Low,
-      });
-      // const $location = null;
-      // console.log($location);
-      setLocation($location);
-      if ($location) {
-        handleOpen();
-        setTimeout(() => {
-          CheckInOut($location);
-        }, 500);
-      } else if ($location === null) {
-        handleOpen();
-        setCheckData({
-          message: "Cannot get your location!",
-          status: null,
-        });
-        setLoad(false);
-        setTimeout(() => {
-          handleClose();
-        }, 1500);
-      }
+      // const $location = await Location.getCurrentPositionAsync({
+      //   accuracy: Location.Accuracy.Low,
+      // });
+      // // const $location = null;
+      // // console.log($location);
+      // setLocation($location);
+      // if ($location) {
+      //   handleOpen();
+      //   setTimeout(() => {
+      //     CheckInOut($location);
+      //   }, 500);
+      // } else if ($location === null) {
+      //   handleOpen();
+      //   setCheckData({
+      //     message: "Cannot get your location!",
+      //     status: null,
+      //   });
+      //   setLoad(false);
+      //   setTimeout(() => {
+      //     handleClose();
+      //   }, 1500);
+      // }
+
+      const locationListener = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.Low,
+          timeInterval: 5000,
+          distanceInterval: 1,
+        },
+        (location) => {
+          setLocation(location);
+          handleOpen();
+          CheckInOut(location);
+        }
+      );
+
+      // Optionally, you can store the location listener to stop it later
+      // e.g., store it in a state variable or a ref
+      // const locationListenerRef = useRef(locationListener);
+
+      // If you want to stop watching the location after a specific time, you can use setTimeout
+      // setTimeout(() => {
+      //   locationListenerRef.current.remove();
+      // }, YOUR_TIMEOUT);
     } catch (error) {
-      handleClose();
+      handleOpen();
       setErrorMsg("Error getting location");
+      setCheckData({
+        message: "Cannot get your location!",
+        status: null,
+      });
+      setLoad(false);
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     }
   }
 
@@ -542,50 +592,94 @@ export default function ChecKAttendance({ locate }: any) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={[
-                CheckStyle.CheckInButtonContainer,
-                {
-                  padding: moderateScale(10),
-                  borderRadius: moderateScale(10),
-                  marginVertical: moderateScale(10),
-                },
-              ]}
-              onPress={async () => {
-                HandleCheckAttendance("checkIn");
-              }}
-            >
-              <Text
+            {getCheckInOutButtonData?.getCheckInOutButton?.checkIn ? (
+              <TouchableOpacity
                 style={[
-                  CheckStyle.CheckButtonText,
-                  { fontSize: moderateScale(14) },
+                  CheckStyle.CheckInButtonContainer,
+                  {
+                    padding: moderateScale(10),
+                    borderRadius: moderateScale(10),
+                    marginVertical: moderateScale(10),
+                  },
+                ]}
+                onPress={async () => {
+                  HandleCheckAttendance("checkIn");
+                }}
+              >
+                <Text
+                  style={[
+                    CheckStyle.CheckButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  CHECK IN
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View
+                style={[
+                  CheckStyle.CheckOutDisableButtonContainer,
+                  {
+                    padding: moderateScale(10),
+                    borderRadius: moderateScale(10),
+                    marginVertical: moderateScale(10),
+                  },
                 ]}
               >
-                CHECK IN
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[
-                CheckStyle.CheckOutButtonContainer,
-                {
-                  padding: moderateScale(10),
-                  borderRadius: moderateScale(10),
-                  marginBottom: moderateScale(10),
-                },
-              ]}
-              onPress={() => {
-                HandleCheckAttendance("checkOut");
-              }}
-            >
-              <Text
+                <Text
+                  style={[
+                    CheckStyle.CheckButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  CHECK IN
+                </Text>
+              </View>
+            )}
+            {getCheckInOutButtonData?.getCheckInOutButton?.checkOut ? (
+              <TouchableOpacity
                 style={[
-                  CheckStyle.CheckButtonText,
-                  { fontSize: moderateScale(14) },
+                  CheckStyle.CheckOutButtonContainer,
+                  {
+                    padding: moderateScale(10),
+                    borderRadius: moderateScale(10),
+                    marginBottom: moderateScale(10),
+                  },
+                ]}
+                onPress={() => {
+                  HandleCheckAttendance("checkOut");
+                }}
+              >
+                <Text
+                  style={[
+                    CheckStyle.CheckButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  CHECK OUT
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View
+                style={[
+                  CheckStyle.CheckInDisableButtonContainer,
+                  {
+                    padding: moderateScale(10),
+                    borderRadius: moderateScale(10),
+                    marginBottom: moderateScale(10),
+                  },
                 ]}
               >
-                CHECK OUT
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={[
+                    CheckStyle.CheckButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  CHECK OUT
+                </Text>
+              </View>
+            )}
 
             <View
               style={[

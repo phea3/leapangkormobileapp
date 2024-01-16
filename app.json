@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "5",
+      "buildNumber": "4",
       "infoPlist": {
         "NSCalendarsFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
         "NSCalendarsUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
@@ -26,7 +26,6 @@
         "NSLocationAlwaysUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSLocationWhenInUseUsageDescription": "Access your location to ensure you are close to the company for scanning.",
         "NSMicrophoneUsageDescription": "Allow $(PRODUCT_NAME) to access your microphone",
-        "NSUserTrackingUsageDescription": "Allow $(PRODUCT_NAME) to collect and use data for personalized services.",
         "NSRemoteNotificationUsageDescription": "Receive push notifications to stay updated on important information.",
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photo library.",
         "NSUserNotificationsUsageDescription": "Allow $(PRODUCT_NAME) to push you notification.",

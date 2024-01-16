@@ -10,7 +10,7 @@ import { AuthContext } from "../Context/AuthContext";
 
 export default function ApolloConfig({ children }: any) {
   const URI = "endpoint-hr-leap-angkor.go-globalit.com/graphql";
-  // const URI = "192.168.2.193:4510/graphql";
+  // const URI = "192.168.2.12:4510/graphql";
   const { token } = useContext(AuthContext);
 
   const authLink = setContext((_, { headers }: any) => {
