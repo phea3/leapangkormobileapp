@@ -7,6 +7,7 @@ export const GET_EMPLOYEEONHOLIDAY = gql`
       profileImage
       latinName
       reason
+      shiftOff
       dateLeave
     }
   }

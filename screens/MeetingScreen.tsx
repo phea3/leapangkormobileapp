@@ -13,6 +13,9 @@ export default function MeetingScreen() {
       style={[
         MeetingStyle.MeetingContainer,
         {
+          borderTopWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
           borderTopLeftRadius: moderateScale(15),
           borderTopRightRadius: moderateScale(15),
         },

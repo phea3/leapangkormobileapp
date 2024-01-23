@@ -1,13 +1,23 @@
 import { useState, useEffect, useContext } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  Modal,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useNavigate } from "react-router-native";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import HomeStyle from "../styles/HomeStyle.scss";
 import LeaveStyle from "../styles/LeaveStyle.scss";
 import { GET_LEAVE_LIST } from "../graphql/RequestLeave";
 import { AuthContext } from "../Context/AuthContext";
 import * as Animatable from "react-native-animatable";
 import { moderateScale } from "../ Metrics";
+import { CANCELLEAVE } from "../graphql/CancelLeave";
+import ModalStyle from "../styles/ModalStyle.scss";
 
 export default function LeaveScreen() {
   const navigate = useNavigate();
@@ -15,6 +25,15 @@ export default function LeaveScreen() {
   const [limit, setLimit] = useState(10);
   const { dimension } = useContext(AuthContext);
   const [load, setLoad] = useState(true);
+  const [CheckIsVisible, setCheckVisible] = useState(false);
+
+  const handleCheckClose = () => {
+    setCheckVisible(false);
+  };
+
+  const handleCheckOpen = () => {
+    setCheckVisible(true);
+  };
 
   useEffect(() => {
     setTimeout(() => {
@@ -22,14 +41,14 @@ export default function LeaveScreen() {
     }, 1000);
   }, []);
 
-  const { data, refetch } = useQuery(GET_LEAVE_LIST, {
+  const { data, refetch, loading } = useQuery(GET_LEAVE_LIST, {
     pollInterval: 2000,
     variables: {
       limit: limit,
     },
-    onCompleted: (data) => {
+    onCompleted: ({ getLeaveListForMobile }) => {
       // console.log(data?.getLeaveListForMobile);
-      setLeaveData(data?.getLeaveListForMobile);
+      setLeaveData(getLeaveListForMobile);
     },
     onError: (err) => {
       console.log(err?.message);
@@ -40,6 +59,27 @@ export default function LeaveScreen() {
     refetch();
   }, []);
 
+  const [CancelLeave] = useMutation(CANCELLEAVE, {
+    onCompleted: ({ cancelLeave }) => {
+      setTimeout(() => {
+        refetch();
+      }, 500);
+    },
+    onError: (error: any) => {
+      console.log(error);
+    },
+  });
+
+  const [leaveId, setLeaveId] = useState("");
+
+  const handleCancelLeave = async () => {
+    await CancelLeave({
+      variables: {
+        leaveId: leaveId,
+        hrComment: " ",
+      },
+    });
+  };
   return (
     <View
       style={[
@@ -53,6 +93,91 @@ export default function LeaveScreen() {
         },
       ]}
     >
+      <Modal
+        visible={CheckIsVisible}
+        animationType="none"
+        onRequestClose={handleCheckClose}
+        transparent={true}
+      >
+        <View style={ModalStyle.ModalContainer}>
+          <TouchableOpacity
+            style={ModalStyle.ModalBackgroundOpacity}
+            onPress={handleCheckClose}
+            activeOpacity={0.2}
+          />
+          <View
+            style={[
+              ModalStyle.ModalButtonContainerMain,
+              {
+                height: moderateScale(200),
+                borderRadius: moderateScale(10),
+                borderWidth: moderateScale(1),
+              },
+            ]}
+          >
+            <View
+              style={[
+                ModalStyle.ModalButtonTextTitleContainerMain,
+                { padding: moderateScale(20) },
+              ]}
+            >
+              <Text
+                style={[
+                  ModalStyle.ModalButtonTextTitleMain,
+                  { fontSize: moderateScale(16) },
+                ]}
+              >
+                {"Do you want to cancel leave?"}
+              </Text>
+            </View>
+
+            <View style={ModalStyle.ModalButtonOptionContainer}>
+              <TouchableOpacity
+                onPress={() => handleCheckClose()}
+                style={[
+                  ModalStyle.ModalButtonOptionLeft,
+                  {
+                    padding: moderateScale(15),
+                    borderTopWidth: moderateScale(1),
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    ModalStyle.ModalButtonTextTitleMain,
+                    { fontSize: moderateScale(16) },
+                  ]}
+                >
+                  No
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  handleCheckClose();
+                  handleCancelLeave();
+                }}
+                style={[
+                  ModalStyle.ModalButtonOptionLeft,
+                  {
+                    padding: moderateScale(15),
+                    borderLeftWidth: moderateScale(1),
+                    borderTopWidth: moderateScale(1),
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    ModalStyle.ModalButtonTextTitleMain,
+                    { fontSize: moderateScale(16) },
+                  ]}
+                >
+                  Yes
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <View style={LeaveStyle.LeaveBackButtonContainer}>
         <TouchableOpacity
           onPress={() => navigate("/home")}
@@ -136,72 +261,83 @@ export default function LeaveScreen() {
           style={{ flex: 1, width: "100%" }}
           showsVerticalScrollIndicator={false}
         >
-          {leavListData?.map((attendance: any, index: number) => (
-            <Animatable.View
-              style={[
-                LeaveStyle.LeaveBodyContainer,
-                { height: moderateScale(55) },
-              ]}
-              key={index}
-              animation={load ? "fadeInUp" : "fadeInUp"}
-            >
-              <View
+          {data?.getLeaveListForMobile?.map(
+            (attendance: any, index: number) => (
+              <Animatable.View
                 style={[
-                  LeaveStyle.LeaveTitleLeftContainer,
-                  { marginLeft: moderateScale(6) },
+                  LeaveStyle.LeaveBodyContainer,
+                  { height: moderateScale(55) },
                 ]}
+                key={index}
+                animation={load ? "fadeInUp" : "fadeInUp"}
               >
-                <Text
+                <View
                   style={[
-                    LeaveStyle.LeaveBodyReasonText,
-                    { fontSize: moderateScale(12) },
+                    LeaveStyle.LeaveTitleLeftContainer,
+                    { marginLeft: moderateScale(6) },
                   ]}
                 >
-                  {attendance?.description}
-                </Text>
-              </View>
-              <View style={LeaveStyle.LeaveTitleLeftContainer}>
-                <Text
-                  style={[
-                    LeaveStyle.LeaveBodyText,
-                    { fontSize: moderateScale(12), textAlign: "center" },
-                  ]}
+                  <Text
+                    style={[
+                      LeaveStyle.LeaveBodyReasonText,
+                      { fontSize: moderateScale(12) },
+                    ]}
+                  >
+                    {attendance?.description}
+                  </Text>
+                </View>
+                <View style={LeaveStyle.LeaveTitleLeftContainer}>
+                  <Text
+                    style={[
+                      LeaveStyle.LeaveBodyText,
+                      { fontSize: moderateScale(12), textAlign: "center" },
+                    ]}
+                  >
+                    {attendance?.date}
+                  </Text>
+                </View>
+                <View style={LeaveStyle.LeaveTitleContainer}>
+                  <Text
+                    style={[
+                      LeaveStyle.LeaveBodyText,
+                      { fontSize: moderateScale(12) },
+                    ]}
+                  >
+                    {attendance?.shife ? attendance?.shife : "--:--"}
+                  </Text>
+                </View>
+                <TouchableOpacity
+                  style={LeaveStyle.LeaveTitleContainer}
+                  onPress={() => {
+                    if (attendance?.status === "pending") {
+                      handleCheckOpen();
+                      setLeaveId(attendance?._id);
+                    }
+                  }}
+                  activeOpacity={attendance?.status === "pending" ? 0.2 : 1}
                 >
-                  {attendance?.date}
-                </Text>
-              </View>
-              <View style={LeaveStyle.LeaveTitleContainer}>
-                <Text
-                  style={[
-                    LeaveStyle.LeaveBodyText,
-                    { fontSize: moderateScale(12) },
-                  ]}
-                >
-                  {attendance?.shife ? attendance?.shife : "--:--"}
-                </Text>
-              </View>
-              <View style={LeaveStyle.LeaveTitleContainer}>
-                <Text
-                  style={[
-                    LeaveStyle.LeaveApproveText,
-                    {
-                      fontSize: moderateScale(12),
-                      color:
-                        attendance?.status === "cancel"
-                          ? "red"
-                          : attendance?.status === "approve"
-                          ? "green"
-                          : attendance?.status === "pending"
-                          ? "orange"
-                          : "black",
-                    },
-                  ]}
-                >
-                  {attendance?.status}
-                </Text>
-              </View>
-            </Animatable.View>
-          ))}
+                  <Text
+                    style={[
+                      LeaveStyle.LeaveApproveText,
+                      {
+                        fontSize: moderateScale(12),
+                        color:
+                          attendance?.status === "cancel"
+                            ? "red"
+                            : attendance?.status === "approve"
+                            ? "green"
+                            : attendance?.status === "pending"
+                            ? "orange"
+                            : "black",
+                      },
+                    ]}
+                  >
+                    {attendance?.status}
+                  </Text>
+                </TouchableOpacity>
+              </Animatable.View>
+            )
+          )}
 
           {leavListData?.length >= limit ? (
             <TouchableOpacity

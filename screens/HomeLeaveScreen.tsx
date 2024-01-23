@@ -21,6 +21,7 @@ import { REQUEST_LEAVE } from "../graphql/RequestLeave";
 import { GETTIMEOFFSFORMOBILE } from "../graphql/GetTimeOffsForMobile";
 import { moderateScale } from "../ Metrics";
 import LeaveStyle from "../styles/LeaveStyle.scss";
+import { GETWKORINGTIMEBYEMPFORMOBILE } from "../graphql/GetWorkingTimeByEmpForMobile";
 
 export default function HomeLeaveScreen() {
   const { dimension } = useContext(AuthContext);
@@ -37,8 +38,7 @@ export default function HomeLeaveScreen() {
   const [morning, setMorning] = useState(true);
   const [afternoon, setAfternoon] = useState(false);
   const [defaultTimeoff, setDefaultTimeoff] = useState("");
-  const [defaultTimeoffId, setDefaultTimeoffId] = useState("");
-
+  const [workingTimeId, setWorkingTimeId] = useState("");
   // console.log(startDate);
   const hidDatePicker = () => {
     setDateIsvisible(false);
@@ -75,6 +75,7 @@ export default function HomeLeaveScreen() {
     {
       pollInterval: 2000,
       onCompleted(data) {
+        // console.log(data);
         setTimeOff(TimeDate?.getTimeOffsForMobile);
       },
       onError(error) {
@@ -87,13 +88,30 @@ export default function HomeLeaveScreen() {
     TimeRefetch();
   }, []);
 
+  const { data: WorkingTime, refetch: WorkingRefetch } = useQuery(
+    GETWKORINGTIMEBYEMPFORMOBILE,
+    {
+      onCompleted(data) {
+        // console.log(WorkingTime);
+        setTimeOff(data?.getWorkingTimeByEmpForMobile);
+      },
+      onError(error) {
+        console.log(error?.message);
+      },
+    }
+  );
+
+  useEffect(() => {
+    WorkingRefetch();
+  }, []);
+
   useEffect(() => {
     setDefaultTimeoff(
       TimeDate?.getTimeOffsForMobile
         ? TimeDate?.getTimeOffsForMobile[0]?.timeOff
         : ""
     );
-    setDefaultTimeoffId(
+    setTimeId(
       TimeDate?.getTimeOffsForMobile
         ? TimeDate?.getTimeOffsForMobile[0]?._id
         : ""
@@ -106,13 +124,7 @@ export default function HomeLeaveScreen() {
     const newValues = {
       from: startDate ? moment(startDate).format("YYYY-MM-DD") : "",
       reason: reason ? reason : "",
-      shiftOff: allDay
-        ? "AllDay"
-        : morning
-        ? "Morning"
-        : afternoon
-        ? "Afternoon"
-        : "",
+      shiftOff: allDay ? "AllDay" : "HalfDay",
       timeOff: timeId ? timeId : "",
       to:
         allDay === true && endDate
@@ -120,21 +132,32 @@ export default function HomeLeaveScreen() {
           : startDate
           ? moment(startDate).format("YYYY-MM-DD")
           : "",
+      workingTimeId: workingTimeId,
     };
-    console.log(newValues);
+    // console.log(newValues);
+
     await requestLeave({
       variables: { input: newValues },
       onCompleted: ({ requestLeave }) => {
-        Alert.alert("Success!", requestLeave?.message, [
-          {
-            text: "Okay",
-            onPress: () => navigate("/home/main"),
-            style: "cancel",
-          },
-        ]);
+        console.log(requestLeave);
+        Alert.alert(
+          requestLeave?.status ? "Success!" : "Opp!",
+          requestLeave?.message,
+          [
+            {
+              text: "Okay",
+              onPress: () => {
+                if (requestLeave?.status === true) {
+                  navigate("/leave");
+                }
+              },
+              style: "cancel",
+            },
+          ]
+        );
       },
       onError(error) {
-        Alert.alert("Success!", error?.message);
+        Alert.alert("Opp!", error?.message);
       },
     });
   };
@@ -167,6 +190,9 @@ export default function HomeLeaveScreen() {
       style={[
         HomeStyle.HomeMainContentContainer,
         {
+          borderTopWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
           borderTopLeftRadius: moderateScale(15),
           borderTopRightRadius: moderateScale(15),
         },
@@ -354,112 +380,24 @@ export default function HomeLeaveScreen() {
                   </View>
                 </View>
               </View>
-              <View style={HomeStyle.HomeMainSelectDateMiniContainer}>
-                <View
-                  style={[
-                    HomeStyle.HomeMainSelectDateButtonLabelContainer,
-                    { height: moderateScale(40) },
-                  ]}
-                >
-                  <Text
+              {!halfDay && (
+                <View style={HomeStyle.HomeMainSelectDateMiniContainer}>
+                  <View
                     style={[
-                      HomeStyle.HomeMainSelectDateButtonLabel,
-                      { fontSize: moderateScale(14) },
+                      HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                      { height: moderateScale(40) },
                     ]}
                   >
-                    {halfDay ? "Request For" : "End Date"}
-                  </Text>
-                </View>
-
-                {halfDay ? (
-                  <View
-                    style={
-                      dimension === "sm" || Platform.OS === "android"
-                        ? HomeStyle.HomeMainSelectDateSectionSM
-                        : HomeStyle.HomeMainSelectDateSection
-                    }
-                  >
-                    <TouchableOpacity
+                    <Text
                       style={[
-                        HomeStyle.HomeMainSelectDateButton,
-                        {
-                          height: moderateScale(40),
-                          paddingHorizontal: moderateScale(10),
-                          borderRadius: moderateScale(10),
-                          marginRight: moderateScale(10),
-                          marginBottom:
-                            dimension === "sm" || Platform.OS === "android"
-                              ? moderateScale(10)
-                              : 0,
-                        },
+                        HomeStyle.HomeMainSelectDateButtonLabel,
+                        { fontSize: moderateScale(14) },
                       ]}
-                      onPress={() => {
-                        setMorning(true);
-                        setAfternoon(false);
-                      }}
                     >
-                      <Image
-                        source={
-                          morning
-                            ? require("../assets/Images/rec.png")
-                            : require("../assets/Images/reced.png")
-                        }
-                        style={{
-                          width: moderateScale(20),
-                          height: moderateScale(20),
-                          marginRight: moderateScale(10),
-                        }}
-                      />
-                      <Text
-                        style={[
-                          HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                          { fontSize: moderateScale(12) },
-                        ]}
-                      >
-                        Morning
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[
-                        HomeStyle.HomeMainSelectDateButton,
-                        {
-                          height: moderateScale(40),
-                          paddingHorizontal: moderateScale(10),
-                          borderRadius: moderateScale(10),
-                          marginBottom:
-                            dimension === "sm" || Platform.OS === "android"
-                              ? moderateScale(10)
-                              : 0,
-                        },
-                      ]}
-                      onPress={() => {
-                        setMorning(false);
-                        setAfternoon(true);
-                      }}
-                    >
-                      <Image
-                        source={
-                          afternoon
-                            ? require("../assets/Images/rec.png")
-                            : require("../assets/Images/reced.png")
-                        }
-                        style={{
-                          width: moderateScale(20),
-                          height: moderateScale(20),
-                          marginRight: moderateScale(10),
-                        }}
-                      />
-                      <Text
-                        style={[
-                          HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                          { fontSize: moderateScale(12) },
-                        ]}
-                      >
-                        Afternoon
-                      </Text>
-                    </TouchableOpacity>
+                      End Date
+                    </Text>
                   </View>
-                ) : (
+
                   <View
                     style={[
                       HomeStyle.HomeMainSelectDateButton,
@@ -495,9 +433,98 @@ export default function HomeLeaveScreen() {
                       onCancel={hidDatePicker2}
                     />
                   </View>
-                )}
+                </View>
+              )}
+            </View>
+
+            <View style={HomeStyle.HomeMainSelectDateContainer}>
+              <View style={{ width: "100%" }}>
+                <View
+                  style={[
+                    HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                    { height: moderateScale(40) },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      HomeStyle.HomeMainSelectDateButtonLabel,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    Request For
+                  </Text>
+                </View>
+                <ScrollView
+                  horizontal
+                  style={{ width: "100%" }}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  {WorkingTime?.getWorkingTimeByEmpForMobile.map(
+                    (data: any, index: number) => (
+                      <View
+                        style={HomeStyle.HomeMainSelectDateSection}
+                        key={index}
+                      >
+                        <TouchableOpacity
+                          style={[
+                            HomeStyle.HomeMainSelectDateButton,
+                            {
+                              height: moderateScale(40),
+                              paddingHorizontal: moderateScale(10),
+                              borderRadius: moderateScale(10),
+                              marginRight: moderateScale(10),
+                              marginBottom:
+                                dimension === "sm" || Platform.OS === "android"
+                                  ? moderateScale(10)
+                                  : 0,
+                            },
+                          ]}
+                          onPress={() => {
+                            setWorkingTimeId(
+                              data?._id !== workingTimeId ? data?._id : ""
+                            );
+                          }}
+                        >
+                          <Image
+                            source={
+                              workingTimeId === data?._id
+                                ? require("../assets/Images/rec.png")
+                                : require("../assets/Images/reced.png")
+                            }
+                            style={{
+                              width: moderateScale(20),
+                              height: moderateScale(20),
+                              marginRight: moderateScale(10),
+                            }}
+                          />
+                          <Text
+                            style={[
+                              HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                              { fontSize: moderateScale(12) },
+                            ]}
+                          >
+                            {data?.shiftName} Shift
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  )}
+                </ScrollView>
               </View>
             </View>
+            {workingTimeId.length === 0 && (
+              <View style={{ width: "100%" }}>
+                <Text
+                  style={{
+                    color: "#ff0000",
+                    padding: moderateScale(5),
+                    fontSize: moderateScale(14),
+                  }}
+                >
+                  Require!
+                </Text>
+              </View>
+            )}
           </>
         ) : null}
         <View
@@ -537,7 +564,7 @@ export default function HomeLeaveScreen() {
           </View>
         ) : (
           <SelectDropdown
-            data={timeOff}
+            data={TimeDate?.getTimeOffsForMobile}
             onSelect={(selectedItem, index) => {
               // console.log(selectedItem, index);
               setTimeId(selectedItem?._id);
@@ -668,10 +695,17 @@ export default function HomeLeaveScreen() {
                 padding: moderateScale(10),
                 marginBottom: moderateScale(10),
                 borderRadius: moderateScale(10),
+                backgroundColor:
+                  reason !== "" && timeId !== "" && workingTimeId !== ""
+                    ? "#177a02"
+                    : "#dcdcdc",
               },
             ]}
+            activeOpacity={
+              reason !== "" && timeId !== "" && workingTimeId !== "" ? 0.4 : 1
+            }
             onPress={() => {
-              if (reason !== "" && timeId !== "") {
+              if (reason !== "" && timeId !== "" && workingTimeId !== "") {
                 handlRequest();
               }
             }}

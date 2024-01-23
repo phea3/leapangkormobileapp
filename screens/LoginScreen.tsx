@@ -105,6 +105,22 @@ export default function LoginScreen() {
     });
   };
 
+  const [validateEmailStatus, setValidateEmailStatus] = useState(false);
+
+  const handleCheckValidate = (text: string) => {
+    let reg: any = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if (reg.test(text) === false) {
+      // console.log("Email is Not Correct");
+      setValidateEmailStatus(true);
+      setEmail(text);
+      return false;
+    } else {
+      setEmail(text);
+      setValidateEmailStatus(false);
+      // console.log("Email is Correct");
+    }
+  };
+
   const login = async () => {
     await auth.createApp(
       serviceAccount.app_id,
@@ -144,7 +160,7 @@ export default function LoginScreen() {
       let userPassword = await AsyncStorage.getItem("@password");
       // console.log(userGmail + "\n" + userPassword);
       if (userGmail) {
-        setEmail(userGmail);
+        handleCheckValidate(userGmail);
       }
       if (userPassword) {
         setPassword(userPassword);
@@ -248,12 +264,24 @@ export default function LoginScreen() {
               ]}
               onChangeText={(e) => {
                 const updatedText = e.replace(/\s/g, "");
-                setEmail(updatedText);
+                handleCheckValidate(updatedText);
               }}
               keyboardType="email-address"
             />
           </View>
-          {email === "" ? (
+
+          {validateEmailStatus === true ? (
+            <Text
+              style={[
+                LoginStyle.LoginRequireScreenTextInputText,
+                { fontSize: moderateScale(12) },
+              ]}
+            >
+              Oop!, invalid email
+            </Text>
+          ) : null}
+
+          {/* {email === "" ? (
             <Text
               style={[
                 LoginStyle.LoginRequireScreenTextInputText,
@@ -271,7 +299,7 @@ export default function LoginScreen() {
             >
               Invalid email!, email cannot contain spaces
             </Text>
-          ) : email.includes("@gmail.com") ? null : (
+          ) : validEmail ? null : (
             <Text
               style={[
                 LoginStyle.LoginRequireScreenTextInputText,
@@ -280,7 +308,7 @@ export default function LoginScreen() {
             >
               Oop!, invalid email
             </Text>
-          )}
+          )} */}
         </View>
         <View
           style={[
@@ -411,7 +439,7 @@ export default function LoginScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            © {moment(new Date()).format("YYYY")} Go Global School.
+            © {moment(new Date()).format("YYYY")} Leap Angkor.
           </Text>
         </View>
       )}

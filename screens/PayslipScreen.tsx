@@ -4,12 +4,22 @@ import PayslipStyle from "../styles/PayslipStyle.scss";
 import { useNavigate } from "react-router-native";
 import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import { moderateScale } from "../ Metrics";
 
 export default function PayslipScreen() {
   const navigate = useNavigate();
   const { dimension } = useContext(AuthContext);
   return (
-    <View style={MeetingStyle.MeetingContainer}>
+    <View
+      style={[
+        MeetingStyle.MeetingContainer,
+        {
+          borderTopWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
+        },
+      ]}
+    >
       <View style={MeetingStyle.MeetingBackButtonContainer}>
         <TouchableOpacity
           onPress={() => navigate("/home")}

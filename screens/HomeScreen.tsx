@@ -11,9 +11,9 @@ import { AuthContext } from "../Context/AuthContext";
 import { moderateScale } from "../ Metrics";
 
 const Actions = [
-  {
-    title: "Day Off",
-  },
+  // {
+  //   title: "Day Off",
+  // },
   {
     title: "Permission",
   },

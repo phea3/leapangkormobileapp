@@ -7,7 +7,6 @@ import ImageView from "react-native-image-viewing";
 
 import ProfileStyle from "../styles/ProfileStyle.scss";
 import ModalStyle from "../styles/ModalStyle.scss";
-
 import { AuthContext } from "../Context/AuthContext";
 import auth from "../Auth/auth";
 import useLoginUser from "../Hook/useLoginUser";
@@ -62,7 +61,7 @@ export default function ProfileScreen() {
         <View
           style={{
             width: "100%",
-            height: "70%",
+            height: "85%",
             position: "absolute",
             backgroundColor: "white",
           }}
@@ -161,15 +160,15 @@ export default function ProfileScreen() {
                 width: "90%",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "#f1f1f1",
+                // backgroundColor: "#f1f1f1",
                 borderRadius: moderateScale(15),
               }}
             >
-              <Text
+              {/* <Text
                 style={[ProfileStyle.UserName, { fontSize: moderateScale(14) }]}
               >
                 Empty
-              </Text>
+              </Text> */}
             </View>
 
             <TouchableOpacity

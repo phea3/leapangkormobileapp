@@ -23,6 +23,10 @@ const Features = [
     icon: require("../assets/Images/check-list.png"),
   },
   {
+    title: "Timeoff",
+    icon: require("../assets/Images/day-off.png"),
+  },
+  {
     title: "Payslip",
     icon: require("../assets/Images/conversation.png"),
   },
@@ -62,6 +66,9 @@ export default function HomeMainScreen() {
       style={[
         HomeStyle.HomeMainContentContainer,
         {
+          borderTopWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
           borderTopLeftRadius: moderateScale(15),
           borderTopRightRadius: moderateScale(15),
         },
@@ -83,51 +90,62 @@ export default function HomeMainScreen() {
           { height: moderateScale(100) },
         ]}
       >
-        {Features.map((feature: any, index: number) => (
-          <TouchableOpacity
-            onPress={() => {
-              if (feature.title === "Leaves") {
-                navigate("/leave");
-              } else if (feature.title === "Check-In/Out") {
-                navigate("/check");
-              } else if (feature.title === "Attendances") {
-                navigate("/attendance");
-              } else if (feature.title === "Payslip") {
-                navigate("/meeting");
-              }
-            }}
-            style={[
-              HomeStyle.HomeFeaturesBoxContaienr,
-              { height: moderateScale(100) },
-            ]}
-            key={index}
-          >
-            <View
+        <ScrollView
+          horizontal
+          style={{ width: "100%" }}
+          showsHorizontalScrollIndicator={false}
+        >
+          {Features.map((feature: any, index: number) => (
+            <TouchableOpacity
+              onPress={() => {
+                if (feature.title === "Leaves") {
+                  navigate("/leave");
+                } else if (feature.title === "Check-In/Out") {
+                  navigate("/check");
+                } else if (feature.title === "Attendances") {
+                  navigate("/attendance");
+                } else if (feature.title === "Payslip") {
+                  navigate("/meeting");
+                } else if (feature.title === "Timeoff") {
+                  navigate("/timeoff");
+                }
+              }}
               style={[
-                HomeStyle.HomeBoxStyle,
-                {
-                  height: moderateScale(90),
-                  borderWidth: moderateScale(1.5),
-                  borderRadius: moderateScale(10),
-                },
+                HomeStyle.HomeFeaturesBoxContaienr,
+                { width: moderateScale(100), height: moderateScale(100) },
               ]}
+              key={index}
             >
-              <Animatable.Image
-                animation={"bounce"}
-                source={feature.icon}
-                style={{ width: moderateScale(30), height: moderateScale(30) }}
-              />
-              <Text
+              <View
                 style={[
-                  HomeStyle.HomeFeaturesBoxTitle,
-                  { fontSize: moderateScale(10) },
+                  HomeStyle.HomeBoxStyle,
+                  {
+                    height: moderateScale(90),
+                    borderWidth: moderateScale(1.5),
+                    borderRadius: moderateScale(10),
+                  },
                 ]}
               >
-                {feature.title}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+                <Animatable.Image
+                  animation={"bounce"}
+                  source={feature.icon}
+                  style={{
+                    width: moderateScale(30),
+                    height: moderateScale(30),
+                  }}
+                />
+                <Text
+                  style={[
+                    HomeStyle.HomeFeaturesBoxTitle,
+                    { fontSize: moderateScale(10) },
+                  ]}
+                >
+                  {feature.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       <TouchableOpacity
         style={[
@@ -224,14 +242,49 @@ export default function HomeMainScreen() {
                     {leave?.reason}
                   </Text>
                 </View>
-                <Text
-                  style={[
-                    HomeStyle.HomeHolidayTitle2,
-                    { fontSize: moderateScale(12) },
-                  ]}
+                <View
+                  style={{
+                    alignItems: "flex-end",
+                    flex: 1,
+                  }}
                 >
-                  {leave?.dateLeave ? leave?.dateLeave : ""}
-                </Text>
+                  <View
+                    style={{
+                      padding: moderateScale(4),
+                      backgroundColor: "#4cbb17",
+                      alignItems: "center",
+                      borderRadius: moderateScale(8),
+                    }}
+                  >
+                    <Text
+                      style={[
+                        {
+                          fontSize: moderateScale(10),
+                          textAlign: "right",
+                          fontFamily: "Kantumruy-Regular",
+                          color: "white",
+                        },
+                      ]}
+                    >
+                      {leave?.shiftOff ? leave?.shiftOff : ""}
+                    </Text>
+                  </View>
+                  <View
+                    style={{
+                      alignItems: "flex-end",
+                      width: "100%",
+                    }}
+                  >
+                    <Text
+                      style={[
+                        HomeStyle.HomeHolidayTitle2,
+                        { fontSize: moderateScale(12) },
+                      ]}
+                    >
+                      {leave?.dateLeave ? leave?.dateLeave : ""}
+                    </Text>
+                  </View>
+                </View>
               </Animatable.View>
             ))
           : null}

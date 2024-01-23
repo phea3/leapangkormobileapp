@@ -30,6 +30,7 @@ import MeetingScreen from "./screens/MeetingScreen";
 import LoginLayout from "./layouts/LoginLayout";
 import PayslipScreen from "./screens/PayslipScreen";
 import MonthlyPayslipReportScreen from "./screens/MonthlyPayslipReportScreen";
+import TimeoffScreen from "./screens/TimeoffScreen";
 
 export default function Router() {
   const { expoPushToken, notificationResponse } = usePushNotifications();
@@ -164,6 +165,7 @@ export default function Router() {
         { path: "/profile", element: <ProfileScreen /> },
         { path: "/meeting", element: <MeetingScreen /> },
         { path: "/payslip", element: <PayslipScreen /> },
+        { path: "/timeoff", element: <TimeoffScreen /> },
         { path: "/monthlypayslip", element: <MonthlyPayslipReportScreen /> },
         {
           path: "/notification",

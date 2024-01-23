@@ -30,7 +30,8 @@ export default function ChecKAttendance({ locate }: any) {
   const navigate = useNavigate();
   const located = useLocation();
   const [isVisible, setVisible] = useState(false);
-  const [CheckIsVisible, setCheckVisible] = useState(false);
+  const [CheckInIsVisible, setCheckInVisible] = useState(false);
+  const [CheckOutIsVisible, setCheckOutVisible] = useState(false);
   const [scanType, setScanType] = useState("");
   const { dimension } = useContext(AuthContext);
   const [checkData, setCheckData] = useState<{
@@ -101,8 +102,20 @@ export default function ChecKAttendance({ locate }: any) {
 
   // console.log(distance);
 
-  const handleCheckClose = () => {
-    setCheckVisible(false);
+  const handleCheckInClose = () => {
+    setCheckInVisible(false);
+  };
+
+  const handleCheckOutClose = () => {
+    setCheckOutVisible(false);
+  };
+
+  const handleCheckInOpen = () => {
+    setCheckInVisible(true);
+  };
+
+  const handleCheckOutOpen = () => {
+    setCheckOutVisible(true);
   };
 
   const handleClose = () => {
@@ -115,10 +128,6 @@ export default function ChecKAttendance({ locate }: any) {
     }, 500);
     setLocation(null);
     setLoad(true);
-  };
-
-  const handleCheckOpen = () => {
-    setCheckVisible(true);
   };
 
   const handleOpen = () => {
@@ -159,9 +168,35 @@ export default function ChecKAttendance({ locate }: any) {
   };
 
   // console.log(locate);
-  const [employeeCheckAttendance] = useMutation(EMPLOYEECHECKATTENDANCE);
+  const [employeeCheckAttendance] = useMutation(EMPLOYEECHECKATTENDANCE, {
+    onCompleted: ({ employeeCheckAttendance }) => {
+      // console.log("Succeed", employeeCheckAttendance);
+      setCheckData({
+        message: employeeCheckAttendance?.message,
+        status: employeeCheckAttendance?.status,
+      });
+      setLoad(false);
+      if (checkData) {
+        setTimeout(() => {
+          handleClose();
+        }, 2000);
+      }
+    },
+    onError: (error: any) => {
+      console.log("Fail", error);
+      setCheckData({
+        message: error?.message,
+        status: error?.status,
+      });
+      setLoad(false);
+      setTimeout(() => {
+        handleClose();
+      }, 2000);
+    },
+  });
 
-  const CheckInOut = async (located: any) => {
+  //=============================  CHECK IN ===========================
+  const handleCheckInButton = async (located: any) => {
     let createValue = {
       longitude: located?.coords.longitude
         ? located?.coords.longitude.toString()
@@ -174,44 +209,41 @@ export default function ChecKAttendance({ locate }: any) {
         ? location?.coords.latitude.toString()
         : "",
       shift: morning ? "morning" : afternoon ? "afternoon" : "",
-      scan: scanType,
+      scan: "checkIn",
     };
     // console.log(createValue);
     await employeeCheckAttendance({
       variables: {
         ...createValue,
       },
-      onCompleted(data) {
-        // console.log("Succeed", data);
-        if (data?.employeeCheckAttendance?.status === false) {
-          Vibration.vibrate();
-        }
-        setCheckData({
-          message: data?.employeeCheckAttendance?.message,
-          status: data?.employeeCheckAttendance?.status,
-        });
-        setLoad(false);
-        if (checkData) {
-          setTimeout(() => {
-            handleClose();
-          }, 1500);
-        }
-      },
-      onError(error: any) {
-        // console.log("Fail", error?.message);
-        setCheckData({
-          message: error?.message,
-          status: error?.status,
-        });
-        setLoad(false);
-        setTimeout(() => {
-          handleClose();
-        }, 1500);
+    });
+  };
+
+  //=============================  CHECK OUT ===========================
+  const handleCheckOutButton = async (located: any) => {
+    let createValue = {
+      longitude: located?.coords.longitude
+        ? located?.coords.longitude.toString()
+        : location?.coords.longitude
+        ? location?.coords.longitude.toString()
+        : "",
+      latitude: located?.coords.latitude
+        ? located?.coords.latitude.toString()
+        : location?.coords.latitude
+        ? location?.coords.latitude.toString()
+        : "",
+      shift: morning ? "morning" : afternoon ? "afternoon" : "",
+      scan: "checkOut",
+    };
+    // console.log(createValue);
+    await employeeCheckAttendance({
+      variables: {
+        ...createValue,
       },
     });
   };
 
-  async function getLocation() {
+  const getLocationIn = async () => {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       setErrorMsg("Permission to access location was denied");
@@ -219,30 +251,7 @@ export default function ChecKAttendance({ locate }: any) {
     }
 
     try {
-      // const $location = await Location.getCurrentPositionAsync({
-      //   accuracy: Location.Accuracy.Low,
-      // });
-      // // const $location = null;
-      // // console.log($location);
-      // setLocation($location);
-      // if ($location) {
-      //   handleOpen();
-      //   setTimeout(() => {
-      //     CheckInOut($location);
-      //   }, 500);
-      // } else if ($location === null) {
-      //   handleOpen();
-      //   setCheckData({
-      //     message: "Cannot get your location!",
-      //     status: null,
-      //   });
-      //   setLoad(false);
-      //   setTimeout(() => {
-      //     handleClose();
-      //   }, 1500);
-      // }
-
-      const locationListener = await Location.watchPositionAsync(
+      await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.Low,
           timeInterval: 5000,
@@ -251,18 +260,9 @@ export default function ChecKAttendance({ locate }: any) {
         (location) => {
           setLocation(location);
           handleOpen();
-          CheckInOut(location);
+          handleCheckInButton(location);
         }
       );
-
-      // Optionally, you can store the location listener to stop it later
-      // e.g., store it in a state variable or a ref
-      // const locationListenerRef = useRef(locationListener);
-
-      // If you want to stop watching the location after a specific time, you can use setTimeout
-      // setTimeout(() => {
-      //   locationListenerRef.current.remove();
-      // }, YOUR_TIMEOUT);
     } catch (error) {
       handleOpen();
       setErrorMsg("Error getting location");
@@ -275,11 +275,40 @@ export default function ChecKAttendance({ locate }: any) {
         handleClose();
       }, 1500);
     }
-  }
+  };
 
-  const HandleCheckAttendance = async (check: string) => {
-    setScanType(check);
-    handleCheckOpen();
+  const getLocationOut = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
+      return;
+    }
+
+    try {
+      await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.Low,
+          timeInterval: 5000,
+          distanceInterval: 1,
+        },
+        (location) => {
+          setLocation(location);
+          handleOpen();
+          handleCheckOutButton(location);
+        }
+      );
+    } catch (error) {
+      handleOpen();
+      setErrorMsg("Error getting location");
+      setCheckData({
+        message: "Cannot get your location!",
+        status: null,
+      });
+      setLoad(false);
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
+    }
   };
 
   useEffect(() => {
@@ -355,15 +384,15 @@ export default function ChecKAttendance({ locate }: any) {
       <>
         {/* ============= Ask For Check Attendance ============= */}
         <Modal
-          visible={CheckIsVisible}
+          visible={CheckInIsVisible}
           animationType="none"
-          onRequestClose={handleCheckClose}
+          onRequestClose={handleCheckInClose}
           transparent={true}
         >
           <View style={ModalStyle.ModalContainer}>
             <TouchableOpacity
               style={ModalStyle.ModalBackgroundOpacity}
-              onPress={handleCheckClose}
+              onPress={handleCheckInClose}
               activeOpacity={0.2}
             />
             <View
@@ -388,15 +417,13 @@ export default function ChecKAttendance({ locate }: any) {
                     { fontSize: moderateScale(16) },
                   ]}
                 >
-                  {scanType === "checkIn"
-                    ? "Do you want to check in?"
-                    : "Do you want to check out?"}
+                  {"Do you want to check in?"}
                 </Text>
               </View>
 
               <View style={ModalStyle.ModalButtonOptionContainer}>
                 <TouchableOpacity
-                  onPress={() => handleCheckClose()}
+                  onPress={() => handleCheckInClose()}
                   style={[
                     ModalStyle.ModalButtonOptionLeft,
                     {
@@ -416,8 +443,95 @@ export default function ChecKAttendance({ locate }: any) {
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
-                    handleCheckClose();
-                    getLocation();
+                    handleCheckInClose();
+                    getLocationIn();
+                  }}
+                  style={[
+                    ModalStyle.ModalButtonOptionLeft,
+                    {
+                      padding: moderateScale(15),
+                      borderLeftWidth: moderateScale(1),
+                      borderTopWidth: moderateScale(1),
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      ModalStyle.ModalButtonTextTitleMain,
+                      { fontSize: moderateScale(16) },
+                    ]}
+                  >
+                    Yes
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* ====================================  Modal Check Out ======================= */}
+        <Modal
+          visible={CheckOutIsVisible}
+          animationType="none"
+          onRequestClose={handleCheckOutClose}
+          transparent={true}
+        >
+          <View style={ModalStyle.ModalContainer}>
+            <TouchableOpacity
+              style={ModalStyle.ModalBackgroundOpacity}
+              onPress={handleCheckOutClose}
+              activeOpacity={0.2}
+            />
+            <View
+              style={[
+                ModalStyle.ModalButtonContainerMain,
+                {
+                  height: moderateScale(200),
+                  borderRadius: moderateScale(10),
+                  borderWidth: moderateScale(1),
+                },
+              ]}
+            >
+              <View
+                style={[
+                  ModalStyle.ModalButtonTextTitleContainerMain,
+                  { padding: moderateScale(20) },
+                ]}
+              >
+                <Text
+                  style={[
+                    ModalStyle.ModalButtonTextTitleMain,
+                    { fontSize: moderateScale(16) },
+                  ]}
+                >
+                  {"Do you want to check Out?"}
+                </Text>
+              </View>
+
+              <View style={ModalStyle.ModalButtonOptionContainer}>
+                <TouchableOpacity
+                  onPress={() => handleCheckOutClose()}
+                  style={[
+                    ModalStyle.ModalButtonOptionLeft,
+                    {
+                      padding: moderateScale(15),
+                      borderTopWidth: moderateScale(1),
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      ModalStyle.ModalButtonTextTitleMain,
+                      { fontSize: moderateScale(16) },
+                    ]}
+                  >
+                    No
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleCheckOutClose();
+                    getLocationOut();
                   }}
                   style={[
                     ModalStyle.ModalButtonOptionLeft,
@@ -603,7 +717,7 @@ export default function ChecKAttendance({ locate }: any) {
                   },
                 ]}
                 onPress={async () => {
-                  HandleCheckAttendance("checkIn");
+                  handleCheckInOpen();
                 }}
               >
                 <Text
@@ -647,7 +761,7 @@ export default function ChecKAttendance({ locate }: any) {
                   },
                 ]}
                 onPress={() => {
-                  HandleCheckAttendance("checkOut");
+                  handleCheckOutOpen();
                 }}
               >
                 <Text
@@ -744,14 +858,11 @@ export default function ChecKAttendance({ locate }: any) {
                   {locate?.coords.longitude ? locate?.coords.longitude : ""}
                 </Text>
               </View>
-              <TouchableOpacity
+              <View
                 style={[
                   CheckStyle.CheckOutLocationRefetchButton,
                   { borderRadius: moderateScale(10) },
                 ]}
-                onPress={() => {
-                  getLocation();
-                }}
               >
                 <Image
                   source={
@@ -769,7 +880,7 @@ export default function ChecKAttendance({ locate }: any) {
                   ]}
                   resizeMode="contain"
                 />
-              </TouchableOpacity>
+              </View>
             </View>
           </ScrollView>
         </View>
