@@ -40,7 +40,7 @@ export default function HomeScreen() {
   const { data: leaveData, refetch: leavRefetch } = useQuery(
     GETEMPLOYEELEAVEINFO,
     {
-      pollInterval: 2000,
+      // pollInterval: 2000,
       variables: {
         employeeId: uid ? uid : "",
       },

@@ -37,7 +37,7 @@ const Layout = ({ expoPushToken }: any) => {
   const { data: UserData, refetch: UserRefetch } = useQuery(
     GET_USER_MOBILE_LOGIN,
     {
-      pollInterval: 2000,
+      // pollInterval: 2000,
       variables: {
         token: expoPushToken?.data ? expoPushToken?.data : "",
       },

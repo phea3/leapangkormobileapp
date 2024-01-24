@@ -30,7 +30,7 @@ export default function TimeoffScreen() {
 
   const [TimeOffData, setTimeOffData] = useState([]);
   const { refetch: TimeOffRefetch } = useQuery(GETPUBLICHOLIDAYBYEMPLOYEE, {
-    pollInterval: 2000,
+    // pollInterval: 2000,
     variables: {
       employeeId: !uid ? uid : "659f3c36029ca95bcc7be50d",
       year: moment(year).format("YYYY"),

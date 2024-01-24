@@ -22,6 +22,7 @@ import { GETTIMEOFFSFORMOBILE } from "../graphql/GetTimeOffsForMobile";
 import { moderateScale } from "../ Metrics";
 import LeaveStyle from "../styles/LeaveStyle.scss";
 import { GETWKORINGTIMEBYEMPFORMOBILE } from "../graphql/GetWorkingTimeByEmpForMobile";
+import { GETBREAKTIMEBYEMPWORKINGTIMEFORMOBILE } from "../graphql/GetBreakTimeByEmpWorkingTimeForMobile";
 
 export default function HomeLeaveScreen() {
   const { dimension } = useContext(AuthContext);
@@ -39,6 +40,8 @@ export default function HomeLeaveScreen() {
   const [afternoon, setAfternoon] = useState(false);
   const [defaultTimeoff, setDefaultTimeoff] = useState("");
   const [workingTimeId, setWorkingTimeId] = useState("");
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
   // console.log(startDate);
   const hidDatePicker = () => {
     setDateIsvisible(false);
@@ -73,7 +76,7 @@ export default function HomeLeaveScreen() {
   const { data: TimeDate, refetch: TimeRefetch } = useQuery(
     GETTIMEOFFSFORMOBILE,
     {
-      pollInterval: 2000,
+      // pollInterval: 2000,
       onCompleted(data) {
         // console.log(data);
         setTimeOff(TimeDate?.getTimeOffsForMobile);
@@ -92,7 +95,7 @@ export default function HomeLeaveScreen() {
     GETWKORINGTIMEBYEMPFORMOBILE,
     {
       onCompleted(data) {
-        // console.log(WorkingTime);
+        console.log(WorkingTime);
         setTimeOff(data?.getWorkingTimeByEmpForMobile);
       },
       onError(error) {
@@ -104,6 +107,26 @@ export default function HomeLeaveScreen() {
   useEffect(() => {
     WorkingRefetch();
   }, []);
+
+  const { data: breakData, refetch: breakRefetch } = useQuery(
+    GETBREAKTIMEBYEMPWORKINGTIMEFORMOBILE,
+    {
+      // pollInterval: 2000,
+      variables: {
+        workingTimeId: workingTimeId,
+      },
+      onCompleted: ({ getBreakTimeByEmpWorkingTimeForMobile }) => {
+        console.log(getBreakTimeByEmpWorkingTimeForMobile);
+      },
+      onError: (err) => {
+        console.log(err?.message);
+      },
+    }
+  );
+
+  useEffect(() => {
+    breakRefetch();
+  }, [workingTimeId]);
 
   useEffect(() => {
     setDefaultTimeoff(
@@ -133,6 +156,8 @@ export default function HomeLeaveScreen() {
           ? moment(startDate).format("YYYY-MM-DD")
           : "",
       workingTimeId: workingTimeId,
+      breakStart: start,
+      breakEnd: end,
     };
     // console.log(newValues);
 
@@ -459,56 +484,59 @@ export default function HomeLeaveScreen() {
                   style={{ width: "100%" }}
                   showsHorizontalScrollIndicator={false}
                 >
-                  {WorkingTime?.getWorkingTimeByEmpForMobile.map(
-                    (data: any, index: number) => (
-                      <View
-                        style={HomeStyle.HomeMainSelectDateSection}
-                        key={index}
-                      >
-                        <TouchableOpacity
-                          style={[
-                            HomeStyle.HomeMainSelectDateButton,
-                            {
-                              height: moderateScale(40),
-                              paddingHorizontal: moderateScale(10),
-                              borderRadius: moderateScale(10),
-                              marginRight: moderateScale(10),
-                              marginBottom:
-                                dimension === "sm" || Platform.OS === "android"
-                                  ? moderateScale(10)
-                                  : 0,
-                            },
-                          ]}
-                          onPress={() => {
-                            setWorkingTimeId(
-                              data?._id !== workingTimeId ? data?._id : ""
-                            );
-                          }}
-                        >
-                          <Image
-                            source={
-                              workingTimeId === data?._id
-                                ? require("../assets/Images/rec.png")
-                                : require("../assets/Images/reced.png")
-                            }
-                            style={{
-                              width: moderateScale(20),
-                              height: moderateScale(20),
-                              marginRight: moderateScale(10),
-                            }}
-                          />
-                          <Text
-                            style={[
-                              HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                              { fontSize: moderateScale(12) },
-                            ]}
+                  {WorkingTime?.getWorkingTimeByEmpForMobile
+                    ? WorkingTime?.getWorkingTimeByEmpForMobile.map(
+                        (data: any, index: number) => (
+                          <View
+                            style={HomeStyle.HomeMainSelectDateSection}
+                            key={index}
                           >
-                            {data?.shiftName} Shift
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    )
-                  )}
+                            <TouchableOpacity
+                              style={[
+                                HomeStyle.HomeMainSelectDateButton,
+                                {
+                                  height: moderateScale(40),
+                                  paddingHorizontal: moderateScale(10),
+                                  borderRadius: moderateScale(10),
+                                  marginRight: moderateScale(10),
+                                  marginBottom:
+                                    dimension === "sm" ||
+                                    Platform.OS === "android"
+                                      ? moderateScale(10)
+                                      : 0,
+                                },
+                              ]}
+                              onPress={() => {
+                                setWorkingTimeId(
+                                  data?._id !== workingTimeId ? data?._id : ""
+                                );
+                              }}
+                            >
+                              <Image
+                                source={
+                                  workingTimeId === data?._id
+                                    ? require("../assets/Images/rec.png")
+                                    : require("../assets/Images/reced.png")
+                                }
+                                style={{
+                                  width: moderateScale(20),
+                                  height: moderateScale(20),
+                                  marginRight: moderateScale(10),
+                                }}
+                              />
+                              <Text
+                                style={[
+                                  HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                                  { fontSize: moderateScale(12) },
+                                ]}
+                              >
+                                {data?.shiftName} Shift
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        )
+                      )
+                    : null}
                 </ScrollView>
               </View>
             </View>
@@ -524,6 +552,207 @@ export default function HomeLeaveScreen() {
                   Require!
                 </Text>
               </View>
+            )}
+            {allDay ? null : (
+              <>
+                <View style={HomeStyle.HomeMainSelectDateContainer}>
+                  <View style={{ width: "100%" }}>
+                    <View
+                      style={[
+                        HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                        { height: moderateScale(40) },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          HomeStyle.HomeMainSelectDateButtonLabel,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        Time
+                      </Text>
+                    </View>
+                    <ScrollView
+                      horizontal
+                      style={{ width: "100%" }}
+                      showsHorizontalScrollIndicator={false}
+                    >
+                      {breakData?.getBreakTimeByEmpWorkingTimeForMobile !==
+                      null ? (
+                        <View style={HomeStyle.HomeMainSelectDateSection}>
+                          <TouchableOpacity
+                            style={[
+                              HomeStyle.HomeMainSelectDateButton,
+                              {
+                                height: moderateScale(40),
+                                paddingHorizontal: moderateScale(10),
+                                borderRadius: moderateScale(10),
+                                marginRight: moderateScale(10),
+                                marginBottom:
+                                  dimension === "sm" ||
+                                  Platform.OS === "android"
+                                    ? moderateScale(10)
+                                    : 0,
+                              },
+                            ]}
+                            onPress={() => {
+                              setStart(
+                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.firstStart !== start
+                                  ? breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.firstStart
+                                  : ""
+                              );
+                              setEnd(
+                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.firstEnd !== end
+                                  ? breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.firstEnd
+                                  : ""
+                              );
+                            }}
+                          >
+                            <Image
+                              source={
+                                start ===
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.firstStart &&
+                                end ===
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.firstEnd
+                                  ? require("../assets/Images/rec.png")
+                                  : require("../assets/Images/reced.png")
+                              }
+                              style={{
+                                width: moderateScale(20),
+                                height: moderateScale(20),
+                                marginRight: moderateScale(10),
+                              }}
+                            />
+                            <Text
+                              style={[
+                                HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                                { fontSize: moderateScale(12) },
+                              ]}
+                            >
+                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                ?.firstStart !== null
+                                ? breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.firstStart
+                                : "--"}
+                              ~
+                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                ?.firstEnd !== null
+                                ? breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.firstEnd
+                                : "--"}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
+
+                      {breakData?.getBreakTimeByEmpWorkingTimeForMobile !==
+                      null ? (
+                        <View style={HomeStyle.HomeMainSelectDateSection}>
+                          <TouchableOpacity
+                            style={[
+                              HomeStyle.HomeMainSelectDateButton,
+                              {
+                                height: moderateScale(40),
+                                paddingHorizontal: moderateScale(10),
+                                borderRadius: moderateScale(10),
+                                marginRight: moderateScale(10),
+                                marginBottom:
+                                  dimension === "sm" ||
+                                  Platform.OS === "android"
+                                    ? moderateScale(10)
+                                    : 0,
+                              },
+                            ]}
+                            onPress={() => {
+                              setStart(
+                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.secondStart !== start
+                                  ? breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.secondStart
+                                  : ""
+                              );
+                              setEnd(
+                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.secondEnd !== end
+                                  ? breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.secondEnd
+                                  : ""
+                              );
+                            }}
+                          >
+                            <Image
+                              source={
+                                start ===
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.secondStart &&
+                                end ===
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.secondEnd
+                                  ? require("../assets/Images/rec.png")
+                                  : require("../assets/Images/reced.png")
+                              }
+                              style={{
+                                width: moderateScale(20),
+                                height: moderateScale(20),
+                                marginRight: moderateScale(10),
+                              }}
+                            />
+                            <Text
+                              style={[
+                                HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                                { fontSize: moderateScale(12) },
+                              ]}
+                            >
+                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                ?.secondStart !== null
+                                ? breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.secondStart
+                                : "--"}
+                              ~
+                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
+                                ?.secondEnd !== null
+                                ? breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.secondEnd
+                                : "--"}
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
+                    </ScrollView>
+                  </View>
+                </View>
+                {start === "" && end === "" && (
+                  <View style={{ width: "100%" }}>
+                    <Text
+                      style={{
+                        color: "#ff0000",
+                        padding: moderateScale(5),
+                        fontSize: moderateScale(14),
+                      }}
+                    >
+                      Require!
+                    </Text>
+                  </View>
+                )}
+              </>
             )}
           </>
         ) : null}

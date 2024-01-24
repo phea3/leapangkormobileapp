@@ -15,7 +15,7 @@ export default function NotificationActiveScreen() {
   const [limit, setLimit] = useState(10);
 
   const { data, refetch } = useQuery(GET_NOTIFICATION_CONTACT, {
-    pollInterval: 2000,
+    // pollInterval: 2000,
     variables: {
       limit: limit,
     },

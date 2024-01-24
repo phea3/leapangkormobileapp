@@ -47,7 +47,7 @@ export default function HomeMainScreen() {
   }, []);
 
   const { refetch: HoliRefetch } = useQuery(GET_EMPLOYEEONHOLIDAY, {
-    pollInterval: 2000,
+    // pollInterval: 2000,
     onCompleted(GetEmployeeOnHoliday) {
       // console.log(holiData);
       setHolidata(GetEmployeeOnHoliday?.getEmployeeOnHoliday);

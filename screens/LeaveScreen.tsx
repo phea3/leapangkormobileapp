@@ -42,7 +42,7 @@ export default function LeaveScreen() {
   }, []);
 
   const { data, refetch, loading } = useQuery(GET_LEAVE_LIST, {
-    pollInterval: 2000,
+    // pollInterval: 2000,
     variables: {
       limit: limit,
     },

@@ -21,7 +21,7 @@ export default function CheckModal({
     if (data?.status === true) {
       setTimeout(() => {
         navigate("/attendance");
-      }, 500);
+      }, 2000);
     }
   }, [data?.status]);
 

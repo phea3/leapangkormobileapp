@@ -25,7 +25,7 @@ export default function AttendanceScreen() {
   const { data: AttendanceData, refetch: AttendanceRefetch } = useQuery(
     GETATTENDANCEMOBILE,
     {
-      pollInterval: 2000,
+      // pollInterval: 2000,
       variables: {
         limit: limit,
       },
