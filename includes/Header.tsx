@@ -1,4 +1,11 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Linking,
+  Platform,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import HeaderStyle from "../styles/HeaderStyle.scss";
 import { useContext, useMemo, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
@@ -10,7 +17,7 @@ import {
 import Back from "./Back";
 import { moderateScale } from "../ Metrics";
 
-export default function Header() {
+export default function Header({ versionData }: any) {
   const [mobileUserLogin, setMobileUserLogin] = useState(initMobileUserLogin);
 
   const { dimension } = useContext(AuthContext);
@@ -175,21 +182,49 @@ export default function Header() {
             </TouchableOpacity>
           </>
         )}
+
         {location.pathname === "/notification" ||
         location.pathname === "/notification/action" ||
         location.pathname === "/notification/meeting" ? null : (
-          <TouchableOpacity
-            style={HeaderStyle.HeaderRightSideContainer}
-            onPress={() => navigate("/notification")}
-          >
-            <Image
-              source={require("../assets/Images/bell.png")}
-              style={{
-                height: moderateScale(30),
-                width: moderateScale(30),
-              }}
-            />
-          </TouchableOpacity>
+          <View style={HeaderStyle.HeaderRightSideContainer}>
+            {!versionData ? (
+              <TouchableOpacity
+                style={HeaderStyle.HeaderRightSideContainer}
+                onPress={() => {
+                  if (Platform.OS === "ios") {
+                    Linking.openURL(
+                      "https://apps.apple.com/kh/app/leap-angkor-human-resource/id6474982219"
+                    );
+                  } else {
+                    Linking.openURL(
+                      "https://play.google.com/store/apps/details?id=com.leapangkor.humanresource"
+                    );
+                  }
+                }}
+              >
+                <Image
+                  source={require("../assets/Images/alerting.gif")}
+                  style={{
+                    height: moderateScale(35),
+                    width: moderateScale(35),
+                  }}
+                />
+              </TouchableOpacity>
+            ) : null}
+
+            <TouchableOpacity
+              style={HeaderStyle.HeaderRightSideContainer}
+              onPress={() => navigate("/notification")}
+            >
+              <Image
+                source={require("../assets/Images/bell.png")}
+                style={{
+                  height: moderateScale(25),
+                  width: moderateScale(25),
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>

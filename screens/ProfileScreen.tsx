@@ -1,9 +1,18 @@
 import { useState, useContext, useEffect } from "react";
-import { Text, View, Image, Modal, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  Modal,
+  TouchableOpacity,
+  Platform,
+  Linking,
+} from "react-native";
 import { useLocation, useNavigate } from "react-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@apollo/client";
 import ImageView from "react-native-image-viewing";
+import Constants from "expo-constants";
 
 import ProfileStyle from "../styles/ProfileStyle.scss";
 import ModalStyle from "../styles/ModalStyle.scss";
@@ -13,12 +22,26 @@ import useLoginUser from "../Hook/useLoginUser";
 import { GET_USER_INFO } from "../graphql/GetUserInfo";
 import * as Animatable from "react-native-animatable";
 import { moderateScale } from "../ Metrics";
+import getAppVersion from "../getAppVersion";
+import { AppVersions } from "../functions/FetchDataLocalStorage";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({ versionData }: any) {
   const location = useLocation();
   const { dimension } = useContext(AuthContext);
   const [isVisible, setVisible] = useState(false);
   const [visible, setIsVisible] = useState(false);
+  const [versions, setVersions] = useState<AppVersions | null>(null);
+
+  useEffect(() => {
+    const fetchAppVersion = async () => {
+      const appVersions = await getAppVersion();
+      if (appVersions !== undefined) {
+        setVersions(appVersions);
+        // console.log(versions);
+      }
+    };
+    fetchAppVersion();
+  }, []);
 
   const handleCloseModal = () => {
     setVisible(false);
@@ -153,47 +176,78 @@ export default function ProfileScreen() {
                 : "--:--"}
             </Text>
           </View>
-          <View style={ProfileStyle.LogoutContainer}>
-            <View
-              style={{
-                flex: 1,
-                width: "90%",
-                justifyContent: "center",
-                alignItems: "center",
-                // backgroundColor: "#f1f1f1",
-                borderRadius: moderateScale(15),
-              }}
-            >
-              {/* <Text
-                style={[ProfileStyle.UserName, { fontSize: moderateScale(14) }]}
+          {!versionData ? (
+            <View style={ProfileStyle.LogoutContainer}>
+              <View
+                style={{
+                  flex: 1,
+                  width: "90%",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  // backgroundColor: "#f1f1f1",
+                  borderRadius: moderateScale(15),
+                }}
               >
-                Empty
-              </Text> */}
-            </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (Platform.OS === "ios") {
+                      Linking.openURL(
+                        "https://apps.apple.com/kh/app/leap-angkor-human-resource/id6474982219"
+                      );
+                    } else {
+                      Linking.openURL(
+                        "https://play.google.com/store/apps/details?id=com.leapangkor.humanresource"
+                      );
+                    }
+                  }}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    source={require("../assets/Images/alerting.gif")}
+                    style={{
+                      width: moderateScale(50),
+                      height: moderateScale(50),
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: moderateScale(12),
+                      fontFamily: "Kantumruy-Light",
+                      color: "#3C6EFB",
+                    }}
+                  >
+                    Quick update {">>>"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
 
-            <TouchableOpacity
-              style={[
-                ProfileStyle.LogoutScreenLogoutButton,
-                {
-                  borderRadius: moderateScale(10),
-                  padding: moderateScale(10),
-                  marginVertical: moderateScale(10),
-                },
-              ]}
-              onPress={() => {
-                handleOpenModal();
-              }}
-            >
-              <Text
+              <TouchableOpacity
                 style={[
-                  ProfileStyle.LogoutScreenLogoutButtonText,
-                  { fontSize: moderateScale(14) },
+                  ProfileStyle.LogoutScreenLogoutButton,
+                  {
+                    borderRadius: moderateScale(10),
+                    padding: moderateScale(10),
+                    marginVertical: moderateScale(10),
+                  },
                 ]}
+                onPress={() => {
+                  handleOpenModal();
+                }}
               >
-                Logout
-              </Text>
-            </TouchableOpacity>
-          </View>
+                <Text
+                  style={[
+                    ProfileStyle.LogoutScreenLogoutButtonText,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  Logout
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : null}
         </View>
       </View>
       {/* ========================START MODAL ALERT============================ */}

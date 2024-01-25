@@ -27,7 +27,7 @@ import { GETCHECKINOUTBUTTON } from "../graphql/GetCheckInOutButton";
 import ModalCheckIn from "../components/ModalCheckIn";
 import ModalCheckOut from "../components/ModalCheckOut";
 
-export default function ChecKAttendance({ locate }: any) {
+export default function ChecKAttendance({ locate, versionData }: any) {
   const { uid } = useContext(AuthContext);
   const navigate = useNavigate();
   const located = useLocation();
@@ -309,7 +309,60 @@ export default function ChecKAttendance({ locate }: any) {
     }
   }, [errorMsg]);
 
-  if (errorMsg) {
+  if (!versionData) {
+    return (
+      <View
+        style={[
+          LeaveStyle.LeaveContainer,
+          {
+            borderTopLeftRadius: moderateScale(15),
+            borderTopRightRadius: moderateScale(15),
+            borderTopWidth: moderateScale(1),
+            borderRightWidth: moderateScale(1),
+            borderLeftWidth: moderateScale(1),
+          },
+        ]}
+      >
+        <View style={LeaveStyle.LeaveBackButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigate("/home")}
+            style={[LeaveStyle.LeaveBackButton, { padding: moderateScale(15) }]}
+          >
+            <Image
+              source={require("../assets/Images/back-dark-blue.png")}
+              style={{
+                width: moderateScale(20),
+                height: moderateScale(20),
+                marginRight: moderateScale(10),
+              }}
+            />
+            <Text
+              style={[
+                LeaveStyle.LeaveBackButtonTitle,
+                { fontSize: moderateScale(14) },
+              ]}
+            >
+              Leave Check
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text
+            style={{
+              fontFamily: "Kantumruy-Regular",
+              fontSize: moderateScale(12),
+              textAlign: "center",
+            }}
+          >
+            Please update your app to access this feature.{"\n"}
+            សូម update កម្មវិធីទូរសព្ទ័ដើម្បីអាចប្រើមុខងារនេះបាន។
+          </Text>
+        </View>
+      </View>
+    );
+  } else if (errorMsg) {
     return (
       <View
         style={[

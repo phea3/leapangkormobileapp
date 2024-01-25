@@ -31,6 +31,9 @@ import LoginLayout from "./layouts/LoginLayout";
 import PayslipScreen from "./screens/PayslipScreen";
 import MonthlyPayslipReportScreen from "./screens/MonthlyPayslipReportScreen";
 import TimeoffScreen from "./screens/TimeoffScreen";
+import Constants from "expo-constants";
+import { CHECKVERSIONALLOW } from "./graphql/CheckVersionAllow";
+import { useQuery } from "@apollo/client";
 
 export default function Router() {
   const { expoPushToken, notificationResponse } = usePushNotifications();
@@ -41,6 +44,29 @@ export default function Router() {
   const { dispatch, REDUCER_ACTIONS } = useLoginUser();
   const height = Dimensions.get("screen").height;
   const width = Dimensions.get("screen").width;
+  const LocalVersion = Constants.expoConfig?.version;
+  const platform = Platform.OS;
+
+  const { data: versionData, refetch: versionRefetch } = useQuery(
+    CHECKVERSIONALLOW,
+    {
+      variables: {
+        version: LocalVersion,
+        os: platform,
+      },
+      onCompleted: ({ checkVersionAllow }) => {
+        // console.log(checkVersionAllow);
+        // console.log(LocalVersion);
+      },
+      onError: (error: any) => {
+        console.log(error?.message);
+      },
+    }
+  );
+
+  useEffect(() => {
+    versionRefetch();
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -144,7 +170,12 @@ export default function Router() {
     { path: "/login", element: <Navigate to="/" /> },
     {
       path: "/",
-      element: <Layout expoPushToken={expoPushToken} />,
+      element: (
+        <Layout
+          expoPushToken={expoPushToken}
+          versionData={versionData?.checkVersionAllow}
+        />
+      ),
       children: [
         { path: "/", element: <Navigate to="/home" /> },
         {
@@ -153,16 +184,31 @@ export default function Router() {
           children: [
             { path: "/home", element: <Navigate to="/home/main" /> },
             { path: "/home/main", element: <HomeMainScreen /> },
-            { path: "/home/leave", element: <HomeLeaveScreen /> },
+            {
+              path: "/home/leave",
+              element: (
+                <HomeLeaveScreen versionData={versionData?.checkVersionAllow} />
+              ),
+            },
           ],
         },
         { path: "/leave", element: <LeaveScreen /> },
         {
           path: "/check",
-          element: <ChecKAttendance locate={locate} />,
+          element: (
+            <ChecKAttendance
+              locate={locate}
+              versionData={versionData?.checkVersionAllow}
+            />
+          ),
         },
         { path: "/attendance", element: <AttendanceScreen /> },
-        { path: "/profile", element: <ProfileScreen /> },
+        {
+          path: "/profile",
+          element: (
+            <ProfileScreen versionData={versionData?.checkVersionAllow} />
+          ),
+        },
         { path: "/meeting", element: <MeetingScreen /> },
         { path: "/payslip", element: <PayslipScreen /> },
         { path: "/timeoff", element: <TimeoffScreen /> },

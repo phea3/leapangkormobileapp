@@ -32,23 +32,21 @@ export default function TimeoffScreen() {
   const { refetch: TimeOffRefetch } = useQuery(GETPUBLICHOLIDAYBYEMPLOYEE, {
     // pollInterval: 2000,
     variables: {
-      employeeId: !uid ? uid : "659f3c36029ca95bcc7be50d",
+      employeeId: uid ? uid : "659f3c36029ca95bcc7be50d",
       year: moment(year).format("YYYY"),
     },
-    onCompleted(data) {
-      // console.log(data?.getPublicHolidayByEmployee);
-      if (data) {
+    onCompleted: ({ getPublicHolidayByEmployee }) => {
+      console.log(getPublicHolidayByEmployee);
+      if (getPublicHolidayByEmployee) {
         setTimeOffData(
-          data?.getPublicHolidayByEmployee?.filter(
-            (e: any) => e.status === true
-          )
+          getPublicHolidayByEmployee?.filter((e: any) => e.status === true)
         );
       } else {
         // Handle the case where data.getPublicHolidayByEmployee is not an array
         console.log("Invalid data format received");
       }
     },
-    onError(error) {
+    onError: (error: any) => {
       console.log(error?.message);
     },
   });

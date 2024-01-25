@@ -6,7 +6,7 @@ export default function LoginLayout() {
   return (
     <ImageBackground
       source={require("../assets/Images/watermark.png")}
-      resizeMode="cover"
+      resizeMode="repeat"
       style={LayoutStyle.LoginLayoutContainer}
     >
       <StatusBar

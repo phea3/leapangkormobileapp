@@ -18,7 +18,7 @@ import Animated, {
 import NetInfo from "@react-native-community/netinfo";
 import { GET_EMPLOYEEBYID } from "../graphql/GetEmployeeById";
 
-const Layout = ({ expoPushToken }: any) => {
+const Layout = ({ expoPushToken, versionData }: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { heightScreen } = useContext(AuthContext);
@@ -175,11 +175,11 @@ const Layout = ({ expoPushToken }: any) => {
       <View style={LayoutStyle.LayoutCoverFooter} />
       <ImageBackground
         source={require("../assets/Images/insidebackground.png")}
-        resizeMode="cover"
+        resizeMode="repeat"
         style={LayoutStyle.LoginLayoutContainer}
       >
         <View style={LayoutStyle.LayoutContainer}>
-          <Header />
+          <Header versionData={versionData} />
           <Animated.View
             style={[
               {

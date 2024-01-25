@@ -26,3 +26,8 @@ export async function fetchDataLocalStorage(keyword: string) {
     return `{"__typename":"MobileUserLogin","_id":"","firstName":"","lastName":"","englishName":"","profileImg":"","role":""}`;
   }
 }
+
+export interface AppVersions {
+  playStoreVersion: string;
+  appStoreVersion: string;
+}

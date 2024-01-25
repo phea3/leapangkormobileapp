@@ -24,7 +24,7 @@ import LeaveStyle from "../styles/LeaveStyle.scss";
 import { GETWKORINGTIMEBYEMPFORMOBILE } from "../graphql/GetWorkingTimeByEmpForMobile";
 import { GETBREAKTIMEBYEMPWORKINGTIMEFORMOBILE } from "../graphql/GetBreakTimeByEmpWorkingTimeForMobile";
 
-export default function HomeLeaveScreen() {
+export default function HomeLeaveScreen({ versionData }: any) {
   const { dimension } = useContext(AuthContext);
   const navigate = useNavigate();
   const [allDay, setAllDay] = useState(true);
@@ -210,203 +210,204 @@ export default function HomeLeaveScreen() {
     };
   }, []);
 
-  return (
-    <View
-      style={[
-        HomeStyle.HomeMainContentContainer,
-        {
-          borderTopWidth: moderateScale(1),
-          borderLeftWidth: moderateScale(1),
-          borderRightWidth: moderateScale(1),
-          borderTopLeftRadius: moderateScale(15),
-          borderTopRightRadius: moderateScale(15),
-        },
-      ]}
-    >
-      <View style={HomeStyle.HomeFeaturesTitle}>
-        <TouchableOpacity
-          style={[
-            HomeStyle.HomeFeaturesTitleButton,
-            { padding: moderateScale(15) },
-          ]}
-          onPress={() => navigate("/home/main")}
-        >
-          <Image
-            source={require("../assets/Images/back-dark-blue.png")}
-            style={{
-              width: moderateScale(20),
-              height: moderateScale(20),
-              marginRight: moderateScale(10),
-            }}
-          />
-          <Text
-            style={[
-              LeaveStyle.LeaveBackButtonTitle,
-              { fontSize: moderateScale(14) },
-            ]}
-          >
-            Main leave
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <ScrollView
-        contentContainerStyle={{
-          alignItems: "center",
-          backgroundColor: "#f8f8f8",
-          padding: moderateScale(10),
-          borderRadius: moderateScale(10),
-        }}
+  if (!versionData) {
+    return (
+      <View
         style={[
-          HomeStyle.HomeMainScrollviewStyle,
-          { padding: moderateScale(10) },
+          HomeStyle.HomeMainContentContainer,
+          {
+            borderTopWidth: moderateScale(1),
+            borderLeftWidth: moderateScale(1),
+            borderRightWidth: moderateScale(1),
+            borderTopLeftRadius: moderateScale(15),
+            borderTopRightRadius: moderateScale(15),
+          },
         ]}
-        showsVerticalScrollIndicator={false}
       >
-        {/* <KeyboardDismissableArea /> */}
-        {!isKeyboardVisible ? (
-          <>
-            <View
+        <View style={HomeStyle.HomeFeaturesTitle}>
+          <TouchableOpacity
+            style={[
+              HomeStyle.HomeFeaturesTitleButton,
+              { padding: moderateScale(15) },
+            ]}
+            onPress={() => navigate("/home/main")}
+          >
+            <Image
+              source={require("../assets/Images/back-dark-blue.png")}
+              style={{
+                width: moderateScale(20),
+                height: moderateScale(20),
+                marginRight: moderateScale(10),
+              }}
+            />
+            <Text
               style={[
-                HomeStyle.HomeMainSelectDateButtonLabelContainer,
-                { height: moderateScale(40) },
+                LeaveStyle.LeaveBackButtonTitle,
+                { fontSize: moderateScale(14) },
               ]}
             >
-              <Text
-                style={[
-                  HomeStyle.HomeMainSelectDateButtonLabel,
-                  { fontSize: moderateScale(14) },
-                ]}
-              >
-                Select Shift
-              </Text>
-            </View>
-            <View
+              Main leave
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <Text
+            style={{
+              fontFamily: "Kantumruy-Regular",
+              fontSize: moderateScale(12),
+              textAlign: "center",
+            }}
+          >
+            Please update your app to access this feature.{"\n"}
+            សូម update កម្មវិធីទូរសព្ទ័ដើម្បីអាចប្រើមុខងារនេះបាន។
+          </Text>
+        </View>
+      </View>
+    );
+  } else {
+    return (
+      <View
+        style={[
+          HomeStyle.HomeMainContentContainer,
+          {
+            borderTopWidth: moderateScale(1),
+            borderLeftWidth: moderateScale(1),
+            borderRightWidth: moderateScale(1),
+            borderTopLeftRadius: moderateScale(15),
+            borderTopRightRadius: moderateScale(15),
+          },
+        ]}
+      >
+        <View style={HomeStyle.HomeFeaturesTitle}>
+          <TouchableOpacity
+            style={[
+              HomeStyle.HomeFeaturesTitleButton,
+              { padding: moderateScale(15) },
+            ]}
+            onPress={() => navigate("/home/main")}
+          >
+            <Image
+              source={require("../assets/Images/back-dark-blue.png")}
+              style={{
+                width: moderateScale(20),
+                height: moderateScale(20),
+                marginRight: moderateScale(10),
+              }}
+            />
+            <Text
               style={[
-                HomeStyle.HomeMainSelectTimeContainer,
-                { height: moderateScale(40), paddingTop: moderateScale(10) },
+                LeaveStyle.LeaveBackButtonTitle,
+                { fontSize: moderateScale(14) },
               ]}
             >
-              <TouchableOpacity
-                style={[
-                  HomeStyle.HomeMainSelectTimeHalfContainer,
-                  { marginRight: 10 },
-                ]}
-                onPress={() => {
-                  setAllDay(true), setHalfDay(false);
-                }}
-              >
-                <Image
-                  source={
-                    allDay
-                      ? require("../assets/Images/rec.png")
-                      : require("../assets/Images/reced.png")
-                  }
-                  style={{
-                    width: moderateScale(20),
-                    height: moderateScale(20),
-                    marginRight: moderateScale(10),
-                  }}
-                />
-                <Text
-                  style={[
-                    HomeStyle.HomeMainSelectTitle,
-                    { fontSize: moderateScale(14) },
-                  ]}
-                >
-                  All Day
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={HomeStyle.HomeMainSelectTimeHalfContainer}
-                onPress={() => {
-                  setAllDay(false), setHalfDay(true);
-                }}
-              >
-                <Image
-                  source={
-                    halfDay
-                      ? require("../assets/Images/rec.png")
-                      : require("../assets/Images/reced.png")
-                  }
-                  style={{
-                    width: moderateScale(20),
-                    height: moderateScale(20),
-                    marginRight: moderateScale(10),
-                  }}
-                />
-                <Text
-                  style={[
-                    HomeStyle.HomeMainSelectTitle,
-                    { fontSize: moderateScale(14) },
-                  ]}
-                >
-                  Half Day
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <View style={HomeStyle.HomeMainSelectDateContainer}>
+              Main leave
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <ScrollView
+          contentContainerStyle={{
+            alignItems: "center",
+            backgroundColor: "#f8f8f8",
+            padding: moderateScale(10),
+            borderRadius: moderateScale(10),
+          }}
+          style={[
+            HomeStyle.HomeMainScrollviewStyle,
+            { padding: moderateScale(10) },
+          ]}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* <KeyboardDismissableArea /> */}
+          {!isKeyboardVisible ? (
+            <>
               <View
                 style={[
-                  HomeStyle.HomeMainSelectDateMiniContainer,
-                  { marginRight: moderateScale(10) },
+                  HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                  { height: moderateScale(40) },
                 ]}
               >
-                <View
+                <Text
                   style={[
-                    HomeStyle.HomeMainSelectDateButtonLabelContainer,
-                    { height: moderateScale(40) },
+                    HomeStyle.HomeMainSelectDateButtonLabel,
+                    { fontSize: moderateScale(14) },
                   ]}
                 >
-                  <Text
-                    style={[
-                      HomeStyle.HomeMainSelectDateButtonLabel,
-                      { fontSize: moderateScale(14) },
-                    ]}
-                  >
-                    {allDay ? "Start Date" : "Date"}
-                  </Text>
-                </View>
-
-                <View
+                  Select Shift
+                </Text>
+              </View>
+              <View
+                style={[
+                  HomeStyle.HomeMainSelectTimeContainer,
+                  { height: moderateScale(40), paddingTop: moderateScale(10) },
+                ]}
+              >
+                <TouchableOpacity
                   style={[
-                    HomeStyle.HomeMainSelectDateButton,
-                    {
-                      height: moderateScale(40),
-                      paddingHorizontal: moderateScale(10),
-                      borderRadius: moderateScale(10),
-                    },
+                    HomeStyle.HomeMainSelectTimeHalfContainer,
+                    { marginRight: 10 },
                   ]}
+                  onPress={() => {
+                    setAllDay(true), setHalfDay(false);
+                  }}
                 >
                   <Image
-                    source={require("../assets/Images/calendar.png")}
+                    source={
+                      allDay
+                        ? require("../assets/Images/rec.png")
+                        : require("../assets/Images/reced.png")
+                    }
                     style={{
                       width: moderateScale(20),
                       height: moderateScale(20),
                       marginRight: moderateScale(10),
                     }}
                   />
-                  <View style={HomeStyle.HomeMainSelectDateSection}>
-                    <TouchableOpacity onPress={showDatePicker}>
-                      <Text
-                        style={[
-                          HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                          { fontSize: moderateScale(12) },
-                        ]}
-                      >
-                        {moment(startDate).format("DD-MM-YYYY")}
-                      </Text>
-                    </TouchableOpacity>
-                    <DateTimePickerModal
-                      isVisible={dateIsvisble}
-                      mode="date"
-                      onConfirm={handConfirm}
-                      onCancel={hidDatePicker}
-                    />
-                  </View>
-                </View>
+                  <Text
+                    style={[
+                      HomeStyle.HomeMainSelectTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    All Day
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={HomeStyle.HomeMainSelectTimeHalfContainer}
+                  onPress={() => {
+                    setAllDay(false), setHalfDay(true);
+                  }}
+                >
+                  <Image
+                    source={
+                      halfDay
+                        ? require("../assets/Images/rec.png")
+                        : require("../assets/Images/reced.png")
+                    }
+                    style={{
+                      width: moderateScale(20),
+                      height: moderateScale(20),
+                      marginRight: moderateScale(10),
+                    }}
+                  />
+                  <Text
+                    style={[
+                      HomeStyle.HomeMainSelectTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    Half Day
+                  </Text>
+                </TouchableOpacity>
               </View>
-              {!halfDay && (
-                <View style={HomeStyle.HomeMainSelectDateMiniContainer}>
+              <View style={HomeStyle.HomeMainSelectDateContainer}>
+                <View
+                  style={[
+                    HomeStyle.HomeMainSelectDateMiniContainer,
+                    { marginRight: moderateScale(10) },
+                  ]}
+                >
                   <View
                     style={[
                       HomeStyle.HomeMainSelectDateButtonLabelContainer,
@@ -419,7 +420,7 @@ export default function HomeLeaveScreen() {
                         { fontSize: moderateScale(14) },
                       ]}
                     >
-                      End Date
+                      {allDay ? "Start Date" : "Date"}
                     </Text>
                   </View>
 
@@ -441,56 +442,201 @@ export default function HomeLeaveScreen() {
                         marginRight: moderateScale(10),
                       }}
                     />
-                    <TouchableOpacity onPress={showDatePicker2}>
-                      <Text
-                        style={[
-                          HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                          { fontSize: moderateScale(12) },
-                        ]}
-                      >
-                        {moment(endDate).format("DD-MM-YYYY")}
-                      </Text>
-                    </TouchableOpacity>
-                    <DateTimePickerModal
-                      isVisible={dateIsvisble2}
-                      mode="date"
-                      onConfirm={handConfirm2}
-                      onCancel={hidDatePicker2}
-                    />
+                    <View style={HomeStyle.HomeMainSelectDateSection}>
+                      <TouchableOpacity onPress={showDatePicker}>
+                        <Text
+                          style={[
+                            HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                            { fontSize: moderateScale(12) },
+                          ]}
+                        >
+                          {moment(startDate).format("DD-MM-YYYY")}
+                        </Text>
+                      </TouchableOpacity>
+                      <DateTimePickerModal
+                        isVisible={dateIsvisble}
+                        mode="date"
+                        onConfirm={handConfirm}
+                        onCancel={hidDatePicker}
+                      />
+                    </View>
                   </View>
                 </View>
-              )}
-            </View>
+                {!halfDay && (
+                  <View style={HomeStyle.HomeMainSelectDateMiniContainer}>
+                    <View
+                      style={[
+                        HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                        { height: moderateScale(40) },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          HomeStyle.HomeMainSelectDateButtonLabel,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        End Date
+                      </Text>
+                    </View>
 
-            <View style={HomeStyle.HomeMainSelectDateContainer}>
-              <View style={{ width: "100%" }}>
-                <View
-                  style={[
-                    HomeStyle.HomeMainSelectDateButtonLabelContainer,
-                    { height: moderateScale(40) },
-                  ]}
-                >
-                  <Text
+                    <View
+                      style={[
+                        HomeStyle.HomeMainSelectDateButton,
+                        {
+                          height: moderateScale(40),
+                          paddingHorizontal: moderateScale(10),
+                          borderRadius: moderateScale(10),
+                        },
+                      ]}
+                    >
+                      <Image
+                        source={require("../assets/Images/calendar.png")}
+                        style={{
+                          width: moderateScale(20),
+                          height: moderateScale(20),
+                          marginRight: moderateScale(10),
+                        }}
+                      />
+                      <TouchableOpacity onPress={showDatePicker2}>
+                        <Text
+                          style={[
+                            HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                            { fontSize: moderateScale(12) },
+                          ]}
+                        >
+                          {moment(endDate).format("DD-MM-YYYY")}
+                        </Text>
+                      </TouchableOpacity>
+                      <DateTimePickerModal
+                        isVisible={dateIsvisble2}
+                        mode="date"
+                        onConfirm={handConfirm2}
+                        onCancel={hidDatePicker2}
+                      />
+                    </View>
+                  </View>
+                )}
+              </View>
+
+              <View style={HomeStyle.HomeMainSelectDateContainer}>
+                <View style={{ width: "100%" }}>
+                  <View
                     style={[
-                      HomeStyle.HomeMainSelectDateButtonLabel,
-                      { fontSize: moderateScale(14) },
+                      HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                      { height: moderateScale(40) },
                     ]}
                   >
-                    Request For
+                    <Text
+                      style={[
+                        HomeStyle.HomeMainSelectDateButtonLabel,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      Request For
+                    </Text>
+                  </View>
+                  <ScrollView
+                    horizontal
+                    style={{ width: "100%" }}
+                    showsHorizontalScrollIndicator={false}
+                  >
+                    {WorkingTime?.getWorkingTimeByEmpForMobile
+                      ? WorkingTime?.getWorkingTimeByEmpForMobile.map(
+                          (data: any, index: number) => (
+                            <View
+                              style={HomeStyle.HomeMainSelectDateSection}
+                              key={index}
+                            >
+                              <TouchableOpacity
+                                style={[
+                                  HomeStyle.HomeMainSelectDateButton,
+                                  {
+                                    height: moderateScale(40),
+                                    paddingHorizontal: moderateScale(10),
+                                    borderRadius: moderateScale(10),
+                                    marginRight: moderateScale(10),
+                                    marginBottom:
+                                      dimension === "sm" ||
+                                      Platform.OS === "android"
+                                        ? moderateScale(10)
+                                        : 0,
+                                  },
+                                ]}
+                                onPress={() => {
+                                  setWorkingTimeId(
+                                    data?._id !== workingTimeId ? data?._id : ""
+                                  );
+                                }}
+                              >
+                                <Image
+                                  source={
+                                    workingTimeId === data?._id
+                                      ? require("../assets/Images/rec.png")
+                                      : require("../assets/Images/reced.png")
+                                  }
+                                  style={{
+                                    width: moderateScale(20),
+                                    height: moderateScale(20),
+                                    marginRight: moderateScale(10),
+                                  }}
+                                />
+                                <Text
+                                  style={[
+                                    HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                                    { fontSize: moderateScale(12) },
+                                  ]}
+                                >
+                                  {data?.shiftName} Shift
+                                </Text>
+                              </TouchableOpacity>
+                            </View>
+                          )
+                        )
+                      : null}
+                  </ScrollView>
+                </View>
+              </View>
+              {workingTimeId.length === 0 && (
+                <View style={{ width: "100%" }}>
+                  <Text
+                    style={{
+                      color: "#ff0000",
+                      padding: moderateScale(5),
+                      fontSize: moderateScale(14),
+                    }}
+                  >
+                    Require!
                   </Text>
                 </View>
-                <ScrollView
-                  horizontal
-                  style={{ width: "100%" }}
-                  showsHorizontalScrollIndicator={false}
-                >
-                  {WorkingTime?.getWorkingTimeByEmpForMobile
-                    ? WorkingTime?.getWorkingTimeByEmpForMobile.map(
-                        (data: any, index: number) => (
-                          <View
-                            style={HomeStyle.HomeMainSelectDateSection}
-                            key={index}
-                          >
+              )}
+              {allDay ? null : (
+                <>
+                  <View style={HomeStyle.HomeMainSelectDateContainer}>
+                    <View style={{ width: "100%" }}>
+                      <View
+                        style={[
+                          HomeStyle.HomeMainSelectDateButtonLabelContainer,
+                          { height: moderateScale(40) },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            HomeStyle.HomeMainSelectDateButtonLabel,
+                            { fontSize: moderateScale(14) },
+                          ]}
+                        >
+                          Time
+                        </Text>
+                      </View>
+                      <ScrollView
+                        horizontal
+                        style={{ width: "100%" }}
+                        showsHorizontalScrollIndicator={false}
+                      >
+                        {breakData?.getBreakTimeByEmpWorkingTimeForMobile !==
+                        null ? (
+                          <View style={HomeStyle.HomeMainSelectDateSection}>
                             <TouchableOpacity
                               style={[
                                 HomeStyle.HomeMainSelectDateButton,
@@ -507,14 +653,36 @@ export default function HomeLeaveScreen() {
                                 },
                               ]}
                               onPress={() => {
-                                setWorkingTimeId(
-                                  data?._id !== workingTimeId ? data?._id : ""
+                                setStart(
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.firstStart !== start
+                                    ? breakData
+                                        ?.getBreakTimeByEmpWorkingTimeForMobile
+                                        ?.firstStart
+                                    : ""
+                                );
+                                setEnd(
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.firstEnd !== end
+                                    ? breakData
+                                        ?.getBreakTimeByEmpWorkingTimeForMobile
+                                        ?.firstEnd
+                                    : ""
                                 );
                               }}
                             >
                               <Image
                                 source={
-                                  workingTimeId === data?._id
+                                  start ===
+                                    breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.firstStart &&
+                                  end ===
+                                    breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.firstEnd
                                     ? require("../assets/Images/rec.png")
                                     : require("../assets/Images/reced.png")
                                 }
@@ -530,426 +698,324 @@ export default function HomeLeaveScreen() {
                                   { fontSize: moderateScale(12) },
                                 ]}
                               >
-                                {data?.shiftName} Shift
-                              </Text>
-                            </TouchableOpacity>
-                          </View>
-                        )
-                      )
-                    : null}
-                </ScrollView>
-              </View>
-            </View>
-            {workingTimeId.length === 0 && (
-              <View style={{ width: "100%" }}>
-                <Text
-                  style={{
-                    color: "#ff0000",
-                    padding: moderateScale(5),
-                    fontSize: moderateScale(14),
-                  }}
-                >
-                  Require!
-                </Text>
-              </View>
-            )}
-            {allDay ? null : (
-              <>
-                <View style={HomeStyle.HomeMainSelectDateContainer}>
-                  <View style={{ width: "100%" }}>
-                    <View
-                      style={[
-                        HomeStyle.HomeMainSelectDateButtonLabelContainer,
-                        { height: moderateScale(40) },
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          HomeStyle.HomeMainSelectDateButtonLabel,
-                          { fontSize: moderateScale(14) },
-                        ]}
-                      >
-                        Time
-                      </Text>
-                    </View>
-                    <ScrollView
-                      horizontal
-                      style={{ width: "100%" }}
-                      showsHorizontalScrollIndicator={false}
-                    >
-                      {breakData?.getBreakTimeByEmpWorkingTimeForMobile !==
-                      null ? (
-                        <View style={HomeStyle.HomeMainSelectDateSection}>
-                          <TouchableOpacity
-                            style={[
-                              HomeStyle.HomeMainSelectDateButton,
-                              {
-                                height: moderateScale(40),
-                                paddingHorizontal: moderateScale(10),
-                                borderRadius: moderateScale(10),
-                                marginRight: moderateScale(10),
-                                marginBottom:
-                                  dimension === "sm" ||
-                                  Platform.OS === "android"
-                                    ? moderateScale(10)
-                                    : 0,
-                              },
-                            ]}
-                            onPress={() => {
-                              setStart(
-                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                  ?.firstStart !== start
+                                {breakData
+                                  ?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.firstStart !== null
                                   ? breakData
                                       ?.getBreakTimeByEmpWorkingTimeForMobile
                                       ?.firstStart
-                                  : ""
-                              );
-                              setEnd(
-                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                  ?.firstEnd !== end
+                                  : "--"}
+                                ~
+                                {breakData
+                                  ?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.firstEnd !== null
                                   ? breakData
                                       ?.getBreakTimeByEmpWorkingTimeForMobile
                                       ?.firstEnd
-                                  : ""
-                              );
-                            }}
-                          >
-                            <Image
-                              source={
-                                start ===
-                                  breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.firstStart &&
-                                end ===
-                                  breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.firstEnd
-                                  ? require("../assets/Images/rec.png")
-                                  : require("../assets/Images/reced.png")
-                              }
-                              style={{
-                                width: moderateScale(20),
-                                height: moderateScale(20),
-                                marginRight: moderateScale(10),
-                              }}
-                            />
-                            <Text
-                              style={[
-                                HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                                { fontSize: moderateScale(12) },
-                              ]}
-                            >
-                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                ?.firstStart !== null
-                                ? breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.firstStart
-                                : "--"}
-                              ~
-                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                ?.firstEnd !== null
-                                ? breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.firstEnd
-                                : "--"}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      ) : null}
+                                  : "--"}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        ) : null}
 
-                      {breakData?.getBreakTimeByEmpWorkingTimeForMobile !==
-                      null ? (
-                        <View style={HomeStyle.HomeMainSelectDateSection}>
-                          <TouchableOpacity
-                            style={[
-                              HomeStyle.HomeMainSelectDateButton,
-                              {
-                                height: moderateScale(40),
-                                paddingHorizontal: moderateScale(10),
-                                borderRadius: moderateScale(10),
-                                marginRight: moderateScale(10),
-                                marginBottom:
-                                  dimension === "sm" ||
-                                  Platform.OS === "android"
-                                    ? moderateScale(10)
-                                    : 0,
-                              },
-                            ]}
-                            onPress={() => {
-                              setStart(
-                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                  ?.secondStart !== start
+                        {breakData?.getBreakTimeByEmpWorkingTimeForMobile !==
+                        null ? (
+                          <View style={HomeStyle.HomeMainSelectDateSection}>
+                            <TouchableOpacity
+                              style={[
+                                HomeStyle.HomeMainSelectDateButton,
+                                {
+                                  height: moderateScale(40),
+                                  paddingHorizontal: moderateScale(10),
+                                  borderRadius: moderateScale(10),
+                                  marginRight: moderateScale(10),
+                                  marginBottom:
+                                    dimension === "sm" ||
+                                    Platform.OS === "android"
+                                      ? moderateScale(10)
+                                      : 0,
+                                },
+                              ]}
+                              onPress={() => {
+                                setStart(
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.secondStart !== start
+                                    ? breakData
+                                        ?.getBreakTimeByEmpWorkingTimeForMobile
+                                        ?.secondStart
+                                    : ""
+                                );
+                                setEnd(
+                                  breakData
+                                    ?.getBreakTimeByEmpWorkingTimeForMobile
+                                    ?.secondEnd !== end
+                                    ? breakData
+                                        ?.getBreakTimeByEmpWorkingTimeForMobile
+                                        ?.secondEnd
+                                    : ""
+                                );
+                              }}
+                            >
+                              <Image
+                                source={
+                                  start ===
+                                    breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.secondStart &&
+                                  end ===
+                                    breakData
+                                      ?.getBreakTimeByEmpWorkingTimeForMobile
+                                      ?.secondEnd
+                                    ? require("../assets/Images/rec.png")
+                                    : require("../assets/Images/reced.png")
+                                }
+                                style={{
+                                  width: moderateScale(20),
+                                  height: moderateScale(20),
+                                  marginRight: moderateScale(10),
+                                }}
+                              />
+                              <Text
+                                style={[
+                                  HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                                  { fontSize: moderateScale(12) },
+                                ]}
+                              >
+                                {breakData
+                                  ?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.secondStart !== null
                                   ? breakData
                                       ?.getBreakTimeByEmpWorkingTimeForMobile
                                       ?.secondStart
-                                  : ""
-                              );
-                              setEnd(
-                                breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                  ?.secondEnd !== end
+                                  : "--"}
+                                ~
+                                {breakData
+                                  ?.getBreakTimeByEmpWorkingTimeForMobile
+                                  ?.secondEnd !== null
                                   ? breakData
                                       ?.getBreakTimeByEmpWorkingTimeForMobile
                                       ?.secondEnd
-                                  : ""
-                              );
-                            }}
-                          >
-                            <Image
-                              source={
-                                start ===
-                                  breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.secondStart &&
-                                end ===
-                                  breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.secondEnd
-                                  ? require("../assets/Images/rec.png")
-                                  : require("../assets/Images/reced.png")
-                              }
-                              style={{
-                                width: moderateScale(20),
-                                height: moderateScale(20),
-                                marginRight: moderateScale(10),
-                              }}
-                            />
-                            <Text
-                              style={[
-                                HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                                { fontSize: moderateScale(12) },
-                              ]}
-                            >
-                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                ?.secondStart !== null
-                                ? breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.secondStart
-                                : "--"}
-                              ~
-                              {breakData?.getBreakTimeByEmpWorkingTimeForMobile
-                                ?.secondEnd !== null
-                                ? breakData
-                                    ?.getBreakTimeByEmpWorkingTimeForMobile
-                                    ?.secondEnd
-                                : "--"}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      ) : null}
-                    </ScrollView>
+                                  : "--"}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        ) : null}
+                      </ScrollView>
+                    </View>
                   </View>
-                </View>
-                {start === "" && end === "" && (
-                  <View style={{ width: "100%" }}>
-                    <Text
-                      style={{
-                        color: "#ff0000",
-                        padding: moderateScale(5),
-                        fontSize: moderateScale(14),
-                      }}
-                    >
-                      Require!
-                    </Text>
-                  </View>
-                )}
-              </>
-            )}
-          </>
-        ) : null}
-        <View
-          style={[
-            HomeStyle.HomeMainSelectDateButtonLabelContainer,
-            { height: moderateScale(40) },
-          ]}
-        >
-          <Text
+                  {start === "" && end === "" && (
+                    <View style={{ width: "100%" }}>
+                      <Text
+                        style={{
+                          color: "#ff0000",
+                          padding: moderateScale(5),
+                          fontSize: moderateScale(14),
+                        }}
+                      >
+                        Require!
+                      </Text>
+                    </View>
+                  )}
+                </>
+              )}
+            </>
+          ) : null}
+          <View
             style={[
-              HomeStyle.HomeMainSelectDateButtonLabel,
-              { fontSize: moderateScale(14) },
+              HomeStyle.HomeMainSelectDateButtonLabelContainer,
+              { height: moderateScale(40) },
             ]}
-          >
-            Type Time Off
-          </Text>
-        </View>
-        {timeOff && timeOff.length === 0 ? (
-          <View style={{ width: "100%" }}>
-            <View
-              style={{
-                width: "100%",
-                height: dimension === "sm" ? 30 : 40,
-                backgroundColor: "#f8f8f8",
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: "#9aa3a6",
-                justifyContent: "center",
-                padding: 5,
-              }}
-            >
-              <Text style={{ color: "#9aa3a6" }}>Choose time off</Text>
-            </View>
-            <Text style={{ color: "#ff0000", padding: 5 }}>
-              You don't have time-off, please contact HR!
-            </Text>
-          </View>
-        ) : (
-          <SelectDropdown
-            data={TimeDate?.getTimeOffsForMobile}
-            onSelect={(selectedItem, index) => {
-              // console.log(selectedItem, index);
-              setTimeId(selectedItem?._id);
-            }}
-            renderCustomizedButtonChild={(selectedItem, index) => {
-              // text represented after item is selected
-              // if data array is an array of objects then return selectedItem.property to render after item is selected
-              return (
-                <View>
-                  <Text
-                    style={[
-                      HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                      { fontSize: moderateScale(12) },
-                    ]}
-                  >
-                    {selectedItem?.timeOff
-                      ? selectedItem?.timeOff
-                      : defaultTimeoff
-                      ? defaultTimeoff
-                      : "Choose time off"}
-                  </Text>
-                </View>
-              );
-            }}
-            dropdownStyle={{
-              borderRadius: moderateScale(10),
-              paddingHorizontal: moderateScale(10),
-            }}
-            renderCustomizedRowChild={(item, index) => {
-              // text represented for each item in dropdown
-              // if data array is an array of objects then return item.property to represent item in dropdown
-              return (
-                <View>
-                  <Text
-                    style={[
-                      HomeStyle.HomeMainSelectDateButtonPlaceholder,
-                      { fontSize: moderateScale(12) },
-                    ]}
-                  >
-                    {item?.timeOff}
-                  </Text>
-                </View>
-              );
-            }}
-            buttonStyle={{
-              width: "100%",
-              height: moderateScale(40),
-              backgroundColor: "#f8f8f8",
-              borderRadius: moderateScale(10),
-              borderWidth: moderateScale(1),
-              borderColor: "#177a02",
-            }}
-          />
-        )}
-
-        <View
-          style={[
-            HomeStyle.HomeMainSelectDateButtonLabelContainer,
-            { height: moderateScale(40) },
-          ]}
-        >
-          <Text
-            style={[
-              HomeStyle.HomeMainSelectDateButtonLabel,
-              { fontSize: moderateScale(14) },
-            ]}
-          >
-            Reason
-          </Text>
-        </View>
-        <View
-          style={[
-            HomeStyle.HomeLeaveReasonContainer,
-            {
-              height: moderateScale(40),
-              borderWidth: moderateScale(1),
-              borderRadius: moderateScale(10),
-              paddingLeft: moderateScale(10),
-            },
-          ]}
-        >
-          <TextInput
-            value={reason}
-            placeholder="Reason"
-            style={[
-              HomeStyle.HomeLeaveReasonStyle,
-              { fontSize: moderateScale(12) },
-            ]}
-            onChangeText={(e) => setReason(e)}
-            maxLength={50} // Set the maximum number of characters
-            returnKeyType="done"
-          />
-        </View>
-        {reason.length === 0 && (
-          <View style={{ width: "100%" }}>
-            <Text
-              style={{
-                color: "#ff0000",
-                padding: moderateScale(5),
-                fontSize: moderateScale(14),
-              }}
-            >
-              Require!
-            </Text>
-          </View>
-        )}
-        <View
-          style={[
-            HomeStyle.HomeMainSelectDateButtonLabelContainer,
-            { height: moderateScale(40) },
-          ]}
-        >
-          <Text
-            style={[
-              HomeStyle.HomeMainSelectDateButtonLabel,
-              { fontSize: moderateScale(14) },
-            ]}
-          >
-            {" "}
-          </Text>
-        </View>
-        {isKeyboardVisible ? null : (
-          <TouchableOpacity
-            style={[
-              HomeStyle.HomeLeaveRequestButton,
-              {
-                height: moderateScale(40),
-                padding: moderateScale(10),
-                marginBottom: moderateScale(10),
-                borderRadius: moderateScale(10),
-                backgroundColor:
-                  reason !== "" && timeId !== "" && workingTimeId !== ""
-                    ? "#177a02"
-                    : "#dcdcdc",
-              },
-            ]}
-            activeOpacity={
-              reason !== "" && timeId !== "" && workingTimeId !== "" ? 0.4 : 1
-            }
-            onPress={() => {
-              if (reason !== "" && timeId !== "" && workingTimeId !== "") {
-                handlRequest();
-              }
-            }}
           >
             <Text
               style={[
-                HomeStyle.HomeLeaveRequestButtonText,
+                HomeStyle.HomeMainSelectDateButtonLabel,
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Request
+              Type Time Off
             </Text>
-          </TouchableOpacity>
-        )}
-      </ScrollView>
-    </View>
-  );
+          </View>
+          {timeOff && timeOff.length === 0 ? (
+            <View style={{ width: "100%" }}>
+              <View
+                style={{
+                  width: "100%",
+                  height: dimension === "sm" ? 30 : 40,
+                  backgroundColor: "#f8f8f8",
+                  borderRadius: 10,
+                  borderWidth: 1,
+                  borderColor: "#9aa3a6",
+                  justifyContent: "center",
+                  padding: 5,
+                }}
+              >
+                <Text style={{ color: "#9aa3a6" }}>Choose time off</Text>
+              </View>
+              <Text style={{ color: "#ff0000", padding: 5 }}>
+                You don't have time-off, please contact HR!
+              </Text>
+            </View>
+          ) : (
+            <SelectDropdown
+              data={TimeDate?.getTimeOffsForMobile}
+              onSelect={(selectedItem, index) => {
+                // console.log(selectedItem, index);
+                setTimeId(selectedItem?._id);
+              }}
+              renderCustomizedButtonChild={(selectedItem, index) => {
+                // text represented after item is selected
+                // if data array is an array of objects then return selectedItem.property to render after item is selected
+                return (
+                  <View>
+                    <Text
+                      style={[
+                        HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                        { fontSize: moderateScale(12) },
+                      ]}
+                    >
+                      {selectedItem?.timeOff
+                        ? selectedItem?.timeOff
+                        : defaultTimeoff
+                        ? defaultTimeoff
+                        : "Choose time off"}
+                    </Text>
+                  </View>
+                );
+              }}
+              dropdownStyle={{
+                borderRadius: moderateScale(10),
+                paddingHorizontal: moderateScale(10),
+              }}
+              renderCustomizedRowChild={(item, index) => {
+                // text represented for each item in dropdown
+                // if data array is an array of objects then return item.property to represent item in dropdown
+                return (
+                  <View>
+                    <Text
+                      style={[
+                        HomeStyle.HomeMainSelectDateButtonPlaceholder,
+                        { fontSize: moderateScale(12) },
+                      ]}
+                    >
+                      {item?.timeOff}
+                    </Text>
+                  </View>
+                );
+              }}
+              buttonStyle={{
+                width: "100%",
+                height: moderateScale(40),
+                backgroundColor: "#f8f8f8",
+                borderRadius: moderateScale(10),
+                borderWidth: moderateScale(1),
+                borderColor: "#177a02",
+              }}
+            />
+          )}
+
+          <View
+            style={[
+              HomeStyle.HomeMainSelectDateButtonLabelContainer,
+              { height: moderateScale(40) },
+            ]}
+          >
+            <Text
+              style={[
+                HomeStyle.HomeMainSelectDateButtonLabel,
+                { fontSize: moderateScale(14) },
+              ]}
+            >
+              Reason
+            </Text>
+          </View>
+          <View
+            style={[
+              HomeStyle.HomeLeaveReasonContainer,
+              {
+                height: moderateScale(40),
+                borderWidth: moderateScale(1),
+                borderRadius: moderateScale(10),
+                paddingLeft: moderateScale(10),
+              },
+            ]}
+          >
+            <TextInput
+              value={reason}
+              placeholder="Reason"
+              style={[
+                HomeStyle.HomeLeaveReasonStyle,
+                { fontSize: moderateScale(12) },
+              ]}
+              onChangeText={(e) => setReason(e)}
+              maxLength={50} // Set the maximum number of characters
+              returnKeyType="done"
+            />
+          </View>
+          {reason.length === 0 && (
+            <View style={{ width: "100%" }}>
+              <Text
+                style={{
+                  color: "#ff0000",
+                  padding: moderateScale(5),
+                  fontSize: moderateScale(14),
+                }}
+              >
+                Require!
+              </Text>
+            </View>
+          )}
+          <View
+            style={[
+              HomeStyle.HomeMainSelectDateButtonLabelContainer,
+              { height: moderateScale(40) },
+            ]}
+          >
+            <Text
+              style={[
+                HomeStyle.HomeMainSelectDateButtonLabel,
+                { fontSize: moderateScale(14) },
+              ]}
+            >
+              {" "}
+            </Text>
+          </View>
+          {isKeyboardVisible ? null : (
+            <TouchableOpacity
+              style={[
+                HomeStyle.HomeLeaveRequestButton,
+                {
+                  height: moderateScale(40),
+                  padding: moderateScale(10),
+                  marginBottom: moderateScale(10),
+                  borderRadius: moderateScale(10),
+                  backgroundColor:
+                    reason !== "" && timeId !== "" && workingTimeId !== ""
+                      ? "#177a02"
+                      : "#dcdcdc",
+                },
+              ]}
+              activeOpacity={
+                reason !== "" && timeId !== "" && workingTimeId !== "" ? 0.4 : 1
+              }
+              onPress={() => {
+                if (reason !== "" && timeId !== "" && workingTimeId !== "") {
+                  handlRequest();
+                }
+              }}
+            >
+              <Text
+                style={[
+                  HomeStyle.HomeLeaveRequestButtonText,
+                  { fontSize: moderateScale(14) },
+                ]}
+              >
+                Request
+              </Text>
+            </TouchableOpacity>
+          )}
+        </ScrollView>
+      </View>
+    );
+  }
 }
