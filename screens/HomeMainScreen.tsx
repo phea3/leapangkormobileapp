@@ -1,4 +1,11 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useLocation, useNavigate } from "react-router-native";
 import HomeStyle from "../styles/HomeStyle.scss";
 import { useContext, useEffect, useState } from "react";
@@ -8,7 +15,6 @@ import { GET_EMPLOYEEONHOLIDAY } from "../graphql/GetEmployeeOnHoliday";
 import moment from "moment";
 import { moderateScale } from "../ Metrics";
 import * as Animatable from "react-native-animatable";
-
 const Features = [
   {
     title: "Leaves",

@@ -18,6 +18,7 @@ import { captureRef } from "react-native-view-shot";
 import * as MediaLibrary from "expo-media-library";
 import { requestMediaLibraryPermissionsAsync } from "expo-image-picker";
 import * as ImagePicker from "expo-image-picker";
+import { moderateScale } from "../ Metrics";
 
 export default function MonthlyPayslipReportScreen() {
   const navigate = useNavigate();
@@ -138,32 +139,41 @@ export default function MonthlyPayslipReportScreen() {
   };
 
   return (
-    <View style={MeetingStyle.MeetingContainer}>
+    <View
+      style={[
+        MeetingStyle.MeetingContainer,
+        {
+          borderTopWidth: moderateScale(1),
+          borderLeftWidth: moderateScale(1),
+          borderRightWidth: moderateScale(1),
+          borderTopLeftRadius: moderateScale(15),
+          borderTopRightRadius: moderateScale(15),
+        },
+      ]}
+    >
       <View style={MeetingStyle.MeetingBackButtonContainer}>
         <TouchableOpacity
-          onPress={() => navigate("/payslip")}
-          style={
-            dimension === "sm"
-              ? MeetingStyle.MeetingBackButtonSM
-              : MeetingStyle.MeetingBackButton
-          }
+          onPress={() => navigate("/home")}
+          style={[
+            MeetingStyle.MeetingBackButton,
+            { padding: moderateScale(15) },
+          ]}
         >
           <Image
             source={require("../assets/Images/back-dark-blue.png")}
-            style={
-              dimension === "sm"
-                ? MeetingStyle.MeetingBackButtonIconSM
-                : MeetingStyle.MeetingBackButtonIcon
-            }
+            style={{
+              width: moderateScale(20),
+              height: moderateScale(20),
+              marginRight: moderateScale(10),
+            }}
           />
           <Text
-            style={
-              dimension === "sm"
-                ? MeetingStyle.MeetingBackButtonTitleSM
-                : MeetingStyle.MeetingBackButtonTitle
-            }
+            style={[
+              MeetingStyle.MeetingBackButtonTitle,
+              { fontSize: moderateScale(14) },
+            ]}
           >
-            PAYSLIP MONTHLY
+            PAYSLIP
           </Text>
         </TouchableOpacity>
       </View>
@@ -176,7 +186,7 @@ export default function MonthlyPayslipReportScreen() {
           showsVerticalScrollIndicator={false}
           style={{
             width: "100%",
-            borderRadius: 15,
+            borderRadius: moderateScale(15),
           }}
         >
           <View style={PayslipStyle.MonthlyPayslipEmployeeCard}>
@@ -190,10 +200,10 @@ export default function MonthlyPayslipReportScreen() {
               <Image
                 source={require("../assets/Images/user_phoem.jpg")}
                 style={{
-                  width: 80,
-                  height: 80,
-                  marginRight: 10,
-                  borderRadius: 100,
+                  width: moderateScale(80),
+                  height: moderateScale(80),
+                  marginRight: moderateScale(10),
+                  borderRadius: moderateScale(100),
                 }}
               />
             </View>

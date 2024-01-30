@@ -203,8 +203,15 @@ export default function ChecKAttendance({ locate, versionData }: any) {
     },
   });
 
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isButtonDisabledOut, setIsButtonDisabledOut] = useState(false);
+
   //=============================  CHECK IN ===========================
   const handleCheckInButton = async () => {
+    if (isButtonDisabled) {
+      return;
+    }
+    setIsButtonDisabled(true);
     let createValue = {
       longitude: location?.coords.longitude
         ? location?.coords.longitude.toString()
@@ -216,15 +223,26 @@ export default function ChecKAttendance({ locate, versionData }: any) {
       scan: "checkIn",
     };
     // console.log(createValue);
-    await employeeCheckAttendance({
-      variables: {
-        ...createValue,
-      },
-    });
+
+    try {
+      await employeeCheckAttendance({
+        variables: {
+          ...createValue,
+        },
+      });
+    } catch (error) {
+      console.error("Mutation error:", error);
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   //=============================  CHECK OUT ===========================
   const handleCheckOutButton = async () => {
+    if (isButtonDisabledOut) {
+      return;
+    }
+    setIsButtonDisabledOut(true);
     let createValue = {
       longitude: location?.coords.longitude
         ? location?.coords.longitude.toString()
@@ -236,11 +254,17 @@ export default function ChecKAttendance({ locate, versionData }: any) {
       scan: "checkOut",
     };
     // console.log(createValue);
-    await employeeCheckAttendance({
-      variables: {
-        ...createValue,
-      },
-    });
+    try {
+      await employeeCheckAttendance({
+        variables: {
+          ...createValue,
+        },
+      });
+    } catch (error) {
+      console.error("Mutation error:", error);
+    } finally {
+      setIsButtonDisabledOut(false);
+    }
   };
 
   const getLocationIn = async () => {
@@ -308,6 +332,15 @@ export default function ChecKAttendance({ locate, versionData }: any) {
       Alert.alert("Error getting location");
     }
   }, [errorMsg]);
+
+  console.log(
+    "getCheckInOutButtonData?.getCheckInOutButton?.checkIn",
+    getCheckInOutButtonData?.getCheckInOutButton?.checkIn
+  );
+  console.log(
+    "getCheckInOutButtonData?.getCheckInOutButton?.checkOut",
+    getCheckInOutButtonData?.getCheckInOutButton?.checkOut
+  );
 
   if (!versionData) {
     return (
@@ -431,6 +464,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
           CheckInIsVisible={CheckInIsVisible}
           handleCheckInClose={handleCheckInClose}
           handleCheckInButton={handleCheckInButton}
+          isButtonDisabled={isButtonDisabled}
         />
 
         {/* ====================================  Modal Check Out ======================= */}
@@ -439,6 +473,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
           CheckOutIsVisible={CheckOutIsVisible}
           handleCheckOutClose={handleCheckOutClose}
           handleCheckOutButton={handleCheckOutButton}
+          isButtonDisabledOut={isButtonDisabledOut}
         />
 
         {/* ============= Alert After Check Attendance ============= */}
@@ -449,6 +484,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
           data={checkData}
           load={load}
         />
+
         <View
           style={[
             CheckStyle.CheckContainer,
@@ -592,6 +628,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
               </TouchableOpacity>
             </View>
 
+            {/* =======================  CHECK IN BUTTON ================== */}
             {getCheckInOutButtonData?.getCheckInOutButton?.checkIn ? (
               <TouchableOpacity
                 style={[
@@ -638,6 +675,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
               </View>
             )}
 
+            {/* ==========================  CHECK OUT BUTTON ======================== */}
             {getCheckInOutButtonData?.getCheckInOutButton?.checkOut ? (
               <TouchableOpacity
                 style={[

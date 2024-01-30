@@ -7,6 +7,7 @@ export default function ModalCheckOut({
   CheckOutIsVisible,
   handleCheckOutClose,
   handleCheckOutButton,
+  isButtonDisabledOut,
 }: any) {
   return (
     <Modal
@@ -82,6 +83,7 @@ export default function ModalCheckOut({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={isButtonDisabledOut}
               onPress={() => {
                 handleCheckOutClose();
                 handleCheckOutButton();

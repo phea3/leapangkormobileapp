@@ -23,26 +23,24 @@ export default function PayslipScreen() {
       <View style={MeetingStyle.MeetingBackButtonContainer}>
         <TouchableOpacity
           onPress={() => navigate("/home")}
-          style={
-            dimension === "sm"
-              ? MeetingStyle.MeetingBackButtonSM
-              : MeetingStyle.MeetingBackButton
-          }
+          style={[
+            MeetingStyle.MeetingBackButton,
+            { padding: moderateScale(15) },
+          ]}
         >
           <Image
             source={require("../assets/Images/back-dark-blue.png")}
-            style={
-              dimension === "sm"
-                ? MeetingStyle.MeetingBackButtonIconSM
-                : MeetingStyle.MeetingBackButtonIcon
-            }
+            style={{
+              width: moderateScale(20),
+              height: moderateScale(20),
+              marginRight: moderateScale(10),
+            }}
           />
           <Text
-            style={
-              dimension === "sm"
-                ? MeetingStyle.MeetingBackButtonTitleSM
-                : MeetingStyle.MeetingBackButtonTitle
-            }
+            style={[
+              MeetingStyle.MeetingBackButtonTitle,
+              { fontSize: moderateScale(14) },
+            ]}
           >
             PAYSLIP
           </Text>
@@ -55,19 +53,29 @@ export default function PayslipScreen() {
         >
           <Image
             source={require("../assets/Images/security.png")}
-            style={{ width: 50, height: 50, marginRight: 10 }}
+            style={{
+              width: moderateScale(50),
+              height: moderateScale(50),
+              marginRight: moderateScale(10),
+            }}
           />
           <View>
             <Text
-              style={
-                dimension === "sm"
-                  ? MeetingStyle.MeetingTitleSM
-                  : MeetingStyle.MeetingTitle
-              }
+              style={[
+                MeetingStyle.MeetingTitle,
+                { fontSize: moderateScale(14) },
+              ]}
             >
               Payslip for the month of may 2023
             </Text>
-            <Text>see more...</Text>
+            <Text
+              style={[
+                MeetingStyle.MonthlyPayslipGrossBody,
+                { fontSize: moderateScale(14) },
+              ]}
+            >
+              see more...
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

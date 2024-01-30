@@ -17,6 +17,9 @@ import Animated, {
 } from "react-native-reanimated";
 import NetInfo from "@react-native-community/netinfo";
 import { GET_EMPLOYEEBYID } from "../graphql/GetEmployeeById";
+import { NetworkConsumer } from "react-native-offline";
+import { moderateScale } from "../ Metrics";
+import * as Animatable from "react-native-animatable";
 
 const Layout = ({ expoPushToken, versionData }: any) => {
   const navigate = useNavigate();
@@ -130,6 +133,7 @@ const Layout = ({ expoPushToken, versionData }: any) => {
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state) => {
+      // console.log("Network quality:", state);
       if (connection !== state.isConnected) {
         setConnection(state.isConnected ? true : false);
         if (state.isConnected === true && isConnection.value === "no") {
@@ -159,42 +163,94 @@ const Layout = ({ expoPushToken, versionData }: any) => {
     };
   }, [connection, UserData?.getUserMobileLogin]);
 
-  return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor:
-          location.pathname === "/notification" ||
-          location.pathname === "/notification/action" ||
-          location.pathname === "/notification/meeting"
-            ? "#ffffff"
-            : "#177A02",
-        justifyContent: "flex-end",
-      }}
-    >
-      <View style={LayoutStyle.LayoutCoverFooter} />
-      <ImageBackground
-        source={require("../assets/Images/insidebackground.png")}
-        resizeMode="repeat"
-        style={LayoutStyle.LoginLayoutContainer}
-      >
-        <View style={LayoutStyle.LayoutContainer}>
-          <Header versionData={versionData} />
-          <Animated.View
-            style={[
-              {
+  const ImageViewer = () => (
+    <NetworkConsumer>
+      {({ isConnected }) =>
+        isConnected ? null : (
+          <View
+            style={{
+              position: "absolute",
+              height: "100%",
+              width: "100%",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                position: "absolute",
+                height: "100%",
                 width: "100%",
-                height: 0,
-              },
-              animatedStyles,
-            ]}
-          />
-          <View style={LayoutStyle.LayoutOutletContainer}>
-            <Outlet />
+                backgroundColor: "#000",
+                opacity: 0.2,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            />
+            <Animatable.View
+              animation={"fadeInDown"}
+              style={{
+                position: "absolute",
+                borderWidth: 1,
+                borderColor: "red",
+                padding: moderateScale(10),
+                width: "90%",
+                height: moderateScale(80),
+                borderRadius: moderateScale(10),
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "white",
+                marginTop: moderateScale(80),
+              }}
+            >
+              <Text style={{ color: "red", fontWeight: "bold" }}>
+                the feature is disabled since you are offline.{"\n"}
+                មុខងារត្រូវបានបិទដោយសារគ្មានអ៉ីនធឺណិត
+              </Text>
+            </Animatable.View>
           </View>
-        </View>
-      </ImageBackground>
-    </SafeAreaView>
+        )
+      }
+    </NetworkConsumer>
+  );
+  return (
+    <>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor:
+            location.pathname === "/notification" ||
+            location.pathname === "/notification/action" ||
+            location.pathname === "/notification/meeting"
+              ? "#ffffff"
+              : "#177A02",
+          justifyContent: "flex-end",
+        }}
+      >
+        <View style={LayoutStyle.LayoutCoverFooter} />
+        <ImageBackground
+          source={require("../assets/Images/insidebackground.png")}
+          resizeMode="cover"
+          style={LayoutStyle.LoginLayoutContainer}
+        >
+          <View style={LayoutStyle.LayoutContainer}>
+            <Header versionData={versionData} />
+            <Animated.View
+              style={[
+                {
+                  width: "100%",
+                  height: 0,
+                },
+                animatedStyles,
+              ]}
+            />
+            <View style={LayoutStyle.LayoutOutletContainer}>
+              <Outlet />
+            </View>
+          </View>
+        </ImageBackground>
+      </SafeAreaView>
+      <ImageViewer />
+    </>
   );
 };
 

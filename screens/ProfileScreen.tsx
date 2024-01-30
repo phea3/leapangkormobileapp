@@ -176,19 +176,19 @@ export default function ProfileScreen({ versionData }: any) {
                 : "--:--"}
             </Text>
           </View>
-          {!versionData ? (
-            <View style={ProfileStyle.LogoutContainer}>
-              <View
-                style={{
-                  flex: 1,
-                  width: "90%",
-                  justifyContent: "flex-start",
-                  alignItems: "center",
-                  // backgroundColor: "#f1f1f1",
-                  borderRadius: moderateScale(15),
-                }}
-              >
-                <TouchableOpacity
+
+          <View style={ProfileStyle.LogoutContainer}>
+            <View
+              style={{
+                flex: 1,
+                width: "90%",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                // backgroundColor: "#f1f1f1",
+                borderRadius: moderateScale(15),
+              }}
+            >
+              {/* <TouchableOpacity
                   onPress={() => {
                     if (Platform.OS === "ios") {
                       Linking.openURL(
@@ -221,33 +221,32 @@ export default function ProfileScreen({ versionData }: any) {
                   >
                     Quick update {">>>"}
                   </Text>
-                </TouchableOpacity>
-              </View>
-
-              <TouchableOpacity
-                style={[
-                  ProfileStyle.LogoutScreenLogoutButton,
-                  {
-                    borderRadius: moderateScale(10),
-                    padding: moderateScale(10),
-                    marginVertical: moderateScale(10),
-                  },
-                ]}
-                onPress={() => {
-                  handleOpenModal();
-                }}
-              >
-                <Text
-                  style={[
-                    ProfileStyle.LogoutScreenLogoutButtonText,
-                    { fontSize: moderateScale(14) },
-                  ]}
-                >
-                  Logout
-                </Text>
-              </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
-          ) : null}
+
+            <TouchableOpacity
+              style={[
+                ProfileStyle.LogoutScreenLogoutButton,
+                {
+                  borderRadius: moderateScale(10),
+                  padding: moderateScale(10),
+                  marginVertical: moderateScale(10),
+                },
+              ]}
+              onPress={() => {
+                handleOpenModal();
+              }}
+            >
+              <Text
+                style={[
+                  ProfileStyle.LogoutScreenLogoutButtonText,
+                  { fontSize: moderateScale(14) },
+                ]}
+              >
+                Logout
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
       {/* ========================START MODAL ALERT============================ */}

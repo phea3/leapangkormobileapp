@@ -7,6 +7,7 @@ export default function ModalCheckIn({
   CheckInIsVisible,
   handleCheckInClose,
   handleCheckInButton,
+  isButtonDisabled,
 }: any) {
   return (
     <Modal
@@ -82,6 +83,7 @@ export default function ModalCheckIn({
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={isButtonDisabled}
               onPress={() => {
                 handleCheckInClose();
                 handleCheckInButton();
