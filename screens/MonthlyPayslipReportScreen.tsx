@@ -10,132 +10,213 @@ import {
 } from "react-native";
 import MeetingStyle from "../styles/MeetingStyle.scss";
 import PayslipStyle from "../styles/PayslipStyle.scss";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import { useNavigate } from "react-router-native";
+import { useLocation, useNavigate } from "react-router-native";
 import moment from "moment";
-import { captureRef } from "react-native-view-shot";
-import * as MediaLibrary from "expo-media-library";
-import { requestMediaLibraryPermissionsAsync } from "expo-image-picker";
-import * as ImagePicker from "expo-image-picker";
 import { moderateScale } from "../ Metrics";
+import { useQuery } from "@apollo/client";
+import { GETPAYROLLBYID } from "../graphql/GetPayrollById";
+import {
+  fetchDataLocalStorage,
+  initMobileUserLogin,
+} from "../functions/FetchDataLocalStorage";
+import { useTranslation } from "react-multi-lang";
 
 export default function MonthlyPayslipReportScreen() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { dimension } = useContext(AuthContext);
   const scrollViewRef = useRef<ScrollView>(null);
-  const [mediaLibraryPermission, setMediaLibraryPermission] = useState(false);
   const [eye, setEye] = useState(false);
+  const [mobileUserLogin, setMobileUserLogin] = useState(initMobileUserLogin);
+  const [receive, setReceive] = useState<any>([]);
+  const [deduct, setDeduct] = useState<any>([]);
+  const id = location.state;
+  const t = useTranslation();
 
-  useEffect(() => {
-    requestMediaLibraryPermission();
-  }, []);
+  const { data, refetch } = useQuery(GETPAYROLLBYID, {
+    pollInterval: 2000,
+    variables: {
+      id: id,
+    },
+    onCompleted: ({ getPayrollById }) => {
+      let ArrayRecieve: any[] = [];
+      let ArrayDeduct: {
+        title: any;
+        day: number;
+        hour: number;
+        amount: number;
+      }[] = [];
 
-  const requestMediaLibraryPermission = async () => {
-    try {
-      const { status } = await requestMediaLibraryPermissionsAsync();
-      setMediaLibraryPermission(status === "granted");
-    } catch (error) {
-      console.error("Error requesting media library permission:", error);
-    }
-  };
+      //================  Company Owe ==========
+      // if (getPayrollById?.recentPayrollOwe?.length > 0) {
+      //   getPayrollById?.recentPayrollOwe?.map((rowall: any) => {
+      //     let object = {
+      //       title: "Salary on " + rowall?.month,
+      //       day: 0,
+      //       hour: 0,
+      //       amount: rowall?.remain,
+      //     };
+      //     ArrayRecieve.push(object);
+      //   });
+      // }
 
-  const [selectedImage, setSelectedImage] =
-    useState<ImagePicker.ImagePickerResult | null>(null);
-
-  const openMediaLibrary = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        setSelectedImage(result);
-      }
-    } catch (error) {
-      Alert.alert("Error", "There was an error accessing the media library.");
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedImage) {
-      shareImage();
-    }
-  }, [selectedImage]);
-
-  const shareImage = async () => {
-    try {
-      if (
-        selectedImage &&
-        selectedImage.assets &&
-        selectedImage.assets.length > 0
-      ) {
-        // Use the first asset in the array
-        const firstAsset = selectedImage.assets[0];
-        await Share.share({ url: firstAsset.uri });
-      } else {
-        Alert.alert(
-          "No Image Selected",
-          "Please select an image before sharing."
-        );
-      }
-    } catch (error) {
-      Alert.alert("Error", "There was an error sharing the image.");
-      console.error(error);
-    }
-  };
-
-  const captureScrollView = async () => {
-    try {
-      if (!mediaLibraryPermission) {
-        Alert.alert(
-          "Permission Required",
-          "Please grant permission to access the media library."
-        );
-        return;
-      }
-
-      if (scrollViewRef.current) {
-        const uri = await captureRef(scrollViewRef, {
-          format: "jpg",
-          quality: 0.8,
+      if (getPayrollById?.allowanceList?.length > 0) {
+        getPayrollById?.allowanceList?.map((rowall: any) => {
+          let object = {
+            title: rowall?.allowanceTitle,
+            day: 0,
+            hour: 0,
+            amount: rowall?.totalAmount,
+          };
+          ArrayRecieve.push(object);
         });
-
-        // Save the captured image to the device's media library
-        const asset = await MediaLibrary.createAssetAsync(uri);
-        MediaLibrary.createAlbumAsync("ExpoScrollViewExport", asset)
-          .then(() => {
-            console.log("Image saved to ExpoScrollViewExport album");
-            // Prompt user to open the gallery manually
-            Alert.alert(
-              "Image Saved",
-              "Image saved to your album. Open the gallery app to view & share it.",
-              [
-                {
-                  text: "Cancel",
-                  onPress: () => {},
-                  style: "cancel",
-                },
-                {
-                  text: "OK",
-                  onPress: () => {
-                    openMediaLibrary();
-                  },
-                },
-              ]
-            );
-          })
-          .catch((error) => {
-            console.log("Error saving image to album:", error);
-          });
       }
-    } catch (error) {
-      console.log("Error capturing ScrollView:", error);
+
+      //==================  Overtime ================
+      if (getPayrollById?.overtime?.length > 0) {
+        getPayrollById?.overtime?.map((rowall: any) => {
+          let object = {
+            title: rowall?.overtimeTitle,
+            day: rowall?.overtimeDay ? rowall?.overtimeDay : 0,
+            hour: rowall?.overtimeHour ? rowall?.overtimeHour : 0,
+            amount: rowall?.overtimeAmount,
+          };
+          ArrayRecieve.push(object);
+        });
+      }
+
+      //==================  Bonus ================
+      if (getPayrollById?.bonus?.length > 0) {
+        getPayrollById?.bonus?.map((rowall: any) => {
+          let object = {
+            title: rowall?.bonusTitle,
+            day: rowall?.bonusDay ? rowall?.bonusDay : 0,
+            hour: rowall?.bonusHour ? rowall?.bonusHour : 0,
+            amount: rowall?.bonusAmount,
+          };
+          ArrayRecieve.push(object);
+        });
+      }
+
+      //==================  TimeOff  ================
+      if (getPayrollById?.timeOffList?.length > 0) {
+        getPayrollById?.timeOffList?.map((rowall: any) => {
+          let object = {
+            title: rowall?.timeOffTitle,
+            day: rowall?.day,
+            hour: 0,
+            amount: 0,
+          };
+          ArrayRecieve.push(object);
+        });
+      }
+
+      //==================  withholding  ================
+      if (getPayrollById?.withHoldingList?.length > 0) {
+        getPayrollById?.withHoldingList?.map((rowall: any) => {
+          let object = {
+            title: rowall?.withHoldingTitle,
+            day: 0,
+            hour: 0,
+            amount: rowall?.amount,
+          };
+          ArrayDeduct.push(object);
+        });
+      }
+
+      if (getPayrollById?.late) {
+        let object = {
+          title: "ចូលធ្វើការយីត/ចេញលឿន",
+          day: 0,
+          hour: 0,
+          amount: getPayrollById?.late,
+        };
+        ArrayDeduct.push(object);
+      }
+
+      //======== set array =============
+      setReceive([...ArrayRecieve]);
+      setDeduct([...ArrayDeduct]);
+    },
+  });
+  useMemo(() => {
+    fetchDataLocalStorage("@mobileUserLogin").then((value) => {
+      let mobileUser: string = value;
+      let mobileUserLoginData = JSON.parse(mobileUser);
+      // console.log(mobileUserLoginData);
+      setMobileUserLogin({
+        _id: mobileUserLoginData?.user?._id,
+        firstName: mobileUserLoginData?.user?.firstName,
+        lastName: mobileUserLoginData?.user?.lastName,
+        englishName: mobileUserLoginData?.user?.latinName,
+        profileImg: mobileUserLoginData?.user?.profileImage,
+        role: mobileUserLoginData?.user?.role,
+      });
+    });
+  }, [data]);
+
+  useEffect(() => {
+    refetch();
+    // console.log(id);
+  }, [id]);
+
+  const totalDay = () => {
+    let total = data?.getPayrollById?.workingDay;
+    if (receive) {
+      receive.map((e: any) => {
+        if (e !== null) {
+          total += e?.day;
+        }
+      });
     }
+    return total;
+  };
+
+  const totalHour = () => {
+    let total = 0;
+    if (receive) {
+      receive.map((e: any) => {
+        if (e !== null) {
+          total += e?.hour;
+        }
+      });
+    }
+    return total;
+  };
+
+  const totalAmount = () => {
+    let total = data?.getPayrollById?.baseSalary;
+    if (receive) {
+      receive.map((e: any) => {
+        if (e !== null) {
+          total += e?.amount;
+        }
+      });
+    }
+    return total?.toFixed(2);
+  };
+
+  const totalDeduct = () => {
+    let total =
+      data?.getPayrollById?.unpaidLeave * data?.getPayrollById?.salaryPerDay;
+    if (receive) {
+      deduct.map((e: any) => {
+        if (e !== null) {
+          total += e?.amount;
+        }
+      });
+    }
+    return total?.toFixed(2);
+  };
+
+  const totalGrossAmount = () => {
+    let total = 0.0;
+    let baseSalary = parseFloat(totalAmount());
+    let withHolding = parseFloat(totalDeduct());
+    total = baseSalary - withHolding;
+    return total?.toFixed(2);
   };
 
   return (
@@ -153,7 +234,7 @@ export default function MonthlyPayslipReportScreen() {
     >
       <View style={MeetingStyle.MeetingBackButtonContainer}>
         <TouchableOpacity
-          onPress={() => navigate("/home")}
+          onPress={() => navigate("/payslip")}
           style={[
             MeetingStyle.MeetingBackButton,
             { padding: moderateScale(15) },
@@ -173,7 +254,8 @@ export default function MonthlyPayslipReportScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            PAYSLIP
+            {t("Payslip")}
+            {t("Datail")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -186,86 +268,183 @@ export default function MonthlyPayslipReportScreen() {
           showsVerticalScrollIndicator={false}
           style={{
             width: "100%",
-            borderRadius: moderateScale(15),
           }}
         >
-          <View style={PayslipStyle.MonthlyPayslipEmployeeCard}>
+          <View
+            style={[
+              PayslipStyle.MonthlyPayslipEmployeeCard,
+              {
+                padding: moderateScale(10),
+                borderRadius: moderateScale(10),
+                marginBottom: moderateScale(20),
+              },
+            ]}
+          >
             <View
               style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
+                width: "100%",
               }}
             >
-              <Image
-                source={require("../assets/Images/user_phoem.jpg")}
+              <View
                 style={{
-                  width: moderateScale(80),
-                  height: moderateScale(80),
-                  marginRight: moderateScale(10),
-                  borderRadius: moderateScale(100),
+                  width: "100%",
+                  flexDirection: "row",
                 }}
-              />
-            </View>
-            <View style={{ flex: 2 }}>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipDataBody}>
-                    ID No:
-                  </Text>
+              >
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "flex-start",
+                    alignItems: "center",
+                  }}
+                >
+                  <Image
+                    source={
+                      mobileUserLogin?.profileImg
+                        ? { uri: mobileUserLogin?.profileImg }
+                        : require("../assets/Images/user.png")
+                    }
+                    style={{
+                      width: moderateScale(80),
+                      height: moderateScale(80),
+                      marginRight: moderateScale(10),
+                      borderRadius: moderateScale(100),
+                      borderWidth: moderateScale(1),
+                      borderColor: "#177a02",
+                    }}
+                  />
                 </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossBody}>
-                    131366BSR
-                  </Text>
-                </View>
-              </View>
+                <View style={{ flex: 2 }}>
+                  <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={[
+                          PayslipStyle.MonthlyPayslipDataBody,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        {t("ID No:")}
+                      </Text>
+                    </View>
+                    <View style={{ flex: 2 }}>
+                      <Text
+                        style={[
+                          PayslipStyle.MonthlyPayslipGrossBody,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        {data?.getPayrollById?.IdNo
+                          ? data?.getPayrollById?.IdNo
+                          : "--:--"}
+                      </Text>
+                    </View>
+                  </View>
 
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipDataBody}>Name:</Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossBody}>
-                    Pheak Makara
-                  </Text>
+                  <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+                    <View style={{ flex: 1 }}>
+                      <Text
+                        style={[
+                          PayslipStyle.MonthlyPayslipDataBody,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        {t("Name:")}
+                      </Text>
+                    </View>
+                    <View style={{ flex: 2 }}>
+                      <Text
+                        style={[
+                          PayslipStyle.MonthlyPayslipGrossBody,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        {data?.getPayrollById?.latinName
+                          ? data?.getPayrollById?.latinName
+                          : "--:--"}{" "}
+                      </Text>
+                    </View>
+                  </View>
                 </View>
               </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipDataBody}>
-                    Designation:
-                  </Text>
+              <View style={{ flex: 2 }}>
+                <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+                  <View style={{ flex: 1, justifyContent: "center" }}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipDataBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {t("Designation:")}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 2 }}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.getPayrollById?.position
+                        ? data?.getPayrollById?.position
+                        : "--:--"}
+                    </Text>
+                  </View>
                 </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossBody}>
-                    Graphic Design
-                  </Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipDataBody}>
-                    A/C No:
-                  </Text>
-                </View>
-                <View style={{ flex: 1 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossBody}>
-                    002 272 274
-                  </Text>
+                <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+                  <View style={{ flex: 1, justifyContent: "center" }}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipDataBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {t("A/C No:")}
+                    </Text>
+                  </View>
+                  <View style={{ flex: 2 }}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.getPayrollById?.bankNumber
+                        ? data?.getPayrollById?.bankNumber
+                        : "--:--"}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           </View>
-          <View style={PayslipStyle.MonthlyPayslipEmployeeCard}>
+          <View
+            style={[
+              PayslipStyle.MonthlyPayslipEmployeeCard,
+              {
+                padding: moderateScale(10),
+                borderRadius: moderateScale(10),
+                marginBottom: moderateScale(20),
+              },
+            ]}
+          >
             <View style={{ flex: 2 }}>
               <View
-                style={
-                  PayslipStyle.MonthlyPayslipGrossSalaryEmployeeContentCard
-                }
+                style={[
+                  PayslipStyle.MonthlyPayslipGrossSalaryEmployeeContentCard,
+                  {
+                    padding: moderateScale(10),
+                    borderRadius: moderateScale(10),
+                  },
+                ]}
               >
-                <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                  Gross Salary
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipGrossTitle,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  {t("Gross Salary")}
                 </Text>
                 <View
                   style={{
@@ -281,16 +460,21 @@ export default function MonthlyPayslipReportScreen() {
                         PayslipStyle.MonthlyPayslipGrossSalaryTitle,
                         {
                           height: 30,
+                          fontSize: moderateScale(14),
                         },
                       ]}
                     >
-                      $339.42
+                      ${totalGrossAmount()}
                     </Text>
                   ) : (
                     <Image
                       resizeMode="repeat"
                       source={require("../assets/Images/censored.jpeg")}
-                      style={{ height: 30, width: 80, paddingRight: 10 }}
+                      style={{
+                        height: moderateScale(30),
+                        width: moderateScale(80),
+                        paddingRight: moderateScale(10),
+                      }}
                     />
                   )}
 
@@ -303,8 +487,14 @@ export default function MonthlyPayslipReportScreen() {
                       }
                       style={
                         dimension === "sm"
-                          ? { width: 20, height: 20 }
-                          : { width: 25, height: 25 }
+                          ? {
+                              width: moderateScale(20),
+                              height: moderateScale(20),
+                            }
+                          : {
+                              width: moderateScale(25),
+                              height: moderateScale(25),
+                            }
                       }
                     />
                   </TouchableOpacity>
@@ -313,388 +503,355 @@ export default function MonthlyPayslipReportScreen() {
             </View>
             <View style={{ flex: 3 }}>
               <View style={PayslipStyle.MonthlyPayslipGrossEmployeeContentCard}>
-                <Text style={PayslipStyle.MonthlyPayslipDataBody}>
-                  Payslip For Month
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipDataBody,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  {t("Payslip For Month")}
                 </Text>
-                <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                  of May 2023
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipGrossTitle,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  {t("of")}{" "}
+                  {data?.getPayrollById?.date
+                    ? moment(data?.getPayrollById?.date).format("MMM YYYY")
+                    : "--:--"}
                 </Text>
               </View>
               <View style={PayslipStyle.MonthlyPayslipGrossEmployeeContentCard}>
-                <Text style={PayslipStyle.MonthlyPayslipDataBody}>Date: </Text>
-                <Text style={PayslipStyle.MonthlyPayslipGrossBody}>
-                  {moment(new Date()).format("Do, MMM YYYY")}
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipDataBody,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  {" "}
+                  {t("Date:")}{" "}
+                </Text>
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipGrossBody,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  {data?.getPayrollById?.date
+                    ? moment(data?.getPayrollById?.date).format("Do, MMM YYYY")
+                    : "--:--"}
                 </Text>
               </View>
             </View>
           </View>
-          <View style={PayslipStyle.MonthlyPayslipEmployeeCard}>
+          <View
+            style={[
+              PayslipStyle.MonthlyPayslipEmployeeCard,
+              {
+                padding: moderateScale(10),
+                borderRadius: moderateScale(10),
+                marginBottom: moderateScale(20),
+              },
+            ]}
+          >
             <View style={{ flex: 1 }}>
               <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
                 <View style={{ flex: 2 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    Salary
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("Salary")}
                   </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    Days
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("Days")}
                   </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    Hours
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("Hours")}
                   </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    Amount
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("Amount")}
                   </Text>
                 </View>
               </View>
 
               <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
                 <View style={{ flex: 2 }}>
-                  <Text>Salary-Regular Day</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>22</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>176</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>253.85</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Salary-Night Shift</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text> </Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text> </Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text> </Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Salary-Public Holiday</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Annual Leave</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Sick Leave</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Special Leave</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Maternity Leave</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Overtime-Public Holiday</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Overtime-Off Leave</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>3</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>24</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>51.92</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Overtime-Regular Leave</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Overtime-Early Flight</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>0.00</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text>0</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text></Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Other allowance</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>33.65</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    TOTAL
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossBody,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    Salary-Regular Day
                   </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>25</Text>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossBody,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {data?.getPayrollById?.workingDay
+                      ? data?.getPayrollById?.workingDay
+                      : "--:--"}
+                  </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>200</Text>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossBody,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {"--"}
+                  </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    339.42
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossBody,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {data?.getPayrollById?.baseSalary
+                      ? data?.getPayrollById?.baseSalary?.toFixed(2)
+                      : "--:--"}
+                  </Text>
+                </View>
+              </View>
+              {receive.map((data: any, index: number) => (
+                <View
+                  style={PayslipStyle.MonthlyPayslipEmployeeContentCard}
+                  key={index}
+                >
+                  <View style={{ flex: 2 }}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.title ? data?.title : "--"}
+                    </Text>
+                  </View>
+                  <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.day ? data?.day : "--"}
+                    </Text>
+                  </View>
+                  <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.hour ? data?.hour : "--"}
+                    </Text>
+                  </View>
+                  <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.amount ? data?.amount?.toFixed(2) : "--"}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+
+              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+                <View style={{ flex: 2 }}>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("TOTAL")}
+                  </Text>
+                </View>
+                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {totalDay()}
+                  </Text>
+                </View>
+                <View style={PayslipStyle.MonthlyPayslipContentTextCenter}>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {totalHour()}
+                  </Text>
+                </View>
+                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    ${totalAmount()}
                   </Text>
                 </View>
               </View>
             </View>
           </View>
-          <View style={PayslipStyle.MonthlyPayslipEmployeeCard}>
+          <View
+            style={[
+              PayslipStyle.MonthlyPayslipEmployeeCard,
+              {
+                padding: moderateScale(10),
+                borderRadius: moderateScale(10),
+                marginBottom: moderateScale(20),
+              },
+            ]}
+          >
             <View style={{ flex: 1 }}>
               <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
                 <View style={{ flex: 2 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    Withholding
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("Withholding")}
                   </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    Amount
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("Amount")}
                   </Text>
                 </View>
               </View>
 
               <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
                 <View style={{ flex: 2 }}>
-                  <Text>Resign</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Resign</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Funeral</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Tax</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>NSSF pension</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Other</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text></Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Training</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Bank Charge</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text>Half-Month Salary Paid</Text>
-                </View>
-                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text>$0</Text>
-                </View>
-              </View>
-              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
-                <View style={{ flex: 2 }}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>
-                    TOTAL
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossBody,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    ឈប់សំរាកគ្មានបៀវត្ស/UL ({data?.getPayrollById?.unpaidLeave}
+                    d)
                   </Text>
                 </View>
                 <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
-                  <Text style={PayslipStyle.MonthlyPayslipGrossTitle}>$0</Text>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossBody,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {(
+                      data?.getPayrollById?.unpaidLeave *
+                      data?.getPayrollById?.salaryPerDay
+                    )?.toFixed(2)}
+                  </Text>
+                </View>
+              </View>
+
+              {deduct.map((data: any, index: number) => (
+                <View
+                  style={PayslipStyle.MonthlyPayslipEmployeeContentCard}
+                  key={index}
+                >
+                  <View style={{ flex: 2 }}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.title}
+                    </Text>
+                  </View>
+                  <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
+                    <Text
+                      style={[
+                        PayslipStyle.MonthlyPayslipGrossBody,
+                        { fontSize: moderateScale(14) },
+                      ]}
+                    >
+                      {data?.amount}
+                    </Text>
+                  </View>
+                </View>
+              ))}
+
+              <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+                <View style={{ flex: 2 }}>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    {t("TOTAL")}
+                  </Text>
+                </View>
+                <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
+                  <Text
+                    style={[
+                      PayslipStyle.MonthlyPayslipGrossTitle,
+                      { fontSize: moderateScale(14) },
+                    ]}
+                  >
+                    ${totalDeduct()}
+                  </Text>
                 </View>
               </View>
             </View>
           </View>
         </ScrollView>
-        {/* <TouchableOpacity
-          onPress={captureScrollView}
-          style={{
-            position: "absolute",
-            bottom: 40,
-            right: 20,
-            backgroundColor: "blue",
-            padding: 15,
-            borderRadius: 100,
-          }}
-        >
-          <Image
-            source={require("../assets/Images/screenshot.png")}
-            style={{ width: 25, height: 25 }}
-          />
-        </TouchableOpacity> */}
       </View>
     </View>
   );

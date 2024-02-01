@@ -9,12 +9,14 @@ import { AuthContext } from "../Context/AuthContext";
 import HomeStyle from "../styles/HomeStyle.scss";
 import * as Animatable from "react-native-animatable";
 import { moderateScale } from "../ Metrics";
+import { useTranslation } from "react-multi-lang";
 
 export default function AttendanceScreen() {
   const navigate = useNavigate();
   const [limit, setLimit] = useState(10);
   const { dimension } = useContext(AuthContext);
   const [load, setLoad] = useState(true);
+  const t = useTranslation();
 
   useEffect(() => {
     setTimeout(() => {
@@ -77,7 +79,7 @@ export default function AttendanceScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            Attendances
+            {t("Attendances")}
           </Text>
         </TouchableOpacity>
       </View>
@@ -95,7 +97,7 @@ export default function AttendanceScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            Date
+            {t("Date")}
           </Text>
         </View>
         <View style={AttendanceStyle.AttendanceTitleContainer}>
@@ -105,7 +107,7 @@ export default function AttendanceScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            Morning
+            {t("Morning")}
           </Text>
         </View>
         <View style={AttendanceStyle.AttendanceTitleContainer}>
@@ -115,7 +117,7 @@ export default function AttendanceScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            Afternoon
+            {t("Afternoon")}
           </Text>
         </View>
         <View style={AttendanceStyle.AttendanceFineTitleContainer}>
@@ -125,7 +127,7 @@ export default function AttendanceScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            Fine
+            {t("Fine")}
           </Text>
         </View>
       </View>
@@ -229,7 +231,7 @@ export default function AttendanceScreen() {
                   fontSize: moderateScale(16),
                 }}
               >
-                {"see more..."}
+                {t("seemore")}
               </Text>
             </TouchableOpacity>
           ) : null}

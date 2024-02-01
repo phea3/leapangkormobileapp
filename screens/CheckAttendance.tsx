@@ -26,6 +26,7 @@ import { moderateScale } from "../ Metrics";
 import { GETCHECKINOUTBUTTON } from "../graphql/GetCheckInOutButton";
 import ModalCheckIn from "../components/ModalCheckIn";
 import ModalCheckOut from "../components/ModalCheckOut";
+import { useTranslation } from "react-multi-lang";
 
 export default function ChecKAttendance({ locate, versionData }: any) {
   const { uid } = useContext(AuthContext);
@@ -34,8 +35,8 @@ export default function ChecKAttendance({ locate, versionData }: any) {
   const [isVisible, setVisible] = useState(false);
   const [CheckInIsVisible, setCheckInVisible] = useState(false);
   const [CheckOutIsVisible, setCheckOutVisible] = useState(false);
-  const [scanType, setScanType] = useState("");
-  const { dimension } = useContext(AuthContext);
+  const t = useTranslation();
+
   const [checkData, setCheckData] = useState<{
     message: string;
     status: boolean | null;
@@ -283,11 +284,11 @@ export default function ChecKAttendance({ locate, versionData }: any) {
           distanceInterval: 1,
         },
         (location) => {
-          console.log(
-            "location::",
-            location?.coords.latitude,
-            location?.coords?.longitude
-          );
+          // console.log(
+          //   "location::",
+          //   location?.coords.latitude,
+          //   location?.coords?.longitude
+          // );
           if (location?.coords.longitude && location?.coords?.longitude) {
             setLocation(location);
           }
@@ -311,11 +312,11 @@ export default function ChecKAttendance({ locate, versionData }: any) {
           distanceInterval: 1,
         },
         (location) => {
-          console.log(
-            "location::",
-            location?.coords.latitude,
-            location?.coords?.longitude
-          );
+          // console.log(
+          //   "location::",
+          //   location?.coords.latitude,
+          //   location?.coords?.longitude
+          // );
 
           if (location?.coords.latitude && location?.coords?.longitude) {
             setLocation(location);
@@ -327,20 +328,20 @@ export default function ChecKAttendance({ locate, versionData }: any) {
 
   useEffect(() => {
     if (errorMsg === "Permission to access location was denied.") {
-      Alert.alert("Oop!", "Permission to access location was denied.");
+      Alert.alert("Oop!", t("Permission to access location was denied."));
     } else if (errorMsg === "Error getting location") {
-      Alert.alert("Error getting location");
+      Alert.alert(t("Error getting location"));
     }
   }, [errorMsg]);
 
-  console.log(
-    "getCheckInOutButtonData?.getCheckInOutButton?.checkIn",
-    getCheckInOutButtonData?.getCheckInOutButton?.checkIn
-  );
-  console.log(
-    "getCheckInOutButtonData?.getCheckInOutButton?.checkOut",
-    getCheckInOutButtonData?.getCheckInOutButton?.checkOut
-  );
+  // console.log(
+  //   "getCheckInOutButtonData?.getCheckInOutButton?.checkIn",
+  //   getCheckInOutButtonData?.getCheckInOutButton?.checkIn
+  // );
+  // console.log(
+  //   "getCheckInOutButtonData?.getCheckInOutButton?.checkOut",
+  //   getCheckInOutButtonData?.getCheckInOutButton?.checkOut
+  // );
 
   if (!versionData) {
     return (
@@ -375,7 +376,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Leave Check
+              {t("Check-In/Out")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -428,7 +429,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Leave Check
+              {t("Check-In/Out")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -449,7 +450,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                 { fontSize: moderateScale(16) },
               ]}
             >
-              Permission to access location was denied.
+              {t("Permission to access location was denied.")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -519,7 +520,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                   { fontSize: moderateScale(14) },
                 ]}
               >
-                Check In/Out
+                {t("Check-In/Out")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -551,7 +552,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                   { fontSize: moderateScale(14) },
                 ]}
               >
-                Select Shifts
+                {t("Select Shifts")}
               </Text>
             </View>
             <View style={CheckStyle.CheckMainSelectDateSection}>
@@ -588,7 +589,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                     { fontSize: moderateScale(12) },
                   ]}
                 >
-                  Morning
+                  {t("Morning")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -623,7 +624,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                     { fontSize: moderateScale(12) },
                   ]}
                 >
-                  Afternoon
+                  {t("Afternoon")}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -650,7 +651,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  CHECK IN
+                  {t("CHECK IN")}
                 </Text>
               </TouchableOpacity>
             ) : (
@@ -670,7 +671,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  CHECK IN
+                  {t("CHECK IN")}
                 </Text>
               </View>
             )}
@@ -697,7 +698,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  CHECK OUT
+                  {t("CHECK OUT")}
                 </Text>
               </TouchableOpacity>
             ) : (
@@ -717,7 +718,7 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  CHECK OUT
+                  {t("CHECK OUT")}
                 </Text>
               </View>
             )}
@@ -751,17 +752,20 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                         distance <=
                         employeeData?.getEmployeeById?.checkAttendanceDistance
                           ? "green"
-                          : "red",
+                          : "gray",
                     },
                   ]}
                 >
                   {distance <=
                   employeeData?.getEmployeeById?.checkAttendanceDistance
-                    ? "Coordinates are within the specified range."
-                    : `Coordinates are outside (${
-                        distance -
-                        employeeData?.getEmployeeById?.checkAttendanceDistance
-                      }m)  the specified range.`}
+                    ? t("Coordinates are within the specified range.")
+                    : t("Coordinates are outside") +
+                      " " +
+                      (distance -
+                        employeeData?.getEmployeeById
+                          ?.checkAttendanceDistance) +
+                      "m " +
+                      t("the specified range")}
                 </Text>
 
                 <Text
@@ -774,14 +778,15 @@ export default function ChecKAttendance({ locate, versionData }: any) {
                         distance <=
                         employeeData?.getEmployeeById?.checkAttendanceDistance
                           ? "green"
-                          : "red",
+                          : "gray",
                       paddingTop: moderateScale(10),
                     },
                   ]}
                 >
-                  Latitude:{" "}
+                  {t("Latitude")}:{" "}
                   {locate?.coords.latitude ? locate?.coords.latitude : ""},
-                  {"\n"}Longitude:{" "}
+                  {"\n"}
+                  {t("Longitude")}:{" "}
                   {locate?.coords.longitude ? locate?.coords.longitude : ""}
                 </Text>
               </View>

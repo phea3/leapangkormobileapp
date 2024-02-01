@@ -194,6 +194,7 @@ export default function LoginScreen() {
                   width: moderateScale(130),
                   borderRadius: 100,
                   borderWidth: moderateScale(2),
+                  backgroundColor: "white",
                 },
               ]}
             />

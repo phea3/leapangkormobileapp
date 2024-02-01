@@ -16,10 +16,38 @@ import {
 } from "../functions/FetchDataLocalStorage";
 import Back from "./Back";
 import { moderateScale } from "../ Metrics";
+import {
+  getLanguage,
+  setDefaultLanguage,
+  setDefaultTranslations,
+  setLanguage,
+  setTranslations,
+  useTranslation,
+} from "react-multi-lang";
+import en from "../translations/en.json";
+import kh from "../translations/kh.json";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
+import * as Animatable from "react-native-animatable";
+
+setTranslations({ en, kh });
+setDefaultLanguage("kh");
+
+const ChangeEng = () => {
+  setLanguage("en");
+};
+
+const ChangeKh = () => {
+  setLanguage("kh");
+};
 
 export default function Header({ versionData }: any) {
   const [mobileUserLogin, setMobileUserLogin] = useState(initMobileUserLogin);
-
+  const t = useTranslation();
   const { dimension } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -86,7 +114,7 @@ export default function Header({ versionData }: any) {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  NOTIFICATIONS
+                  {t("NOTIFICATIONS")}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -122,7 +150,7 @@ export default function Header({ versionData }: any) {
                       { fontSize: moderateScale(14) },
                     ]}
                   >
-                    Profile
+                    {t("Profile")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -155,19 +183,14 @@ export default function Header({ versionData }: any) {
                     },
                   ]}
                 />
-                <View
-                  style={[
-                    HeaderStyle.HeaderTitleContainer,
-                    { height: moderateScale(40) },
-                  ]}
-                >
+                <View style={HeaderStyle.HeaderTitleContainer}>
                   <Text
                     style={[
                       HeaderStyle.HeaderTitle1,
                       { fontSize: moderateScale(14) },
                     ]}
                   >
-                    Hi {mobileUserLogin?.englishName}!
+                    {t("Hi")} {mobileUserLogin?.englishName}!
                   </Text>
                   <Text
                     style={[
@@ -175,7 +198,19 @@ export default function Header({ versionData }: any) {
                       { fontSize: moderateScale(12) },
                     ]}
                   >
-                    View Profile{" >"}
+                    {t("View Profile")}
+                    {" >"}
+                  </Text>
+                  <Text
+                    style={[
+                      {
+                        fontSize: moderateScale(11),
+                        fontFamily: "Kantumruy-Regular",
+                        color: !versionData ? "orange" : "#66FF66",
+                      },
+                    ]}
+                  >
+                    {!versionData ? t("Need update!!!") : t("ទាន់សម័យ។")}
                   </Text>
                 </View>
               </View>
@@ -186,10 +221,20 @@ export default function Header({ versionData }: any) {
         {location.pathname === "/notification" ||
         location.pathname === "/notification/action" ||
         location.pathname === "/notification/meeting" ? null : (
-          <View style={HeaderStyle.HeaderRightSideContainer}>
+          <View
+            style={[
+              HeaderStyle.HeaderRightSideContainer,
+              {
+                padding: moderateScale(5),
+              },
+            ]}
+          >
             {!versionData ? (
               <TouchableOpacity
-                style={HeaderStyle.HeaderRightSideContainer}
+                style={[
+                  HeaderStyle.HeaderRightSideContainer,
+                  { marginRight: moderateScale(10) },
+                ]}
                 onPress={() => {
                   if (Platform.OS === "ios") {
                     Linking.openURL(
@@ -205,12 +250,100 @@ export default function Header({ versionData }: any) {
                 <Image
                   source={require("../assets/Images/alerting.gif")}
                   style={{
-                    height: moderateScale(35),
-                    width: moderateScale(35),
+                    height: moderateScale(30),
+                    width: moderateScale(30),
+                    borderWidth: moderateScale(1),
+                    borderColor: "cyan",
+                    borderRadius: moderateScale(12),
+                    marginRight: moderateScale(5),
                   }}
                 />
               </TouchableOpacity>
             ) : null}
+            <View
+              style={[
+                HeaderStyle.HeaderRightSideContainer,
+                { marginRight: moderateScale(10) },
+              ]}
+            >
+              <Menu>
+                <MenuTrigger>
+                  {getLanguage() === "kh" ? (
+                    <Image
+                      source={require("../assets/Images/Cambodia-Flag.png")}
+                      style={{
+                        width: moderateScale(25),
+                        height: moderateScale(25),
+                      }}
+                    />
+                  ) : (
+                    <Image
+                      source={require("../assets/Images/English-Flag.png")}
+                      style={{
+                        width: moderateScale(25),
+                        height: moderateScale(25),
+                      }}
+                    />
+                  )}
+                </MenuTrigger>
+                <MenuOptions>
+                  <MenuOption onSelect={() => ChangeEng()}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: moderateScale(5),
+                      }}
+                    >
+                      <Text
+                        style={[
+                          HeaderStyle.headerTitle3,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        {t("English")}
+                      </Text>
+                      <Image
+                        source={require("../assets/Images/English-Flag.png")}
+                        style={{
+                          width: moderateScale(25),
+                          height: moderateScale(25),
+                        }}
+                      />
+                    </View>
+                  </MenuOption>
+                  <MenuOption onSelect={() => ChangeKh()}>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        padding: moderateScale(5),
+                        borderTopWidth: 1,
+                        borderColor: "#dcdcdc",
+                      }}
+                    >
+                      <Text
+                        style={[
+                          HeaderStyle.headerTitle3,
+                          { fontSize: moderateScale(14) },
+                        ]}
+                      >
+                        {t("Khmer")}
+                      </Text>
+                      <Image
+                        source={require("../assets/Images/Cambodia-Flag.png")}
+                        style={{
+                          width: moderateScale(25),
+                          height: moderateScale(25),
+                        }}
+                      />
+                    </View>
+                  </MenuOption>
+                </MenuOptions>
+              </Menu>
+            </View>
 
             <TouchableOpacity
               style={HeaderStyle.HeaderRightSideContainer}
@@ -219,8 +352,8 @@ export default function Header({ versionData }: any) {
               <Image
                 source={require("../assets/Images/bell.png")}
                 style={{
-                  height: moderateScale(25),
-                  width: moderateScale(25),
+                  height: moderateScale(30),
+                  width: moderateScale(30),
                 }}
               />
             </TouchableOpacity>

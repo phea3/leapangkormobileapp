@@ -15,6 +15,7 @@ import { GET_EMPLOYEEONHOLIDAY } from "../graphql/GetEmployeeOnHoliday";
 import moment from "moment";
 import { moderateScale } from "../ Metrics";
 import * as Animatable from "react-native-animatable";
+import { useTranslation } from "react-multi-lang";
 const Features = [
   {
     title: "Leaves",
@@ -45,6 +46,7 @@ export default function HomeMainScreen() {
   const { dimension } = useContext(AuthContext);
   const [holiData, setHolidata] = useState([]);
   const [load, setLoad] = useState(true);
+  const t = useTranslation();
 
   useEffect(() => {
     setTimeout(() => {
@@ -87,7 +89,7 @@ export default function HomeMainScreen() {
             { padding: moderateScale(15), fontSize: moderateScale(14) },
           ]}
         >
-          FEATURES
+          {t("FEATURES")}
         </Text>
       </View>
       <View
@@ -111,7 +113,7 @@ export default function HomeMainScreen() {
                 } else if (feature.title === "Attendances") {
                   navigate("/attendance");
                 } else if (feature.title === "Payslip") {
-                  navigate("/meeting");
+                  navigate("/payslip");
                 } else if (feature.title === "Timeoff") {
                   navigate("/timeoff");
                 }
@@ -127,7 +129,7 @@ export default function HomeMainScreen() {
                   HomeStyle.HomeBoxStyle,
                   {
                     height: moderateScale(90),
-                    borderWidth: moderateScale(1.5),
+                    borderWidth: moderateScale(1),
                     borderRadius: moderateScale(10),
                   },
                 ]}
@@ -146,7 +148,7 @@ export default function HomeMainScreen() {
                     { fontSize: moderateScale(10) },
                   ]}
                 >
-                  {feature.title}
+                  {t(feature.title)}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -170,7 +172,7 @@ export default function HomeMainScreen() {
             { fontSize: moderateScale(14) },
           ]}
         >
-          REQUEST LEAVE
+          {t("REQUEST LEAVE")}
         </Text>
       </TouchableOpacity>
       <ScrollView
@@ -184,6 +186,7 @@ export default function HomeMainScreen() {
           borderRadius: moderateScale(15),
           borderWidth: moderateScale(1),
           borderColor: "#dcdcdc",
+          marginBottom: moderateScale(10),
         }}
       >
         <View
@@ -198,7 +201,7 @@ export default function HomeMainScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            Employee on holiday
+            {t("Employee on holiday")}
           </Text>
         </View>
 
@@ -265,14 +268,14 @@ export default function HomeMainScreen() {
                     <Text
                       style={[
                         {
-                          fontSize: moderateScale(10),
+                          fontSize: moderateScale(8),
                           textAlign: "right",
                           fontFamily: "Kantumruy-Regular",
                           color: "white",
                         },
                       ]}
                     >
-                      {leave?.shiftOff ? leave?.shiftOff : ""}
+                      {leave?.shiftOff ? t(leave?.shiftOff) : ""}
                     </Text>
                   </View>
                   <View

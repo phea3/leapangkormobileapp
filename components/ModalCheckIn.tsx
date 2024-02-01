@@ -1,6 +1,7 @@
 import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import ModalStyle from "../styles/ModalStyle.scss";
 import { moderateScale } from "../ Metrics";
+import { useTranslation } from "react-multi-lang";
 
 export default function ModalCheckIn({
   location,
@@ -9,6 +10,7 @@ export default function ModalCheckIn({
   handleCheckInButton,
   isButtonDisabled,
 }: any) {
+  const t = useTranslation();
   return (
     <Modal
       visible={CheckInIsVisible}
@@ -54,11 +56,19 @@ export default function ModalCheckIn({
                 { fontSize: moderateScale(12) },
               ]}
             >
-              {location === null || location === undefined
-                ? "I can't get your current location. \n please try again!"
+              {location === null || !location === undefined
+                ? t("I can't get your current location") +
+                  "\n" +
+                  t("please try again!")
                 : !location
-                ? `Getting your current location. \n please wait... \n it's depend on your device.`
-                : "I get your current location. \n Do you want to check in?"}
+                ? t("Getting your current location") +
+                  "\n" +
+                  t("please wait") +
+                  "\n" +
+                  t("it's depend on your device")
+                : t("I get your current location") +
+                  "\n" +
+                  t("Do you want to check in?")}
             </Text>
           </View>
 
@@ -79,7 +89,7 @@ export default function ModalCheckIn({
                   { fontSize: moderateScale(14) },
                 ]}
               >
-                No
+                {t("No")}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -103,7 +113,7 @@ export default function ModalCheckIn({
                   { fontSize: moderateScale(14) },
                 ]}
               >
-                Yes
+                {isButtonDisabled ? t("load") : t("Yes")}
               </Text>
             </TouchableOpacity>
           </View>

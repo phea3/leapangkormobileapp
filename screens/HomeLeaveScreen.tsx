@@ -23,6 +23,7 @@ import { moderateScale } from "../ Metrics";
 import LeaveStyle from "../styles/LeaveStyle.scss";
 import { GETWKORINGTIMEBYEMPFORMOBILE } from "../graphql/GetWorkingTimeByEmpForMobile";
 import { GETBREAKTIMEBYEMPWORKINGTIMEFORMOBILE } from "../graphql/GetBreakTimeByEmpWorkingTimeForMobile";
+import { getLanguage, useTranslation } from "react-multi-lang";
 
 export default function HomeLeaveScreen({ versionData }: any) {
   const { dimension } = useContext(AuthContext);
@@ -42,6 +43,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
   const [workingTimeId, setWorkingTimeId] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
+  const t = useTranslation();
   // console.log(startDate);
   const hidDatePicker = () => {
     setDateIsvisible(false);
@@ -77,9 +79,9 @@ export default function HomeLeaveScreen({ versionData }: any) {
     GETTIMEOFFSFORMOBILE,
     {
       // pollInterval: 2000,
-      onCompleted(data) {
-        // console.log(data);
-        setTimeOff(TimeDate?.getTimeOffsForMobile);
+      onCompleted: ({ getTimeOffsForMobile }) => {
+        // console.log(getTimeOffsForMobile.length);
+        setTimeOff(getTimeOffsForMobile);
       },
       onError(error) {
         console.log(error?.message);
@@ -95,7 +97,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
     GETWKORINGTIMEBYEMPFORMOBILE,
     {
       onCompleted(data) {
-        console.log(WorkingTime);
+        // console.log(WorkingTime);
         setTimeOff(data?.getWorkingTimeByEmpForMobile);
       },
       onError(error) {
@@ -116,7 +118,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
         workingTimeId: workingTimeId,
       },
       onCompleted: ({ getBreakTimeByEmpWorkingTimeForMobile }) => {
-        console.log(getBreakTimeByEmpWorkingTimeForMobile);
+        // console.log(getBreakTimeByEmpWorkingTimeForMobile);
       },
       onError: (err) => {
         console.log(err?.message);
@@ -142,8 +144,13 @@ export default function HomeLeaveScreen({ versionData }: any) {
   }, [TimeDate]);
 
   const [requestLeave] = useMutation(REQUEST_LEAVE);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const handlRequest = async () => {
+    if (isButtonDisabled) {
+      return;
+    }
+    setIsButtonDisabled(true);
     const newValues = {
       from: startDate ? moment(startDate).format("YYYY-MM-DD") : "",
       reason: reason ? reason : "",
@@ -160,31 +167,36 @@ export default function HomeLeaveScreen({ versionData }: any) {
       breakEnd: end,
     };
     // console.log(newValues);
-
-    await requestLeave({
-      variables: { input: newValues },
-      onCompleted: ({ requestLeave }) => {
-        console.log(requestLeave);
-        Alert.alert(
-          requestLeave?.status ? "Success!" : "Opp!",
-          requestLeave?.message,
-          [
-            {
-              text: "Okay",
-              onPress: () => {
-                if (requestLeave?.status === true) {
-                  navigate("/leave");
-                }
+    try {
+      await requestLeave({
+        variables: { input: newValues },
+        onCompleted: ({ requestLeave }) => {
+          console.log(requestLeave);
+          Alert.alert(
+            requestLeave?.status ? "Success!" : "Opp!",
+            requestLeave?.message,
+            [
+              {
+                text: "Okay",
+                onPress: () => {
+                  if (requestLeave?.status === true) {
+                    navigate("/leave");
+                  }
+                },
+                style: "cancel",
               },
-              style: "cancel",
-            },
-          ]
-        );
-      },
-      onError(error) {
-        Alert.alert("Opp!", error?.message);
-      },
-    });
+            ]
+          );
+        },
+        onError(error) {
+          Alert.alert("Opp!", error?.message);
+        },
+      });
+    } catch (error) {
+      console.error("Mutation error:", error);
+    } finally {
+      setIsButtonDisabled(false);
+    }
   };
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -246,7 +258,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Main leave
+              {t("Main Leave")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -302,7 +314,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Main leave
+              {t("Main Leave")}
             </Text>
           </TouchableOpacity>
         </View>
@@ -315,7 +327,9 @@ export default function HomeLeaveScreen({ versionData }: any) {
           }}
           style={[
             HomeStyle.HomeMainScrollviewStyle,
-            { padding: moderateScale(10) },
+            {
+              marginBottom: moderateScale(10),
+            },
           ]}
           showsVerticalScrollIndicator={false}
         >
@@ -334,7 +348,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  Select Shift
+                  {t("Select Shifts")}
                 </Text>
               </View>
               <View
@@ -370,7 +384,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                       { fontSize: moderateScale(14) },
                     ]}
                   >
-                    All Day
+                    {t("AllDay")}
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -397,7 +411,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                       { fontSize: moderateScale(14) },
                     ]}
                   >
-                    Half Day
+                    {t("HalfDay")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -420,7 +434,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                         { fontSize: moderateScale(14) },
                       ]}
                     >
-                      {allDay ? "Start Date" : "Date"}
+                      {allDay ? t("Start Date") : t("Date")}
                     </Text>
                   </View>
 
@@ -476,7 +490,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                           { fontSize: moderateScale(14) },
                         ]}
                       >
-                        End Date
+                        {t("End Date")}
                       </Text>
                     </View>
 
@@ -533,7 +547,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                         { fontSize: moderateScale(14) },
                       ]}
                     >
-                      Request For
+                      {t("Request For")}
                     </Text>
                   </View>
                   <ScrollView
@@ -587,7 +601,9 @@ export default function HomeLeaveScreen({ versionData }: any) {
                                     { fontSize: moderateScale(12) },
                                   ]}
                                 >
-                                  {data?.shiftName} Shift
+                                  {getLanguage() === "en"
+                                    ? t(data?.shiftName) + " " + t("Shift")
+                                    : t("Shift") + t(data?.shiftName)}
                                 </Text>
                               </TouchableOpacity>
                             </View>
@@ -606,7 +622,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                       fontSize: moderateScale(14),
                     }}
                   >
-                    Require!
+                    {t("Require!")}
                   </Text>
                 </View>
               )}
@@ -626,7 +642,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                             { fontSize: moderateScale(14) },
                           ]}
                         >
-                          Time
+                          {t("Time")}
                         </Text>
                       </View>
                       <ScrollView
@@ -813,7 +829,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                           fontSize: moderateScale(14),
                         }}
                       >
-                        Require!
+                        {t("Require!")}
                       </Text>
                     </View>
                   )}
@@ -833,10 +849,10 @@ export default function HomeLeaveScreen({ versionData }: any) {
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Type Time Off
+              {t("Type Time Off")}
             </Text>
           </View>
-          {timeOff && timeOff.length === 0 ? (
+          {timeOff.length === 0 ? (
             <View style={{ width: "100%" }}>
               <View
                 style={{
@@ -850,10 +866,10 @@ export default function HomeLeaveScreen({ versionData }: any) {
                   padding: 5,
                 }}
               >
-                <Text style={{ color: "#9aa3a6" }}>Choose time off</Text>
+                <Text style={{ color: "#9aa3a6" }}>{t("Choose time off")}</Text>
               </View>
               <Text style={{ color: "#ff0000", padding: 5 }}>
-                You don't have time-off, please contact HR!
+                {t("You don't have time-off, please contact HR!")}
               </Text>
             </View>
           ) : (
@@ -878,7 +894,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                         ? selectedItem?.timeOff
                         : defaultTimeoff
                         ? defaultTimeoff
-                        : "Choose time off"}
+                        : t("Choose time off")}
                     </Text>
                   </View>
                 );
@@ -926,7 +942,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                 { fontSize: moderateScale(14) },
               ]}
             >
-              Reason
+              {t("Reason")}
             </Text>
           </View>
           <View
@@ -942,7 +958,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
           >
             <TextInput
               value={reason}
-              placeholder="Reason"
+              placeholder={t("Reason")}
               style={[
                 HomeStyle.HomeLeaveReasonStyle,
                 { fontSize: moderateScale(12) },
@@ -961,7 +977,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                   fontSize: moderateScale(14),
                 }}
               >
-                Require!
+                {t("Require!")}
               </Text>
             </View>
           )}
@@ -982,6 +998,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
           </View>
           {isKeyboardVisible ? null : (
             <TouchableOpacity
+              disabled={isButtonDisabled}
               style={[
                 HomeStyle.HomeLeaveRequestButton,
                 {
@@ -990,7 +1007,10 @@ export default function HomeLeaveScreen({ versionData }: any) {
                   marginBottom: moderateScale(10),
                   borderRadius: moderateScale(10),
                   backgroundColor:
-                    reason !== "" && timeId !== "" && workingTimeId !== ""
+                    reason !== "" &&
+                    timeId !== "" &&
+                    workingTimeId !== "" &&
+                    !((start === "" || end === "") && allDay === false)
                       ? "#177a02"
                       : "#dcdcdc",
                 },
@@ -999,7 +1019,12 @@ export default function HomeLeaveScreen({ versionData }: any) {
                 reason !== "" && timeId !== "" && workingTimeId !== "" ? 0.4 : 1
               }
               onPress={() => {
-                if (reason !== "" && timeId !== "" && workingTimeId !== "") {
+                if (
+                  reason !== "" &&
+                  timeId !== "" &&
+                  workingTimeId !== "" &&
+                  !((start === "" || end === "") && allDay === false)
+                ) {
                   handlRequest();
                 }
               }}
@@ -1010,7 +1035,7 @@ export default function HomeLeaveScreen({ versionData }: any) {
                   { fontSize: moderateScale(14) },
                 ]}
               >
-                Request
+                {t("Request")}
               </Text>
             </TouchableOpacity>
           )}

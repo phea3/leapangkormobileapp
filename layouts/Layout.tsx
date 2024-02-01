@@ -181,7 +181,7 @@ const Layout = ({ expoPushToken, versionData }: any) => {
                 height: "100%",
                 width: "100%",
                 backgroundColor: "#000",
-                opacity: 0.2,
+                opacity: 0.4,
                 alignItems: "center",
                 justifyContent: "center",
               }}
@@ -202,7 +202,13 @@ const Layout = ({ expoPushToken, versionData }: any) => {
                 marginTop: moderateScale(80),
               }}
             >
-              <Text style={{ color: "red", fontWeight: "bold" }}>
+              <Text
+                style={{
+                  color: "red",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
                 the feature is disabled since you are offline.{"\n"}
                 មុខងារត្រូវបានបិទដោយសារគ្មានអ៉ីនធឺណិត
               </Text>

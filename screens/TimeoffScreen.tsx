@@ -15,12 +15,14 @@ import { GETPUBLICHOLIDAYBYEMPLOYEE } from "../graphql/GetPublicHolidayByEmploye
 import { AuthContext } from "../Context/AuthContext";
 import moment from "moment";
 import SelectDropdown from "react-native-select-dropdown";
+import { useTranslation } from "react-multi-lang";
 
 export default function TimeoffScreen() {
   const { uid } = useContext(AuthContext);
   const navigate = useNavigate();
   const [load, setLoad] = useState(true);
   const [year, setYear] = useState(new Date());
+  const t = useTranslation();
 
   useEffect(() => {
     setTimeout(() => {
@@ -36,7 +38,7 @@ export default function TimeoffScreen() {
       year: moment(year).format("YYYY"),
     },
     onCompleted: ({ getPublicHolidayByEmployee }) => {
-      console.log(getPublicHolidayByEmployee);
+      // console.log(getPublicHolidayByEmployee);
       if (getPublicHolidayByEmployee) {
         setTimeOffData(
           getPublicHolidayByEmployee?.filter((e: any) => e.status === true)
@@ -124,7 +126,7 @@ export default function TimeoffScreen() {
               marginRight: moderateScale(10),
             }}
           />
-          <Text style={TimeOffStyles.BackButtonTitle}>Time Off</Text>
+          <Text style={TimeOffStyles.BackButtonTitle}>{t("Timeoff")}</Text>
         </TouchableOpacity>
         <View style={{ paddingRight: moderateScale(10) }}>
           <SelectDropdown
@@ -191,16 +193,16 @@ export default function TimeoffScreen() {
       </View>
       <View style={TimeOffStyles.TimeOffTitleContainer}>
         <View style={TimeOffStyles.TitleTextContainer}>
-          <Text style={TimeOffStyles.TitleText}>Titile</Text>
+          <Text style={TimeOffStyles.TitleText}>{t("Title")}</Text>
         </View>
         <View style={TimeOffStyles.TitleTextContainer}>
-          <Text style={TimeOffStyles.TitleText}>Days</Text>
+          <Text style={TimeOffStyles.TitleText}>{t("Days")}</Text>
         </View>
         <View style={TimeOffStyles.TitleTextContainer}>
-          <Text style={TimeOffStyles.TitleText}>Remain</Text>
+          <Text style={TimeOffStyles.TitleText}>{t("Remain")}</Text>
         </View>
         <View style={TimeOffStyles.TitleTextContainer}>
-          <Text style={TimeOffStyles.TitleText}>Year</Text>
+          <Text style={TimeOffStyles.TitleText}>{t("Year")}</Text>
         </View>
       </View>
       {load ? (

@@ -1,6 +1,8 @@
+import { useTranslation } from "react-multi-lang";
 import { Text, View } from "react-native";
 
 export default function NotFoundScreen() {
+  const t = useTranslation();
   return (
     <View
       style={{
@@ -12,7 +14,7 @@ export default function NotFoundScreen() {
       }}
     >
       <Text style={{ fontFamily: "Kantumruy-Bold" }}>
-        Oop!, Screen not found
+        {t("Oop!, Screen not found")}
       </Text>
     </View>
   );

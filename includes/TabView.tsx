@@ -10,6 +10,7 @@ import Animated, {
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { moderateScale } from "../ Metrics";
+import { useTranslation } from "react-multi-lang";
 
 export default function TabView() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function TabView() {
   const { widthScreen } = useContext(AuthContext);
   const offset = useSharedValue(0);
   const { dimension } = useContext(AuthContext);
+  const t = useTranslation();
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
@@ -66,7 +68,7 @@ export default function TabView() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            ACTION
+            {t("ACTION")}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -89,7 +91,7 @@ export default function TabView() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            MEETING
+            {t("MEETING")}
           </Text>
         </TouchableOpacity>
       </View>

@@ -42,6 +42,7 @@ export default function ProfileScreen({ versionData }: any) {
     };
     fetchAppVersion();
   }, []);
+  // console.log(versionData);
 
   const handleCloseModal = () => {
     setVisible(false);
@@ -176,7 +177,6 @@ export default function ProfileScreen({ versionData }: any) {
                 : "--:--"}
             </Text>
           </View>
-
           <View style={ProfileStyle.LogoutContainer}>
             <View
               style={{
@@ -184,11 +184,11 @@ export default function ProfileScreen({ versionData }: any) {
                 width: "90%",
                 justifyContent: "flex-start",
                 alignItems: "center",
-                // backgroundColor: "#f1f1f1",
                 borderRadius: moderateScale(15),
               }}
             >
-              {/* <TouchableOpacity
+              {!versionData ? (
+                <TouchableOpacity
                   onPress={() => {
                     if (Platform.OS === "ios") {
                       Linking.openURL(
@@ -221,9 +221,9 @@ export default function ProfileScreen({ versionData }: any) {
                   >
                     Quick update {">>>"}
                   </Text>
-                </TouchableOpacity> */}
+                </TouchableOpacity>
+              ) : null}
             </View>
-
             <TouchableOpacity
               style={[
                 ProfileStyle.LogoutScreenLogoutButton,

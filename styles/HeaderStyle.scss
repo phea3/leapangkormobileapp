@@ -30,15 +30,7 @@
 .HeaderLeftSideContainer {
   flex-direction: row;
   align-items: center;
-  height: 80%;
-}
-
-.HeaderRightSideContainerSM {
-  padding: 2px;
-  flex-direction: row;
-  align-items: center;
-  background-color: $color-white;
-  border-radius: 4px;
+  height: 100%;
 }
 
 .HeaderRightSideContainer {
@@ -46,7 +38,6 @@
   align-items: center;
   background-color: $color-white;
   border-radius: 8px;
-  padding: 2px;
 }
 
 .HeaderUserProfileImageSM {
@@ -98,7 +89,7 @@
 }
 
 .HeaderTitleContainer {
-  padding: 0px;
+  justify-content: space-between;
 }
 
 .HeaderBackIconSM {

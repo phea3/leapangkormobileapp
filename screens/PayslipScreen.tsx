@@ -1,14 +1,80 @@
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import MeetingStyle from "../styles/MeetingStyle.scss";
 import PayslipStyle from "../styles/PayslipStyle.scss";
 import { useNavigate } from "react-router-native";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { moderateScale } from "../ Metrics";
+import { useQuery } from "@apollo/client";
+import { GETEMPPAYROLLHISTORYFORMOBILE } from "../graphql/GetEmpPayrollHistoryForMobile";
+import moment from "moment";
+import { useTranslation } from "react-multi-lang";
 
 export default function PayslipScreen() {
   const navigate = useNavigate();
   const { dimension } = useContext(AuthContext);
+  const [limit, setLimit] = useState(10);
+  const [empPayrollhistorys, setEmpPayrollhistorys] = useState([]);
+  const { widthScreen } = useContext(AuthContext);
+  const t = useTranslation();
+
+  const { data, refetch } = useQuery(GETEMPPAYROLLHISTORYFORMOBILE, {
+    variables: {
+      limit: limit,
+    },
+    onCompleted: ({ getEmpPayrollHistoryForMobile }) => {
+      setEmpPayrollhistorys(getEmpPayrollHistoryForMobile);
+    },
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [limit]);
+
+  // Render item function
+  const renderItem = ({ item }: any) => (
+    <View>
+      <TouchableOpacity
+        style={[
+          PayslipStyle.PayslipButtonContainer,
+          {
+            marginTop: moderateScale(10),
+            width: widthScreen * 0.9,
+            padding: moderateScale(10),
+            borderWidth: moderateScale(1),
+            borderRadius: moderateScale(10),
+          },
+        ]}
+        onPress={() => navigate("/monthlypayslip", { state: item?._id })}
+      >
+        <Image
+          source={require("../assets/Images/security.png")}
+          style={{
+            width: moderateScale(50),
+            height: moderateScale(50),
+            marginRight: moderateScale(10),
+          }}
+        />
+        <View>
+          <Text
+            style={[MeetingStyle.MeetingTitle, { fontSize: moderateScale(14) }]}
+          >
+            {t("Payslip for the month of")}{" "}
+            {moment(item.date).format("MMM YYYY")}
+          </Text>
+          <Text
+            style={[
+              MeetingStyle.MonthlyPayslipGrossBody,
+              { fontSize: moderateScale(14) },
+            ]}
+          >
+            {t("seemore")}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View
       style={[
@@ -17,6 +83,8 @@ export default function PayslipScreen() {
           borderTopWidth: moderateScale(1),
           borderLeftWidth: moderateScale(1),
           borderRightWidth: moderateScale(1),
+          borderTopLeftRadius: moderateScale(15),
+          borderTopRightRadius: moderateScale(15),
         },
       ]}
     >
@@ -42,42 +110,35 @@ export default function PayslipScreen() {
               { fontSize: moderateScale(14) },
             ]}
           >
-            PAYSLIP
+            {t("Payslip")}
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={PayslipStyle.PayslipBodyContainer}>
-        <TouchableOpacity
-          style={PayslipStyle.PayslipButtonContainer}
-          onPress={() => navigate("/monthlypayslip")}
-        >
-          <Image
-            source={require("../assets/Images/security.png")}
-            style={{
-              width: moderateScale(50),
-              height: moderateScale(50),
-              marginRight: moderateScale(10),
-            }}
-          />
-          <View>
-            <Text
-              style={[
-                MeetingStyle.MeetingTitle,
-                { fontSize: moderateScale(14) },
-              ]}
-            >
-              Payslip for the month of may 2023
-            </Text>
-            <Text
-              style={[
-                MeetingStyle.MonthlyPayslipGrossBody,
-                { fontSize: moderateScale(14) },
-              ]}
-            >
-              see more...
-            </Text>
-          </View>
-        </TouchableOpacity>
+      {/* <View style={PayslipStyle.PayslipBodyContainer}> */}
+      <View style={{ flex: 1, width: "100%" }}>
+        <FlatList
+          initialNumToRender={10} // Adjust as needed
+          maxToRenderPerBatch={10} // Adjust as needed
+          windowSize={10} // Adjust as needed
+          data={empPayrollhistorys?.slice(0, limit)}
+          keyExtractor={(item: any) => item._id.toString()}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={true}
+          contentContainerStyle={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          style={{
+            width: "100%",
+          }}
+          onEndReached={() => {
+            if (empPayrollhistorys.length >= limit) {
+              setLimit(10 + limit);
+              // console.log(limit);
+            }
+          }}
+          onEndReachedThreshold={0.1} // Adjust this threshold as needed
+        />
       </View>
     </View>
   );

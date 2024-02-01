@@ -36,6 +36,7 @@
     "moment": "^2.29.4",
     "node-sass": "^9.0.0",
     "react": "18.2.0",
+    "react-multi-lang": "^2.2.0",
     "react-native": "0.72.6",
     "react-native-animatable": "^1.4.0",
     "react-native-animated-pagination-dots": "^0.1.73",

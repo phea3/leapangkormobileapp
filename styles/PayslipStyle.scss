@@ -8,13 +8,13 @@
 }
 
 .PayslipButtonContainer {
-  width: 95%;
-  padding: 10px;
-  border-width: 1px;
-  border-radius: 10px;
+  // padding: 10px;
+  // border-width: 1px;
+  // border-radius: 10px;
   flex-direction: row;
   align-items: center;
   border-color: $color-dark-green;
+  background-color: white;
 }
 
 .MonthlyPayslipBodyContainer {
@@ -25,10 +25,12 @@
 .MonthlyPayslipEmployeeCard {
   width: 100%;
   background-color: #f8f8f8;
+  border-color: $color-gray;
+  border-width: 1px;
   flex-direction: row;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  // padding: 10px;
+  // border-radius: 10px;
+  // margin-bottom: 20px;
 }
 
 .MonthlyPayslipGrossEmployeeContentCard {
@@ -52,8 +54,8 @@
   background-color: $color-white;
   justify-content: center;
   align-items: flex-start;
-  padding: 10px;
-  border-radius: 10px;
+  // padding: 10px;
+  // border-radius: 10px;
 }
 
 .MonthlyPayslipGrossTitle {

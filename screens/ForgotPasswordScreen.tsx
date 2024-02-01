@@ -121,7 +121,11 @@ export default function ForgotPasswordScreen() {
               <Image
                 style={[
                   ForgotPasswordStyle.LogoImage,
-                  { width: moderateScale(130), height: moderateScale(130) },
+                  {
+                    width: moderateScale(130),
+                    height: moderateScale(130),
+                    backgroundColor: "white",
+                  },
                 ]}
                 source={require("../assets/logo.png")}
                 resizeMode="contain"
