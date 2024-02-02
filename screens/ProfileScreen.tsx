@@ -24,6 +24,7 @@ import * as Animatable from "react-native-animatable";
 import { moderateScale } from "../ Metrics";
 import getAppVersion from "../getAppVersion";
 import { AppVersions } from "../functions/FetchDataLocalStorage";
+import { useTranslation } from "react-multi-lang";
 
 export default function ProfileScreen({ versionData }: any) {
   const location = useLocation();
@@ -31,6 +32,7 @@ export default function ProfileScreen({ versionData }: any) {
   const [isVisible, setVisible] = useState(false);
   const [visible, setIsVisible] = useState(false);
   const [versions, setVersions] = useState<AppVersions | null>(null);
+  const t = useTranslation();
 
   useEffect(() => {
     const fetchAppVersion = async () => {
@@ -171,7 +173,7 @@ export default function ProfileScreen({ versionData }: any) {
                 },
               ]}
             >
-              Position:{" "}
+              {t("Position:")}{" "}
               {data?.getUserInfoMobile?.position
                 ? data?.getUserInfoMobile?.position
                 : "--:--"}
@@ -219,7 +221,7 @@ export default function ProfileScreen({ versionData }: any) {
                       color: "#3C6EFB",
                     }}
                   >
-                    Quick update {">>>"}
+                    {t("Quick Update")} {">>>"}
                   </Text>
                 </TouchableOpacity>
               ) : null}
@@ -243,7 +245,7 @@ export default function ProfileScreen({ versionData }: any) {
                   { fontSize: moderateScale(14) },
                 ]}
               >
-                Logout
+                {t("Logout")}
               </Text>
             </TouchableOpacity>
           </View>
@@ -284,7 +286,7 @@ export default function ProfileScreen({ versionData }: any) {
                   { fontSize: moderateScale(16) },
                 ]}
               >
-                Do you want to logout?
+                {t("Do you want to logout?")}
               </Text>
             </View>
 
@@ -305,7 +307,7 @@ export default function ProfileScreen({ versionData }: any) {
                     { fontSize: moderateScale(16) },
                   ]}
                 >
-                  No
+                  {t("No")}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -328,7 +330,7 @@ export default function ProfileScreen({ versionData }: any) {
                     { fontSize: moderateScale(16) },
                   ]}
                 >
-                  Yes
+                  {t("Yes")}
                 </Text>
               </TouchableOpacity>
             </View>

@@ -88,6 +88,7 @@ export default function HomeScreen() {
   const [load, setLoad] = useState(true);
   const t = useTranslation();
   const [year, setYear] = useState(new Date());
+  const [month, setMonth] = useState(0);
 
   useEffect(() => {
     setTimeout(() => {
@@ -139,6 +140,9 @@ export default function HomeScreen() {
       // pollInterval: 2000,
       variables: {
         employeeId: uid ? uid : "",
+        month:
+          month !== 0 ? month : parseInt(moment(new Date()).format("M"), 10),
+        year: parseInt(moment(year).format("YYYY"), 10),
       },
       onCompleted: ({ getEmployeeLeaveInfo }) => {
         // console.log("getEmployeeLeaveInfo", getEmployeeLeaveInfo);
@@ -169,6 +173,10 @@ export default function HomeScreen() {
     };
   }, []);
 
+  useEffect(() => {
+    // console.log(month + "-" + moment(year).format("YYYY"));
+    // console.log(moment(new Date()).format("M"));
+  }, [month, year]);
   return (
     <View style={HomeStyle.HomeContainer}>
       <KeyboardDismissableArea />
@@ -186,8 +194,7 @@ export default function HomeScreen() {
               <SelectDropdown
                 data={Months}
                 onSelect={(selectedItem, index) => {
-                  // console.log(selectedItem, index);
-                  // setYear(selectedItem);
+                  setMonth(selectedItem?.number);
                 }}
                 renderCustomizedButtonChild={(selectedItem, index) => {
                   // text represented after item is selected
@@ -198,21 +205,21 @@ export default function HomeScreen() {
                         HomeStyle.HomeSelectDateText,
                         {
                           fontSize: moderateScale(14),
-                          textAlign: "center",
+                          textAlign: "left",
                           fontFamily: "Kantumruy-Bold",
                           color: "#fff",
+                          textTransform: "capitalize",
                         },
                       ]}
                     >
                       {selectedItem
-                        ? selectedItem?.month
-                        : moment(new Date()).format("MMMM")}
+                        ? t(selectedItem?.month)
+                        : t(moment(new Date()).format("MMMM"))}
                     </Text>
                   );
                 }}
                 dropdownStyle={{
                   borderRadius: moderateScale(10),
-                  paddingHorizontal: moderateScale(10),
                   justifyContent: "center",
                   alignContent: "center",
                 }}
@@ -229,7 +236,7 @@ export default function HomeScreen() {
                         },
                       ]}
                     >
-                      {item?.month}
+                      {t(item?.month)}
                     </Text>
                   );
                 }}
@@ -237,10 +244,8 @@ export default function HomeScreen() {
                   width: moderateScale(80),
                   height: moderateScale(30),
                   backgroundColor: "#177a02",
-                  // borderRadius: moderateScale(10),
                   // borderWidth: moderateScale(1),
-                  // borderColor: "#fff",
-                  justifyContent: "center",
+                  justifyContent: "flex-end",
                   alignContent: "center",
                 }}
               />
@@ -259,23 +264,23 @@ export default function HomeScreen() {
                         HomeStyle.HomeSelectDateText,
                         {
                           fontSize: moderateScale(14),
-                          textAlign: "center",
+                          textAlign: "left",
                           fontFamily: "Kantumruy-Bold",
                           color: "#fff",
                         },
                       ]}
                     >
                       {selectedItem
-                        ? moment(selectedItem).format("YYYY")
-                        : moment(year).format("YYYY")}
+                        ? t(moment(selectedItem).format("YYYY"))
+                        : t(moment(year).format("YYYY"))}
                     </Text>
                   );
                 }}
                 dropdownStyle={{
                   borderRadius: moderateScale(10),
-                  paddingHorizontal: moderateScale(10),
+                  // paddingHorizontal: moderateScale(10),
                   justifyContent: "center",
-                  alignContent: "center",
+                  alignContent: "flex-start",
                 }}
                 renderCustomizedRowChild={(item, index) => {
                   // text represented for each item in dropdown
@@ -290,7 +295,7 @@ export default function HomeScreen() {
                         },
                       ]}
                     >
-                      {moment(item).format("YYYY")}
+                      {t(moment(item).format("YYYY"))}
                     </Text>
                   );
                 }}
@@ -335,10 +340,9 @@ export default function HomeScreen() {
                     ]}
                   >
                     {action.title === "Early"
-                      ? // leaveData?.getEmployeeLeaveInfo?.dayOfTimeOff
-                        //   ? leaveData?.getEmployeeLeaveInfo?.dayOfTimeOff
-                        //   :
-                        "0"
+                      ? leaveData?.getEmployeeLeaveInfo?.outEarly
+                        ? leaveData?.getEmployeeLeaveInfo?.outEarly
+                        : "0"
                       : action.title === "Day Off"
                       ? leaveData?.getEmployeeLeaveInfo?.dayOfTimeOff
                         ? leaveData?.getEmployeeLeaveInfo?.dayOfTimeOff

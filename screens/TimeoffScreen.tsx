@@ -150,8 +150,8 @@ export default function TimeoffScreen() {
                   ]}
                 >
                   {selectedItem
-                    ? moment(selectedItem).format("YYYY")
-                    : moment(year).format("YYYY")}
+                    ? t(moment(selectedItem).format("YYYY"))
+                    : t(moment(year).format("YYYY"))}
                 </Text>
               );
             }}
@@ -174,7 +174,7 @@ export default function TimeoffScreen() {
                     },
                   ]}
                 >
-                  {moment(item).format("YYYY")}
+                  {t(moment(item).format("YYYY"))}
                 </Text>
               );
             }}

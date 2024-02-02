@@ -1,9 +1,15 @@
-import { View, Text, SafeAreaView, Alert, ImageBackground } from "react-native";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Alert,
+  ImageBackground,
+  Image,
+} from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import Header from "../includes/Header";
 import LayoutStyle from "../styles/LayoutStyle.scss";
-import { AuthContext } from "../Context/AuthContext";
 import { useQuery } from "@apollo/client";
 import { GET_USER_MOBILE_LOGIN } from "../graphql/GetUserMobileLogin";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -15,22 +21,19 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import NetInfo from "@react-native-community/netinfo";
 import { GET_EMPLOYEEBYID } from "../graphql/GetEmployeeById";
-import { NetworkConsumer } from "react-native-offline";
+import { NetworkConsumer, useIsConnected } from "react-native-offline";
 import { moderateScale } from "../ Metrics";
 import * as Animatable from "react-native-animatable";
 
 const Layout = ({ expoPushToken, versionData }: any) => {
+  const isConnected = useIsConnected();
   const navigate = useNavigate();
   const location = useLocation();
-  const { heightScreen } = useContext(AuthContext);
   const { dispatch, REDUCER_ACTIONS } = useLoginUser();
 
-  const isConnection = useSharedValue("no");
   const offheight = useSharedValue(0);
   const color = useSharedValue("red");
-  const [connection, setConnection] = useState(false);
 
   const onStateChange = useCallback((state: any) => {
     AsyncStorage.setItem("@mobileUserLogin", JSON.stringify(state));
@@ -51,10 +54,9 @@ const Layout = ({ expoPushToken, versionData }: any) => {
         }
         // console.log(expoPushToken?.data);
         //========= Set Online Mode =========
-        if (connection === true) {
+        if (isConnected === true) {
           offheight.value = withTiming(10);
           color.value = withTiming("#4CBB17");
-          isConnection.value = withTiming("yes");
           setTimeout(() => {
             offheight.value = withTiming(0);
           }, 1000);
@@ -64,10 +66,9 @@ const Layout = ({ expoPushToken, versionData }: any) => {
       onError(error) {
         // console.log("getUserMobileLogin", error?.message);
         //========= Set Offline Mode =========
-        if (connection === false) {
+        if (isConnected === false) {
           offheight.value = withTiming(10);
           color.value = withTiming("red");
-          isConnection.value = withTiming("no");
         }
         if (error?.message === "Not Authorized") {
           Alert.alert("Opp! Your session has been expired.", "", [
@@ -131,37 +132,36 @@ const Layout = ({ expoPushToken, versionData }: any) => {
     };
   });
 
+  const [connection, setConnection] = useState(false);
+
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
-      // console.log("Network quality:", state);
-      if (connection !== state.isConnected) {
-        setConnection(state.isConnected ? true : false);
-        if (state.isConnected === true && isConnection.value === "no") {
-          offheight.value = withTiming(10);
-          color.value = withTiming("#4CBB17");
-          isConnection.value = withTiming("yes");
-          setTimeout(() => {
-            offheight.value = withTiming(0);
-          }, 1000);
-        } else if (
-          (state.isConnected === false && isConnection.value === "yes") ||
-          (state.isConnected === false && isConnection.value === "no") ||
-          (state.isConnected === false && isConnection.value === "NaN")
-        ) {
-          offheight.value = withTiming(10);
-          color.value = withTiming("red");
-          isConnection.value = withTiming("no");
-        } else if (state.isConnected === true && isConnection.value === "yes") {
-          setTimeout(() => {
-            isConnection.value = withTiming("no");
-          }, 500);
-        }
-      }
-    });
-    return () => {
-      unsubscribe;
-    };
-  }, [connection, UserData?.getUserMobileLogin]);
+    if (isConnected === true) {
+      setTimeout(() => {
+        setConnection(isConnected === true ? true : false);
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        setConnection(isConnected === false ? false : true);
+      }, 1000);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    if (connection === true) {
+      offheight.value = withTiming(10);
+      color.value = withTiming("#4CBB17");
+      setTimeout(() => {
+        offheight.value = withTiming(0);
+      }, 1000);
+    } else if (connection === false) {
+      offheight.value = withTiming(10);
+      color.value = withTiming("#ff0000");
+    } else {
+      setTimeout(() => {
+        offheight.value = withTiming(0);
+      }, 1000);
+    }
+  }, [connection]);
 
   const ImageViewer = () => (
     <NetworkConsumer>
@@ -196,17 +196,39 @@ const Layout = ({ expoPushToken, versionData }: any) => {
                 width: "90%",
                 height: moderateScale(80),
                 borderRadius: moderateScale(10),
-                justifyContent: "center",
+                justifyContent: "space-evenly",
                 alignItems: "center",
-                backgroundColor: "white",
+                backgroundColor: "red",
                 marginTop: moderateScale(80),
+                flexDirection: "row",
               }}
             >
+              <View
+                style={{
+                  width: moderateScale(40),
+                  height: moderateScale(40),
+                  backgroundColor: "white",
+                  borderRadius: 200,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("../assets/Images/wifi.gif")}
+                  resizeMode="contain"
+                  style={{
+                    width: moderateScale(25),
+                    height: moderateScale(25),
+                  }}
+                />
+              </View>
               <Text
                 style={{
-                  color: "red",
+                  color: "white",
                   fontWeight: "bold",
                   textAlign: "center",
+                  fontSize: moderateScale(14),
+                  fontFamily: "Kantumruy-Bold",
                 }}
               >
                 the feature is disabled since you are offline.{"\n"}

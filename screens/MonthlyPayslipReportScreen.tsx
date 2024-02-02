@@ -50,17 +50,17 @@ export default function MonthlyPayslipReportScreen() {
       }[] = [];
 
       //================  Company Owe ==========
-      // if (getPayrollById?.recentPayrollOwe?.length > 0) {
-      //   getPayrollById?.recentPayrollOwe?.map((rowall: any) => {
-      //     let object = {
-      //       title: "Salary on " + rowall?.month,
-      //       day: 0,
-      //       hour: 0,
-      //       amount: rowall?.remain,
-      //     };
-      //     ArrayRecieve.push(object);
-      //   });
-      // }
+      if (getPayrollById?.recentPayrollOwe?.length > 0) {
+        getPayrollById?.recentPayrollOwe?.map((rowall: any) => {
+          let object = {
+            title: "Salary on " + rowall?.month,
+            day: 0,
+            hour: 0,
+            amount: rowall?.remain,
+          };
+          ArrayRecieve.push(object);
+        });
+      }
 
       if (getPayrollById?.allowanceList?.length > 0) {
         getPayrollById?.allowanceList?.map((rowall: any) => {

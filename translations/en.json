@@ -86,5 +86,21 @@
   "You don't have time-off, please contact HR!": "You don't have time-off, please contact HR!",
   "Reason": "Reason",
   "Request": "Request",
-  "Early": "Early"
+  "Early": "Early",
+  "Position:": "Position:",
+  "Quick Update": "Quick Update",
+  "Logout": "Logout",
+  "Do you want to logout?": "Do you want to logout?",
+  "January": "January",
+  "February": "February",
+  "March": "March",
+  "April": "April",
+  "May": "May",
+  "June": "June",
+  "July": "July",
+  "August": "August",
+  "September": "September",
+  "October": "October",
+  "November": "November",
+  "December": "December"
 }
