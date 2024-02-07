@@ -223,6 +223,18 @@ export default function TimeoffScreen() {
             }}
           />
         </View>
+      ) : TimeOffData?.length === 0 ? (
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            backgroundColor: COLORS.WHITE,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={TimeOffStyles.TitleText}>{t("Empty")}</Text>
+        </View>
       ) : (
         <ScrollView
           contentContainerStyle={{ alignItems: "center" }}

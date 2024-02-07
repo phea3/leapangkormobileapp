@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client";
 import { GETEMPPAYROLLHISTORYFORMOBILE } from "../graphql/GetEmpPayrollHistoryForMobile";
 import moment from "moment";
 import { useTranslation } from "react-multi-lang";
+import { COLORS } from "../color";
 
 export default function PayslipScreen() {
   const navigate = useNavigate();
@@ -114,32 +115,52 @@ export default function PayslipScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      {/* <View style={PayslipStyle.PayslipBodyContainer}> */}
-      <View style={{ flex: 1, width: "100%" }}>
-        <FlatList
-          initialNumToRender={10} // Adjust as needed
-          maxToRenderPerBatch={10} // Adjust as needed
-          windowSize={10} // Adjust as needed
-          data={empPayrollhistorys?.slice(0, limit)}
-          keyExtractor={(item: any) => item._id.toString()}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={true}
-          contentContainerStyle={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+      {empPayrollhistorys?.length === 0 ? (
+        <View
           style={{
+            flex: 1,
             width: "100%",
+            backgroundColor: COLORS.WHITE,
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          onEndReached={() => {
-            if (empPayrollhistorys.length >= limit) {
-              setLimit(10 + limit);
-              // console.log(limit);
-            }
-          }}
-          onEndReachedThreshold={0.1} // Adjust this threshold as needed
-        />
-      </View>
+        >
+          <Text
+            style={[
+              MeetingStyle.MeetingBackButtonTitle,
+              { fontSize: moderateScale(14) },
+            ]}
+          >
+            {t("Empty")}
+          </Text>
+        </View>
+      ) : (
+        <View style={{ flex: 1, width: "100%" }}>
+          <FlatList
+            initialNumToRender={10} // Adjust as needed
+            maxToRenderPerBatch={10} // Adjust as needed
+            windowSize={10} // Adjust as needed
+            data={empPayrollhistorys?.slice(0, limit)}
+            keyExtractor={(item: any) => item._id.toString()}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={true}
+            contentContainerStyle={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            style={{
+              width: "100%",
+            }}
+            onEndReached={() => {
+              if (empPayrollhistorys.length >= limit) {
+                setLimit(10 + limit);
+                // console.log(limit);
+              }
+            }}
+            onEndReachedThreshold={0.1} // Adjust this threshold as needed
+          />
+        </View>
+      )}
     </View>
   );
 }

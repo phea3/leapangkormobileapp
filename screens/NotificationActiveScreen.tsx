@@ -8,11 +8,14 @@ import { useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { GET_NOTIFICATION_CONTACT } from "../graphql/NotificationAction";
 import { moderateScale } from "../ Metrics";
+import { useTranslation } from "react-multi-lang";
+import { COLORS } from "../color";
 
 export default function NotificationActiveScreen() {
   const { dimension } = useContext(AuthContext);
   const [NotificationData, setNotificationData] = useState([]);
   const [limit, setLimit] = useState(10);
+  const t = useTranslation();
 
   const { data, refetch } = useQuery(GET_NOTIFICATION_CONTACT, {
     // pollInterval: 2000,
@@ -34,97 +37,118 @@ export default function NotificationActiveScreen() {
 
   return (
     <View style={NotificationActionStyle.NotificationActionContainer}>
-      <ScrollView
-        contentContainerStyle={{ alignItems: "center" }}
-        style={{ flex: 1, width: "100%" }}
-        showsVerticalScrollIndicator={false}
-      >
-        {NotificationData?.map((card: any, index: number) => (
-          <View
+      {NotificationData?.length === 0 ? (
+        <View
+          style={{
+            flex: 1,
+            width: "100%",
+            backgroundColor: COLORS.WHITE,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
             style={[
-              NotificationActionStyle.ActionCardContainer,
-              {
-                paddingVertical: moderateScale(10),
-                borderBottomWidth: moderateScale(0.5),
-              },
+              NotificationActionStyle.ActionLeaveTitle,
+              { fontSize: moderateScale(14) },
             ]}
-            key={index}
           >
-            <View style={{ marginRight: moderateScale(10) }}>
-              <View
-                style={[
-                  card?.title === "Leave Cancel"
-                    ? NotificationActionStyle.ActionCardIconRed
-                    : NotificationActionStyle.ActionCardIcon,
-                  {
-                    width: moderateScale(40),
-                    height: moderateScale(40),
-                  },
-                ]}
-              >
-                <Image
-                  source={require("../assets/Images/briefcase.png")}
-                  style={{
-                    width: moderateScale(20),
-                    height: moderateScale(20),
-                  }}
-                />
+            {t("Empty")}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView
+          contentContainerStyle={{ alignItems: "center" }}
+          style={{ flex: 1, width: "100%" }}
+          showsVerticalScrollIndicator={false}
+        >
+          {NotificationData?.map((card: any, index: number) => (
+            <View
+              style={[
+                NotificationActionStyle.ActionCardContainer,
+                {
+                  paddingVertical: moderateScale(10),
+                  borderBottomWidth: moderateScale(0.5),
+                },
+              ]}
+              key={index}
+            >
+              <View style={{ marginRight: moderateScale(10) }}>
+                <View
+                  style={[
+                    card?.title === "Leave Cancel"
+                      ? NotificationActionStyle.ActionCardIconRed
+                      : NotificationActionStyle.ActionCardIcon,
+                    {
+                      width: moderateScale(40),
+                      height: moderateScale(40),
+                    },
+                  ]}
+                >
+                  <Image
+                    source={require("../assets/Images/briefcase.png")}
+                    style={{
+                      width: moderateScale(20),
+                      height: moderateScale(20),
+                    }}
+                  />
+                </View>
+              </View>
+              <View style={NotificationActionStyle.ActionCardBodyRight}>
+                <Text
+                  style={[
+                    card?.title === "Leave Cancel"
+                      ? NotificationActionStyle.ActionLeaveTitleRed
+                      : NotificationActionStyle.ActionLeaveTitle,
+                    {
+                      fontSize: moderateScale(14),
+                    },
+                  ]}
+                >
+                  {card?.title}
+                </Text>
+                <Text
+                  style={[
+                    card?.title === "Leave Cancel"
+                      ? NotificationActionStyle.ActionDatTimeRed
+                      : NotificationActionStyle.ActionDatTime,
+                    { fontSize: moderateScale(12) },
+                  ]}
+                >
+                  {moment(card?.date).format("DD MMM YY")} | {card?.time}
+                </Text>
+                <Text
+                  style={[
+                    card?.title === "Leave Cancel"
+                      ? NotificationActionStyle.ActionCommentRed
+                      : NotificationActionStyle.ActionComment,
+                    { fontSize: moderateScale(12) },
+                  ]}
+                >
+                  {card?.body}
+                </Text>
               </View>
             </View>
-            <View style={NotificationActionStyle.ActionCardBodyRight}>
-              <Text
-                style={[
-                  card?.title === "Leave Cancel"
-                    ? NotificationActionStyle.ActionLeaveTitleRed
-                    : NotificationActionStyle.ActionLeaveTitle,
-                  {
-                    fontSize: moderateScale(14),
-                  },
-                ]}
-              >
-                {card?.title}
+          ))}
+          {NotificationData.length >= limit ? (
+            <TouchableOpacity
+              onPress={() => {
+                setLimit(10 + limit);
+              }}
+              style={{
+                width: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+                height: moderateScale(40),
+              }}
+            >
+              <Text style={{ fontFamily: "Kantumruy-Bold", color: "#4cbb17" }}>
+                {"see more"}
               </Text>
-              <Text
-                style={[
-                  card?.title === "Leave Cancel"
-                    ? NotificationActionStyle.ActionDatTimeRed
-                    : NotificationActionStyle.ActionDatTime,
-                  { fontSize: moderateScale(12) },
-                ]}
-              >
-                {moment(card?.date).format("DD MMM YY")} | {card?.time}
-              </Text>
-              <Text
-                style={[
-                  card?.title === "Leave Cancel"
-                    ? NotificationActionStyle.ActionCommentRed
-                    : NotificationActionStyle.ActionComment,
-                  { fontSize: moderateScale(12) },
-                ]}
-              >
-                {card?.body}
-              </Text>
-            </View>
-          </View>
-        ))}
-        {NotificationData.length >= limit ? (
-          <TouchableOpacity
-            onPress={() => {
-              setLimit(10 + limit);
-            }}
-            style={{
-              width: "100%",
-              alignItems: "center",
-              justifyContent: "center",
-              height: moderateScale(40),
-            }}
-          >
-            <Text style={{ fontFamily: "Kantumruy-Bold", color: "#4cbb17" }}>
-              {"see more"}
-            </Text>
-          </TouchableOpacity>
-        ) : null}
-      </ScrollView>
+            </TouchableOpacity>
+          ) : null}
+        </ScrollView>
+      )}
     </View>
   );
 }

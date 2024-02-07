@@ -58,8 +58,11 @@ export const GETPAYROLLBYID = gql`
         payrollId
         remain
         month
+        paidAmount
+        paidDate
       }
       netSalary
+      paidAmount
     }
   }
 `;

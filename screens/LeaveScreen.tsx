@@ -257,6 +257,14 @@ export default function LeaveScreen() {
             }}
           />
         </View>
+      ) : leavListData.length === 0 ? (
+        <View style={HomeStyle.HomeContentContainer}>
+          <Text
+            style={[LeaveStyle.LeaveTitleText, { fontSize: moderateScale(14) }]}
+          >
+            {t("Empty")}
+          </Text>
+        </View>
       ) : (
         <ScrollView
           contentContainerStyle={{ alignItems: "center" }}

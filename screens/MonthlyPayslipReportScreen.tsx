@@ -141,6 +141,16 @@ export default function MonthlyPayslipReportScreen() {
       setDeduct([...ArrayDeduct]);
     },
   });
+  const handleGetPaidPayroll = () => {
+    let totalPaid = data?.getPayrollById?.paidAmount;
+    if (data?.getPayrollById?.recentPayrollOwe?.length > 0) {
+      data?.getPayrollById?.recentPayrollOwe?.map((row: any) => {
+        totalPaid += row?.paidAmount;
+      });
+    }
+    // console.log("totalPaid", totalPaid);
+    return totalPaid;
+  };
   useMemo(() => {
     fetchDataLocalStorage("@mobileUserLogin").then((value) => {
       let mobileUser: string = value;
@@ -444,7 +454,7 @@ export default function MonthlyPayslipReportScreen() {
                     { fontSize: moderateScale(14) },
                   ]}
                 >
-                  {t("Gross Salary")}
+                  {t("Paid Salary")}
                 </Text>
                 <View
                   style={{
@@ -452,6 +462,7 @@ export default function MonthlyPayslipReportScreen() {
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    height: moderateScale(30),
                   }}
                 >
                   {eye ? (
@@ -459,12 +470,12 @@ export default function MonthlyPayslipReportScreen() {
                       style={[
                         PayslipStyle.MonthlyPayslipGrossSalaryTitle,
                         {
-                          height: 30,
+                          height: moderateScale(30),
                           fontSize: moderateScale(14),
                         },
                       ]}
                     >
-                      ${totalGrossAmount()}
+                      ${handleGetPaidPayroll()}
                     </Text>
                   ) : (
                     <Image
@@ -848,6 +859,39 @@ export default function MonthlyPayslipReportScreen() {
                     ${totalDeduct()}
                   </Text>
                 </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={[
+              PayslipStyle.MonthlyPayslipEmployeeCard,
+              {
+                padding: moderateScale(10),
+                borderRadius: moderateScale(10),
+                marginBottom: moderateScale(20),
+              },
+            ]}
+          >
+            <View style={PayslipStyle.MonthlyPayslipEmployeeContentCard}>
+              <View>
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipGrossTitle,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  {t("Gross Salary")}
+                </Text>
+              </View>
+              <View style={PayslipStyle.MonthlyPayslipContentTextRight}>
+                <Text
+                  style={[
+                    PayslipStyle.MonthlyPayslipGrossTitle,
+                    { fontSize: moderateScale(14) },
+                  ]}
+                >
+                  ${totalGrossAmount()}
+                </Text>
               </View>
             </View>
           </View>

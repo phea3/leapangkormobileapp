@@ -141,6 +141,17 @@ export default function AttendanceScreen() {
             }}
           />
         </View>
+      ) : AttendanceData?.getAttendanceMobile?.length === 0 ? (
+        <View style={HomeStyle.HomeContentContainer}>
+          <Text
+            style={[
+              AttendanceStyle.AttendanceTitleText,
+              { fontSize: moderateScale(14) },
+            ]}
+          >
+            {t("Empty")}
+          </Text>
+        </View>
       ) : (
         <ScrollView
           contentContainerStyle={{ alignItems: "center" }}

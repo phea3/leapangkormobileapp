@@ -150,6 +150,7 @@ export default function HomeScreen() {
       onError(error) {
         console.log(error?.message);
       },
+      fetchPolicy: "cache-and-network",
     }
   );
   useEffect(() => {
@@ -241,7 +242,7 @@ export default function HomeScreen() {
                   );
                 }}
                 buttonStyle={{
-                  width: moderateScale(80),
+                  width: moderateScale(90),
                   height: moderateScale(30),
                   backgroundColor: "#177a02",
                   // borderWidth: moderateScale(1),

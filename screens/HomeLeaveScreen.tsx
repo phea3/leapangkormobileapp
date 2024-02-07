@@ -581,6 +581,8 @@ export default function HomeLeaveScreen({ versionData }: any) {
                                   setWorkingTimeId(
                                     data?._id !== workingTimeId ? data?._id : ""
                                   );
+                                  setStart("");
+                                  setEnd("");
                                 }}
                               >
                                 <Image

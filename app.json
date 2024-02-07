@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1",
+      "buildNumber": "2",
       "infoPlist": {
         "NSCalendarsFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
         "NSCalendarsUsageDescription": "Allow $(PRODUCT_NAME) to access your calendars.",
@@ -31,7 +31,6 @@
         "NSUserNotificationsUsageDescription": "Allow $(PRODUCT_NAME) to push you notification.",
         "NSRemindersFullAccessUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders.",
         "NSRemindersUsageDescription": "Allow $(PRODUCT_NAME) to access your reminders.",
-        "NSDataCollectionAndStorage": "Allow $(PRODUCT_NAME) to collect your data and storage.",
         "UIBackgroundModes": ["remote-notification", "fetch"]
       },
       "bundleIdentifier": "com.leapangkor.humanresource"
@@ -51,7 +50,7 @@
         "android.permission.RECORD_AUDIO"
       ],
       "package": "com.leapangkor.humanresource",
-      "versionCode": 9
+      "versionCode": 11
     },
     "plugins": [
       [
